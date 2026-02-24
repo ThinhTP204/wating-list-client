@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_APP_NAME || "Waiting List",
+  title: process.env.NEXT_PUBLIC_APP_NAME || "Wooki",
   description: "Modern Next.js application",
 };
 

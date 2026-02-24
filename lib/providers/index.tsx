@@ -11,7 +11,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <QueryProvider>
         {children}
         <Toaster
-          position="top-right"
+          position="bottom-center"
           expand={true}
           richColors
           closeButton

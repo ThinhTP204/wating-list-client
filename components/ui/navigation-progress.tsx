@@ -18,7 +18,7 @@ export function NavigationProgress({
   return (
     <div
       className={cn(
-        "fixed left-0 top-0 z-[9999] h-1 w-full bg-transparent pointer-events-none",
+        "fixed left-0 top-0 z-9999 h-1 w-full bg-transparent pointer-events-none",
         className
       )}
     >
@@ -31,7 +31,7 @@ export function NavigationProgress({
         }}
       >
         {/* Shimmer effect */}
-        <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+        <div className="absolute right-0 top-0 h-full w-24 bg-linear-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
       </div>
     </div>
   );

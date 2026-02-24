@@ -11,6 +11,7 @@ export const QUERY_KEYS = {
   USER: "user",
   PRODUCTS: "products",
   ORDERS: "orders",
+  REGISTER: "register",
 } as const;
 
 // Routes

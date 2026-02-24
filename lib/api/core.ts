@@ -128,7 +128,7 @@ class ApiService {
 
 // Singleton instance
 const apiService = new ApiService(
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080",
   600000 // 10 minutes timeout
 );
 

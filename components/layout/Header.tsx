@@ -45,8 +45,8 @@ export default function Header() {
           <NavItems items={navItems} />
 
           <div className="flex items-center gap-4">
-            <Button variant="default" className="bg-black text-white font-bold">
-              Trải nghiệm ngay
+            <Button variant="default" className="bg-black text-white font-bold" asChild>
+              <a href="#dang-ky">Trải nghiệm ngay</a>
             </Button>
           </div>
         </NavBody>
@@ -82,10 +82,12 @@ export default function Header() {
             ))}
             <div className="flex w-full flex-col gap-4 pt-2">
               <Button
-                onClick={() => setIsMobileMenuOpen(false)}
                 className="w-full bg-black rounded-md px-4 py-2 text-base font-bold"
+                asChild
               >
-                Trải nghiệm ngay
+                <a href="#dang-ky" onClick={() => setIsMobileMenuOpen(false)}>
+                  Trải nghiệm ngay
+                </a>
               </Button>
             </div>
           </MobileNavMenu>

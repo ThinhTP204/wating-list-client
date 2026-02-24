@@ -4,6 +4,7 @@ import HeroSection from "./components/HeroSection";
 import Problem from "./components/Problem";
 import Blog from "./components/Blog";
 import AboutUs from "./components/AboutUs";
+import Register from "./components/Register";
 import Footer from "@/components/layout/Footer";
 import { useIsMobile } from "@/hooks/useMobile";
 
@@ -18,6 +19,7 @@ export default function Home() {
       </div>
       <Blog />
       <AboutUs />
+      <Register />
       <Footer />
     </main>
   );

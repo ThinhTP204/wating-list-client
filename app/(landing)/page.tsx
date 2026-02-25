@@ -14,7 +14,7 @@ export default function Home() {
     <main className="min-h-screen bg-white">
       <Headers />
       <HeroSection />
-      <div className={`${isMobile ? "px-4" : "pt-150"}`}>
+      <div className={`${isMobile ? "px-4" : "pt-200"}`}>
         <Problem />
       </div>
       <Blog />

@@ -184,7 +184,7 @@ export default function Blog() {
       <div className="relative z-20 mx-auto max-w-7xl py-10 lg:py-40">
         <div className="mb-14 text-center">
           <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-neutral-500">
-            Vấn đề gặp phải
+            Quản lí thông minh
           </span>
           <h4 className="mt-4 text-3xl font-bold text-neutral-900 md:text-4xl lg:text-5xl">
             Mọi thứ bạn cần để{" "}

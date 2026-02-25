@@ -128,7 +128,7 @@ class ApiService {
 
 // Singleton instance
 const apiService = new ApiService(
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080",
+  process.env.NEXT_PUBLIC_API_URL || "https://wooki-waitlist.vercel.app",
   600000 // 10 minutes timeout
 );
 

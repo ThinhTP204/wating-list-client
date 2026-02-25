@@ -9,6 +9,7 @@ export const AUTH_TOKEN_KEY = "auth-token";
 // Query keys
 export const QUERY_KEYS = {
   USER: "user",
+  USERS: "users",
   PRODUCTS: "products",
   ORDERS: "orders",
   REGISTER: "register",

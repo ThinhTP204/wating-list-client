@@ -1,4 +1,33 @@
 
+// User List Item (from GET /api/v1/users)
+export interface UserItem {
+  id: string;
+  email: string;
+  phone_number: string;
+  full_name: string;
+  referral_code: string;
+  status: string;
+  created_at: string;
+  is_active: boolean;
+}
+
+export interface UserListPagination {
+  page: number;
+  limit: number;
+  total_pages: number;
+  total_items: number;
+  has_next: boolean;
+  has_prev: boolean;
+}
+
+export interface UserListResponse {
+  success: boolean;
+  message: string;
+  data: UserItem[];
+  pagination: UserListPagination;
+  metadata?: Record<string, object>;
+}
+
 // User Model
 export interface User {
   id: string;

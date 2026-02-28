@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import SafeImage from "./ui/SafeImage";
 import { PointerHighlight } from "./ui/pointer-highlight";
 import { useIsMobile } from "@/hooks/useMobile";
+import { useRegisterDialog } from "@/hooks/useRegisterDialog";
 
 const badges = ["F&B", "Bán lẻ", "Dịch vụ", "Part-time"];
 
 export default function BackgroundRippleEffectDemo() {
   const isMobile = useIsMobile();
+  const { open: openRegister } = useRegisterDialog();
 
   return (
     <div className="relative flex min-h-screen w-full items-center overflow-hidden">
@@ -34,10 +36,10 @@ export default function BackgroundRippleEffectDemo() {
           </div>
 
           <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-neutral-900 md:text-5xl lg:text-6xl dark:text-white">
-            Quản lý ca làm việc{" "}
+            Nền tảng quản lí ca làm{" "}
             <PointerHighlight containerClassName="inline-block">
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              thông minh.
+              #1 Việt Nam.
             </span>
             </PointerHighlight>
           </h1>
@@ -51,6 +53,7 @@ export default function BackgroundRippleEffectDemo() {
           <div className="mt-8 flex flex-wrap gap-4">
             <Button
               size="lg"
+              onClick={openRegister}
               className="bg-black px-8 py-6 text-base font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
             >
               Trải nghiệm ngay
@@ -59,8 +62,9 @@ export default function BackgroundRippleEffectDemo() {
               size="lg"
               variant="outline"
               className="border-neutral-300 px-8 py-6 text-base font-semibold text-neutral-700 transition-all duration-200 hover:-translate-y-0.5 dark:border-neutral-600 dark:text-neutral-300"
+              asChild
             >
-              Tìm hiểu thêm
+              <a href="#van-de">Tìm hiểu thêm</a>
             </Button>
           </div>
 

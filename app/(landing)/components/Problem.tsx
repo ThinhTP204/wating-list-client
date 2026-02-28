@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Compare } from "@/components/ui/compare";
 import { useIsMobile } from "@/hooks/useMobile";
 
@@ -47,13 +47,43 @@ const newContent = {
 };
 
 export default function Problem() {
-  const [sliderPercent, setSliderPercent] = useState(50);
+  const [sliderPercent, setSliderPercent] = useState(2);
   const isMobile = useIsMobile();
+  const [isHovering, setIsHovering] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Auto-switch between old (2%) and new (98%) every 2 seconds
+  useEffect(() => {
+    if (isHovering) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
+    }
+
+    intervalRef.current = setInterval(() => {
+      setSliderPercent((prev) => (prev <= 50 ? 98 : 2));
+    }, 2000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isHovering]);
+
+  const handleMouseEnter = useCallback(() => setIsHovering(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovering(false), []);
+
   const isOldSide = sliderPercent <= 50;
   const content = isOldSide ? oldContent : newContent;
 
   return (
-    <section id="van-de" className="w-full bg-white py-24 scroll-mt-16">
+    <section
+      id="van-de"
+      className="w-full bg-white py-24 scroll-mt-16"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className="mx-auto max-w-7xl px-6">
         {/* Section header */}
         <div className="mb-14 text-center">
@@ -160,7 +190,8 @@ export default function Problem() {
               slideMode={isMobile ? "drag" : "hover"}
               showHandlebar
               autoplay={false}
-              initialSliderPercentage={50}
+              controlledPercentage={isHovering ? undefined : sliderPercent}
+              initialSliderPercentage={2}
             />
           </div>
         </div>

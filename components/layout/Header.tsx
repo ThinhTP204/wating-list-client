@@ -13,17 +13,19 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useIsMobile } from "@/hooks/useMobile";
+import { useRegisterDialog } from "@/hooks/useRegisterDialog";
 
 const navItems = [
   { name: "Trang chủ", link: "/" },
   { name: "Vấn đề gặp phải", link: "#van-de" },
   { name: "Blog", link: "#blog" },
-  { name: "Về chúng tôi", link: "#ve-chung-toi" },
+  { name: "Bảng giá", link: "#bang-gia" },
 ];
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { open: openRegister } = useRegisterDialog();
 
   useEffect(() => {
     if (!isMobile) setIsMobileMenuOpen(false);
@@ -44,9 +46,9 @@ export default function Header() {
 
           <NavItems items={navItems} />
 
-          <div className="flex items-center gap-4">
-            <Button variant="default" className="bg-black text-white font-bold" asChild>
-              <a href="#dang-ky">Trải nghiệm ngay</a>
+          <div className="relative z-20 flex items-center gap-4">
+            <Button variant="default" className="bg-black text-white font-bold" onClick={openRegister}>
+              Trải nghiệm ngay
             </Button>
           </div>
         </NavBody>
@@ -83,11 +85,9 @@ export default function Header() {
             <div className="flex w-full flex-col gap-4 pt-2">
               <Button
                 className="w-full bg-black rounded-md px-4 py-2 text-base font-bold"
-                asChild
+                onClick={() => { setIsMobileMenuOpen(false); openRegister(); }}
               >
-                <a href="#dang-ky" onClick={() => setIsMobileMenuOpen(false)}>
-                  Trải nghiệm ngay
-                </a>
+                Trải nghiệm ngay
               </Button>
             </div>
           </MobileNavMenu>

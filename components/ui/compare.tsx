@@ -12,6 +12,7 @@ interface CompareProps {
   firstImageClassName?: string;
   secondImageClassname?: string;
   initialSliderPercentage?: number;
+  controlledPercentage?: number;
   slideMode?: "hover" | "drag";
   showHandlebar?: boolean;
   autoplay?: boolean;
@@ -24,12 +25,20 @@ export const Compare = ({
   firstImageClassName,
   secondImageClassname,
   initialSliderPercentage = 50,
+  controlledPercentage,
   slideMode = "hover",
   showHandlebar = true,
   autoplay = false,
   autoplayDuration = 5000,
 }: CompareProps) => {
   const [sliderXPercent, setSliderXPercent] = useState(initialSliderPercentage);
+
+  // Sync with external controlled value
+  useEffect(() => {
+    if (controlledPercentage !== undefined) {
+      setSliderXPercent(controlledPercentage);
+    }
+  }, [controlledPercentage]);
   const [isDragging, setIsDragging] = useState(false);
 
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -171,6 +180,7 @@ export const Compare = ({
             left: `${sliderXPercent}%`,
             top: "0",
             zIndex: 40,
+            transition: controlledPercentage !== undefined && !isMouseOver ? "left 0.6s ease-in-out" : "none",
           }}
           transition={{ duration: 0 }}
         >
@@ -203,6 +213,7 @@ export const Compare = ({
               )}
               style={{
                 clipPath: `inset(0 ${100 - sliderXPercent}% 0 0)`,
+                transition: controlledPercentage !== undefined && !isMouseOver ? "clip-path 0.6s ease-in-out" : "none",
               }}
               transition={{ duration: 0 }}
             >

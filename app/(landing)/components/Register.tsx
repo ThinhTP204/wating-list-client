@@ -218,21 +218,85 @@ export default function Register() {
                 <div>
                   <Label
                     htmlFor="referral_code"
-                    className="mb-1.5 block text-sm font-medium text-neutral-700"
+                    className="mb-2.5 block text-sm font-medium text-neutral-700"
                   >
-                    Tên người giới thiệu{" "}
+                    Người giới thiệu{" "}
                     <span className="font-normal text-neutral-400">
                       (tuỳ chọn)
                     </span>
                   </Label>
-                  <Input
-                    id="referral_code"
-                    type="text"
-                    placeholder="Tên người giới thiệu"
-                    value={referralCode}
-                    onChange={(e) => setReferralCode(e.target.value)}
-                    className="border-neutral-200 bg-neutral-50 focus:bg-white"
-                  />
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {([
+                      { name: "Như Phương", role: "CEO", avatar: "/phuong.png" },
+                      { name: "Thái Hòa", role: "Finance", avatar: "/thaihoa.png" },
+                      { name: "Minh Quang", role: "Marketing", avatar: "/quang.png" },
+                      { name: "Phú Thịnh", role: "Developer", avatar: "/thinh.png" },
+                      { name: "Phương Hòa", role: "Tech Lead", avatar: "/phuonghoa.png" },
+                      { name: "Thành Đạt", role: "Engineer", avatar: "/dat.png" },
+                    ] as const).map(({ name, role, avatar }) => {
+                      const selected = referralCode === name;
+                      return (
+                        <button
+                          key={name}
+                          type="button"
+                          onClick={() =>
+                            setReferralCode(selected ? "" : name)
+                          }
+                          className={`group relative flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-all duration-200 ${
+                            selected
+                              ? "border-emerald-300 bg-emerald-50 shadow-sm ring-1 ring-emerald-200"
+                              : "border-neutral-200 bg-neutral-50/50 hover:border-neutral-300 hover:bg-neutral-50"
+                          }`}
+                        >
+                          {/* Avatar */}
+                          <div
+                            className={`relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 transition-all duration-200 ${
+                              selected
+                                ? "ring-emerald-400"
+                                : "ring-neutral-200 group-hover:ring-neutral-300"
+                            }`}
+                          >
+                            <img
+                              src={avatar}
+                              alt={name}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          {/* Info */}
+                          <div className="min-w-0 flex-1">
+                            <p
+                              className={`text-sm font-semibold truncate transition-colors duration-200 ${
+                                selected ? "text-emerald-800" : "text-neutral-800"
+                              }`}
+                            >
+                              {name}
+                            </p>
+                            <p
+                              className={`text-[11px] truncate transition-colors duration-200 ${
+                                selected ? "text-emerald-600" : "text-neutral-400"
+                              }`}
+                            >
+                              {role}
+                            </p>
+                          </div>
+                          {/* Check indicator */}
+                          {selected && (
+                            <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-sm">
+                              <svg
+                                className="h-3 w-3 text-white"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={3}
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <Button

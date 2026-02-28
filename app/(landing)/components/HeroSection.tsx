@@ -1,7 +1,6 @@
 "use client";
 
 import BackgroundRippleEffectDemo from "@/components/background-ripple-effect-demo";
-import { MacbookScroll } from "@/components/ui/macbook-scroll";
 import { useIsMobile } from "@/hooks/useMobile";
 
 export default function HeroSection() {
@@ -10,7 +9,6 @@ export default function HeroSection() {
   return (
     <>
       <BackgroundRippleEffectDemo />
-      {!isMobile && <MacbookScroll />}
     </>
   );
 }

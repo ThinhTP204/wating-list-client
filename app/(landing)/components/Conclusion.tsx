@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Ballpit from '../../../components/ui/Ballpit';
+import { InteractiveHoverButton } from '../../../components/ui/interactive-hover-button';
 
 const Conclusion: React.FC = () => {
   return (
@@ -59,12 +60,12 @@ const Conclusion: React.FC = () => {
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <button className="rounded-xl bg-white px-6 py-3 text-sm font-bold text-neutral-900 shadow-lg shadow-white/10 transition hover:scale-105 hover:bg-white/90">
+          <InteractiveHoverButton variant="light" className="text-sm">
             Trải nghiệm ngay
-          </button>
-          <button className="rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white backdrop-blur transition hover:scale-105 hover:bg-white/10">
+          </InteractiveHoverButton>
+          <InteractiveHoverButton variant="dark" className="text-sm">
             Tìm hiểu thêm
-          </button>
+          </InteractiveHoverButton>
         </div>
 
         <p className="mt-6 text-xs text-white/40">

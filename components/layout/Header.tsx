@@ -12,6 +12,7 @@ import {
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { InteractiveHoverButton } from "../ui/interactive-hover-button";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useRegisterDialog } from "@/hooks/useRegisterDialog";
 import SparklesIcon from "@/components/ui/sparkles-icon";
@@ -50,10 +51,9 @@ export default function Header() {
 
           <div className="relative z-20 flex items-center gap-4">
             <div className="relative">
-              <Button variant="default" className="bg-black dark:bg-white dark:text-black text-white font-bold" onClick={openRegister}>
+              <InteractiveHoverButton variant="dark" className="font-bold text-sm" onClick={openRegister}>
                 Trải nghiệm ngay
-                <SparklesIcon size={16} className="ml-1" />
-              </Button>
+              </InteractiveHoverButton>
               <div className="absolute left-1/2 -translate-x-1/2 top-full z-40 flex flex-col items-center pointer-events-auto">
                 <ChainThemeToggle />
               </div>
@@ -71,14 +71,13 @@ export default function Header() {
               wokki
             </Link>
             <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                className="bg-black dark:bg-white dark:text-black text-white font-bold text-xs px-3 py-1"
+              <InteractiveHoverButton
+                variant="dark"
+                className="font-bold text-xs px-3 py-1"
                 onClick={openRegister}
               >
                 Trải nghiệm ngay
-                <SparklesIcon size={12} className="ml-1" />
-              </Button>
+              </InteractiveHoverButton>
               <div className="relative">
                 <MobileNavToggle
                   isOpen={isMobileMenuOpen}

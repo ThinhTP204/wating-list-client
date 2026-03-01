@@ -1,6 +1,6 @@
 "use client";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
-import { Button } from "@/components/ui/button";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import SafeImage from "./ui/SafeImage";
 import { PointerHighlight } from "./ui/pointer-highlight";
 import { useIsMobile } from "@/hooks/useMobile";
@@ -51,25 +51,21 @@ export default function BackgroundRippleEffectDemo() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <Button
-              size="lg"
+            <InteractiveHoverButton
+              variant="dark"
+              className="text-base font-semibold"
               onClick={openRegister}
-              className="bg-black px-8 py-6 text-base font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
             >
               Trải nghiệm ngay
-              <RocketIcon size={18} className="ml-1" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-neutral-300 px-8 py-6 text-base font-semibold text-neutral-700 transition-all duration-200 hover:-translate-y-0.5 dark:border-neutral-600 dark:text-neutral-300"
-              asChild
-            >
-              <a href="#van-de" className="inline-flex items-center gap-1">
+            </InteractiveHoverButton>
+            <a href="#van-de">
+              <InteractiveHoverButton
+                variant="light"
+                className="text-base font-semibold"
+              >
                 Tìm hiểu thêm
-                <ArrowNarrowRightIcon size={18} />
-              </a>
-            </Button>
+              </InteractiveHoverButton>
+            </a>
           </div>
 
           <p className="mt-8 text-sm text-neutral-400 dark:text-neutral-500">

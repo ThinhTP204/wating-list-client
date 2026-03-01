@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import SendIcon from "@/components/ui/send-icon";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useTheme } from "next-themes";
 
@@ -153,26 +152,6 @@ export default function AboutQuestion() {
             );
           })}
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className={`${isMobile ? "mt-8" : "mt-12"} rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 ${isMobile ? "p-5" : "p-8"} text-center`}
-        >
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            Không tìm thấy câu trả lời bạn cần?
-          </p>
-          <a
-            href="#dang-ky"
-            className="mt-3 inline-flex items-center gap-2 rounded-full bg-black px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-neutral-800"
-          >
-            Liên hệ chúng tôi
-            <SendIcon size={16} />
-          </a>
-        </motion.div>
       </div>
     </section>
   );

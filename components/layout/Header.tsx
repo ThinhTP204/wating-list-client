@@ -20,8 +20,8 @@ import { ChainThemeToggle } from "@/components/ui/chain-theme-toggle";
 const navItems = [
   { name: "Trang chủ", link: "/" },
   { name: "Vấn đề gặp phải", link: "#van-de" },
-  { name: "Blog", link: "#blog" },
-  { name: "Bảng giá", link: "#bang-gia" },
+  { name: "Lợi ích", link: "#blog" },
+  { name: "Dịch vụ", link: "#bang-gia" },
 ];
 
 export default function Header() {
@@ -71,6 +71,14 @@ export default function Header() {
               wokki
             </Link>
             <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                className="bg-black dark:bg-white dark:text-black text-white font-bold text-xs px-3 py-1"
+                onClick={openRegister}
+              >
+                Trải nghiệm ngay
+                <SparklesIcon size={12} className="ml-1" />
+              </Button>
               <div className="relative">
                 <MobileNavToggle
                   isOpen={isMobileMenuOpen}
@@ -98,13 +106,6 @@ export default function Header() {
               </a>
             ))}
             <div className="flex w-full flex-col gap-4 pt-2">
-              <Button
-                className="w-full bg-black dark:bg-white dark:text-black rounded-md px-4 py-2 text-base font-bold"
-                onClick={() => { setIsMobileMenuOpen(false); openRegister(); }}
-              >
-                Trải nghiệm ngay
-                <SparklesIcon size={16} className="ml-1" />
-              </Button>
             </div>
           </MobileNavMenu>
         </MobileNav>

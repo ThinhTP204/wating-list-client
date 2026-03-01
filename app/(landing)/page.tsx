@@ -3,7 +3,6 @@ import { useState } from "react";
 import Headers from "@/components/layout/Header";
 import HeroSection from "./components/HeroSection";
 import Problem from "./components/Problem";
-import Solution from "./components/Solution";
 import Blog from "./components/Blog";
 import Subscription from "./components/Supscription";
 import AboutQuestion from "./components/AboutQuestion";
@@ -25,11 +24,10 @@ export default function Home() {
         <Headers />
         <HeroSection />
           <Problem />
-        <Solution />
         <Blog />
         <Subscription />
-        <AboutQuestion />
         <Register />
+        <AboutQuestion />
         <Footer />
         <RegisterDialog />
       </main>

@@ -66,7 +66,7 @@ export default function Problem() {
 
     intervalRef.current = setInterval(() => {
       setSliderPercent((prev) => (prev <= 50 ? 98 : 2));
-    }, 2000);
+    }, 5000);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -174,26 +174,12 @@ export default function Problem() {
           </div>
 
           {/* RIGHT — Compare slider */}
-          <div
-            className="flex justify-center"
-            onMouseMove={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const x = e.clientX - rect.left;
-              setSliderPercent(Math.round((x / rect.width) * 100));
-            }}
-            onTouchMove={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const x = e.touches[0].clientX - rect.left;
-              setSliderPercent(Math.round((x / rect.width) * 100));
-            }}
-          >
+          <div className="flex justify-center pointer-events-none">
             <Compare
-              // key={resolvedTheme}
-              // firstImage={resolvedTheme === "dark" ? "/good-way-dark.png" : "/good-way-no-back.png"}
               firstImage="/good-way.png"
               secondImage="/old-way-no-back.png"
               className="h-[420px] w-full max-w-lg rounded-2xl"
-              slideMode={isMobile ? "drag" : "hover"}
+              slideMode="hover"
               showHandlebar
               autoplay={false}
               controlledPercentage={isHovering ? undefined : sliderPercent}

@@ -6,6 +6,10 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  font-family: var(--font-ubuntu), "Ubuntu", sans-serif;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 /* ===== BLACK & WHITE THEME VARIABLES ===== */

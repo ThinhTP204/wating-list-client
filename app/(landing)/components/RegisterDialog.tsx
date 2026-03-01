@@ -11,6 +11,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import RocketIcon from "@/components/ui/rocket-icon";
 
 type ContactType = "email" | "phone";
 
@@ -37,7 +38,7 @@ export default function RegisterDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && close()}>
-      <DialogContent className="max-w-md p-0 overflow-hidden border-neutral-200 bg-white sm:rounded-2xl">
+      <DialogContent className="max-w-md p-0 overflow-hidden border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 sm:rounded-2xl">
         <DialogTitle className="sr-only">Đăng ký trải nghiệm Wokki</DialogTitle>
         {/* Header gradient bar */}
         <div className="h-1.5 w-full bg-gradient-to-r from-emerald-400 to-cyan-400" />
@@ -45,119 +46,46 @@ export default function RegisterDialog() {
         <div className="px-6 pb-6 pt-2">
           {/* Title */}
           <div className="mb-5 text-center">
-            <h3 className="text-xl font-bold text-neutral-900">
+            <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
               Trải nghiệm{" "}
               <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                 Wokki
               </span>
             </h3>
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
               Đăng ký để truy cập sớm — hoàn toàn miễn phí.
             </p>
           </div>
 
           {isSuccess ? (
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-3xl">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950 text-3xl">
                 🎉
               </div>
-              <p className="text-xl font-bold text-neutral-900">
+              <p className="text-xl font-bold text-neutral-900 dark:text-white">
                 Đăng ký thành công!
               </p>
-              <p className="mt-2 text-sm text-neutral-500">
+              <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
                 Chúng tôi sẽ liên hệ bạn sớm nhất có thể. Cảm ơn bạn đã tin
                 tưởng Wokki!
               </p>
               <Button
                 onClick={close}
-                className="mt-5 bg-black text-white font-semibold hover:bg-neutral-800"
+                className="mt-5 bg-black dark:bg-white text-white dark:text-black font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-200"
               >
                 Đóng
               </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Toggle */}
-              <div>
-                <Label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Liên hệ qua
-                </Label>
-                <div className="flex rounded-xl border border-neutral-200 bg-neutral-50 p-1">
-                  <button
-                    type="button"
-                    onClick={() => setContactType("email")}
-                    className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${contactType === "email"
-                      ? "bg-black text-white shadow-sm"
-                      : "text-neutral-500 hover:text-neutral-700"
-                      }`}
-                  >
-                    Email
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setContactType("phone")}
-                    className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${contactType === "phone"
-                      ? "bg-black text-white shadow-sm"
-                      : "text-neutral-500 hover:text-neutral-700"
-                      }`}
-                  >
-                    Số điện thoại
-                  </button>
-                </div>
-              </div>
-
-              {/* Email / Phone */}
-              {contactType === "email" ? (
-                <div>
-                  <Label
-                    htmlFor="dialog-email"
-                    className="mb-2.5 block text-sm font-medium text-neutral-700"
-                  >
-                    Email{" "}
-                    <span className="font-normal text-red-500">*</span>
-
-                  </Label>
-                  <Input
-                    id="dialog-email"
-                    type="email"
-                    placeholder="ban@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="border-neutral-200 bg-neutral-50 focus:bg-white"
-                  />
-                </div>
-              ) : (
-                <div>
-                  <Label
-                    htmlFor="dialog-phone"
-                    className="mb-2.5 block text-sm font-medium text-neutral-700"
-                  >
-                    Số điện thoại{" "}
-                    <span className="font-normal text-red-500">*</span>
-
-                  </Label>
-                  <Input
-                    id="dialog-phone"
-                    type="tel"
-                    placeholder="0912 345 678"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                    className="border-neutral-200 bg-neutral-50 focus:bg-white"
-                  />
-                </div>
-              )}
-
               {/* Full name */}
               <div>
                 <Label
                   htmlFor="dialog-full_name"
-                  className="mb-2.5 block text-sm font-medium text-neutral-700"
+                  className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300"
                 >
                   Họ và tên{" "}
                   <span className="font-normal text-red-500">*</span>
-
                 </Label>
                 <Input
                   id="dialog-full_name"
@@ -166,13 +94,51 @@ export default function RegisterDialog() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
-                  className="border-neutral-200 bg-neutral-50 focus:bg-white"
+                  className="border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 focus:bg-white dark:focus:bg-neutral-700"
                 />
+              </div>
+
+              {/* Email / Phone */}
+              <div>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <Label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    {contactType === "email" ? "Email" : "Số điện thoại"}{" "}
+                    <span className="font-normal text-red-500">*</span>
+                  </Label>
+                  <button
+                    type="button"
+                    onClick={() => setContactType(contactType === "email" ? "phone" : "email")}
+                    className="text-xs font-medium text-emerald-500 hover:text-emerald-600 transition-colors"
+                  >
+                    Dùng {contactType === "email" ? "SĐT" : "Email"} thay
+                  </button>
+                </div>
+                {contactType === "email" ? (
+                  <Input
+                    id="dialog-email"
+                    type="email"
+                    placeholder="ban@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 focus:bg-white dark:focus:bg-neutral-700"
+                  />
+                ) : (
+                  <Input
+                    id="dialog-phone"
+                    type="tel"
+                    placeholder="0912 345 678"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className="border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 focus:bg-white dark:focus:bg-neutral-700"
+                  />
+                )}
               </div>
 
               {/* Referral */}
               <div>
-                <Label className="mb-2.5 block text-sm font-medium text-neutral-700">
+                <Label className="mb-2.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   Người giới thiệu{" "}
                   <span className="font-normal text-red-500">*</span>
                 </Label>
@@ -191,46 +157,30 @@ export default function RegisterDialog() {
                         key={name}
                         type="button"
                         onClick={() => setReferralCode(selected ? "" : name)}
-                        className={`group relative flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all duration-200 ${selected
-                          ? "border-emerald-300 bg-emerald-50 shadow-sm ring-1 ring-emerald-200"
-                          : "border-neutral-200 bg-neutral-50/50 hover:border-neutral-300 hover:bg-neutral-50"
-                          }`}
+                        className={`group relative flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all duration-200 ${
+                          selected
+                            ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950 shadow-sm ring-1 ring-emerald-200 dark:ring-emerald-800"
+                            : "border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                        }`}
                       >
                         <div
-                          className={`relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-2 transition-all duration-200 ${selected
-                            ? "ring-emerald-400"
-                            : "ring-neutral-200 group-hover:ring-neutral-300"
-                            }`}
+                          className={`relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-2 transition-all duration-200 ${
+                            selected ? "ring-emerald-400" : "ring-neutral-200 group-hover:ring-neutral-300"
+                          }`}
                         >
-                          <img
-                            src={avatar}
-                            alt={name}
-                            className="h-full w-full object-cover"
-                          />
+                          <img src={avatar} alt={name} className="h-full w-full object-cover" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p
-                            className={`text-xs font-semibold truncate transition-colors duration-200 ${selected ? "text-emerald-800" : "text-neutral-800"
-                              }`}
-                          >
+                          <p className={`text-xs font-semibold truncate transition-colors duration-200 ${selected ? "text-emerald-800 dark:text-emerald-300" : "text-neutral-800 dark:text-neutral-200"}`}>
                             {name}
                           </p>
-                          <p
-                            className={`text-[10px] truncate transition-colors duration-200 ${selected ? "text-emerald-600" : "text-neutral-400"
-                              }`}
-                          >
+                          <p className={`text-[10px] truncate transition-colors duration-200 ${selected ? "text-emerald-600 dark:text-emerald-400" : "text-neutral-400 dark:text-neutral-500"}`}>
                             {role}
                           </p>
                         </div>
                         {selected && (
                           <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 shadow-sm">
-                            <svg
-                              className="h-2.5 w-2.5 text-white"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={3}
-                            >
+                            <svg className="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
                           </span>
@@ -245,9 +195,10 @@ export default function RegisterDialog() {
                 type="submit"
                 disabled={isPending || !referralCode}
                 size="lg"
-                className="w-full bg-black text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-neutral-800 disabled:opacity-60 disabled:translate-y-0"
+                className="w-full bg-black dark:bg-white text-white dark:text-black font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-60 disabled:translate-y-0"
               >
-                {isPending ? "Đang gửi..." : "Đăng ký ngay →"}
+                <RocketIcon size={18} className="mr-2" />
+                {isPending ? "Đang gửi..." : "Đăng ký ngay"}
               </Button>
 
               <p className="text-center text-xs text-neutral-400">

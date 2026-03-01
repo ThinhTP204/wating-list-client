@@ -109,32 +109,32 @@ export default function Subscription() {
   const isMobile = useIsMobile();
 
   return (
-    <section id="bang-gia" className="w-full bg-white py-24 scroll-mt-16">
-      <div className="mx-auto max-w-7xl px-6">
+    <section id="bang-gia" className={`w-full bg-white dark:bg-neutral-950 scroll-mt-16 transition-colors duration-300 ${isMobile ? "py-14" : "py-24"}`}>
+      <div className={`mx-auto max-w-7xl ${isMobile ? "px-4" : "px-6"}`}>
         {/* Section header */}
-        <div className="mb-14 text-center">
-          <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-neutral-500">
+        <div className={`${isMobile ? "mb-8" : "mb-14"} text-center`}>
+          <span className="inline-block rounded-full border border-neutral-300 dark:border-neutral-700 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
             Bảng giá
           </span>
-          <h2 className="mt-4 text-3xl font-bold text-neutral-900 md:text-4xl lg:text-5xl">
+          <h2 className={`mt-4 font-bold text-neutral-900 dark:text-white ${isMobile ? "text-2xl" : "text-3xl md:text-4xl lg:text-5xl"}`}>
             Chọn gói phù hợp với{" "}
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
               doanh nghiệp bạn
             </span>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base text-neutral-500">
+          <p className={`mx-auto mt-4 max-w-xl text-neutral-500 ${isMobile ? "text-sm" : "text-base"}`}>
             Bắt đầu miễn phí, nâng cấp khi bạn cần. Không ràng buộc, huỷ bất cứ
             lúc nào.
           </p>
 
           {/* Billing toggle */}
-          <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-neutral-200 bg-neutral-50 p-1">
+          <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-1">
             <button
               onClick={() => setBilling("monthly")}
               className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
                 billing === "monthly"
                   ? "bg-black text-white shadow-sm"
-                  : "text-neutral-500 hover:text-neutral-700"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
               }`}
             >
               Hàng tháng
@@ -144,7 +144,7 @@ export default function Subscription() {
               className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
                 billing === "yearly"
                   ? "bg-black text-white shadow-sm"
-                  : "text-neutral-500 hover:text-neutral-700"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
               }`}
             >
               Hàng năm
@@ -156,7 +156,7 @@ export default function Subscription() {
         </div>
 
         {/* Pricing cards */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className={`grid gap-6 ${isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-3"}`}>
           {plans.map((plan) => {
             const price =
               billing === "monthly" ? plan.priceMonthly : plan.priceYearly;
@@ -165,10 +165,10 @@ export default function Subscription() {
             return (
               <div
                 key={plan.name}
-                className={`relative flex flex-col rounded-2xl border p-8 transition-all duration-300 ${
+                className={`relative flex flex-col rounded-2xl border transition-all duration-300 ${isMobile ? "p-6" : "p-8"} ${
                   plan.featured
-                    ? "border-emerald-200 bg-gradient-to-b from-emerald-50/60 to-white shadow-lg shadow-emerald-100/50 ring-1 ring-emerald-200"
-                    : "border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-md"
+                    ? "border-emerald-200 bg-gradient-to-b from-emerald-50/60 to-white dark:from-emerald-950/40 dark:to-neutral-900 shadow-lg shadow-emerald-100/50 dark:shadow-emerald-900/20 ring-1 ring-emerald-200 dark:ring-emerald-800"
+                    : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:border-neutral-300 dark:hover:border-neutral-600 hover:shadow-md"
                 }`}
               >
                 {/* Badge */}
@@ -189,7 +189,7 @@ export default function Subscription() {
 
                 {/* Plan name & description */}
                 <div className={plan.badge ? "mt-2" : ""}>
-                  <h3 className="text-xl font-bold text-neutral-900">
+                  <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
                     {plan.name}
                   </h3>
                   <p className="mt-2 text-sm text-neutral-500 leading-relaxed">
@@ -201,23 +201,23 @@ export default function Subscription() {
                 <div className="mt-6 mb-6">
                   {isCustom ? (
                     <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-extrabold text-neutral-900">
+                      <span className="text-3xl font-extrabold text-neutral-900 dark:text-white">
                         Liên hệ
                       </span>
                     </div>
                   ) : price === 0 ? (
                     <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-extrabold text-neutral-900">
+                      <span className="text-4xl font-extrabold text-neutral-900 dark:text-white">
                         0đ
                       </span>
-                      <span className="text-sm text-neutral-400">/mãi mãi</span>
+                      <span className="text-sm text-neutral-400 dark:text-neutral-500">/mãi mãi</span>
                     </div>
                   ) : (
                     <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-extrabold text-neutral-900">
+                      <span className="text-4xl font-extrabold text-neutral-900 dark:text-white">
                         {formatPrice(price)}đ
                       </span>
-                      <span className="text-sm text-neutral-400">
+                      <span className="text-sm text-neutral-400 dark:text-neutral-500">
                         /{billing === "monthly" ? "tháng" : "năm"}
                       </span>
                     </div>
@@ -236,14 +236,14 @@ export default function Subscription() {
                   className={`block w-full rounded-xl py-3 text-center text-sm font-semibold transition-all duration-200 ${
                     plan.featured
                       ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-md shadow-emerald-200/50 hover:shadow-lg hover:shadow-emerald-200/70"
-                      : "border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50 hover:border-neutral-400"
+                      : "border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-400"
                   }`}
                 >
                   {plan.cta}
                 </a>
 
                 {/* Divider */}
-                <div className="my-6 h-px bg-neutral-200" />
+                <div className="my-6 h-px bg-neutral-200 dark:bg-neutral-700" />
 
                 {/* Features */}
                 <ul className="flex-1 space-y-3">
@@ -254,15 +254,15 @@ export default function Subscription() {
                           <CheckIcon className="h-3 w-3 text-emerald-600" />
                         </span>
                       ) : (
-                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-100">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800">
                           <XIcon className="h-3 w-3 text-neutral-400" />
                         </span>
                       )}
                       <span
                         className={`text-sm ${
                           feature.included
-                            ? "text-neutral-700"
-                            : "text-neutral-400"
+                            ? "text-neutral-700 dark:text-neutral-300"
+                            : "text-neutral-400 dark:text-neutral-500"
                         }`}
                       >
                         {feature.text}
@@ -276,7 +276,7 @@ export default function Subscription() {
         </div>
 
         {/* Bottom trust bar */}
-        <div className="mt-12 rounded-2xl border border-neutral-100 bg-neutral-50 p-6">
+        <div className="mt-12 rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-6">
           <div className={`grid gap-6 text-center ${isMobile ? "grid-cols-1" : "grid-cols-4"}`}>
             {[
               {
@@ -302,8 +302,8 @@ export default function Subscription() {
             ].map(({ icon, title, desc }) => (
               <div key={title} className="flex flex-col items-center gap-2">
                 {icon}
-                <p className="text-sm font-semibold text-neutral-900">{title}</p>
-                <p className="text-xs text-neutral-500">{desc}</p>
+                <p className="text-sm font-semibold text-neutral-900 dark:text-white">{title}</p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400">{desc}</p>
               </div>
             ))}
           </div>

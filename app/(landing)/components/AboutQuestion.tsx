@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import SendIcon from "@/components/ui/send-icon";
+import { useIsMobile } from "@/hooks/useMobile";
+import { useTheme } from "next-themes";
 
 const faqs = [
   {
@@ -39,26 +41,29 @@ const faqs = [
 
 export default function AboutQuestion() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const isMobile = useIsMobile();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   const toggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <section id="cau-hoi" className="w-full bg-white py-24 scroll-mt-16">
-      <div className="mx-auto max-w-3xl px-6">
+    <section id="cau-hoi" className={`w-full bg-white dark:bg-neutral-950 scroll-mt-16 transition-colors duration-300 ${isMobile ? "py-14" : "py-24"}`}>
+      <div className={`mx-auto max-w-3xl ${isMobile ? "px-4" : "px-6"}`}>
         {/* Section header */}
-        <div className="mb-14 text-center">
-          <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-neutral-500">
+        <div className={`${isMobile ? "mb-8" : "mb-14"} text-center`}>
+          <span className="inline-block rounded-full border border-neutral-300 dark:border-neutral-700 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
             FAQ
           </span>
-          <h2 className="mt-4 text-3xl font-bold text-neutral-900 md:text-4xl lg:text-5xl">
+          <h2 className={`mt-4 font-bold text-neutral-900 dark:text-white ${isMobile ? "text-2xl" : "text-3xl md:text-4xl lg:text-5xl"}`}>
             Câu hỏi{" "}
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
               thường gặp
             </span>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base text-neutral-500">
+          <p className={`mx-auto mt-4 max-w-xl text-neutral-500 dark:text-neutral-400 ${isMobile ? "text-sm" : "text-base"}`}>
             Những thắc mắc phổ biến nhất về Wokki — nếu bạn cần thêm thông tin,
             đừng ngại liên hệ chúng tôi.
           </p>
@@ -74,27 +79,29 @@ export default function AboutQuestion() {
                 key={index}
                 initial={false}
                 animate={{
-                  backgroundColor: isOpen ? "rgb(240 253 244)" : "rgb(250 250 250)",
+                  backgroundColor: isOpen
+                    ? (isDark ? "rgb(6 78 59)" : "rgb(240 253 244)")
+                    : (isDark ? "rgb(23 23 23)" : "rgb(250 250 250)"),
                 }}
                 transition={{ duration: 0.25 }}
-                className="overflow-hidden rounded-2xl border border-neutral-200"
+                className="overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800"
               >
                 {/* Question */}
                 <button
                   onClick={() => toggle(index)}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                  className={`flex w-full items-center justify-between gap-4 text-left ${isMobile ? "px-4 py-4" : "px-6 py-5"}`}
                 >
-                  <span className="text-base font-semibold text-neutral-900 md:text-lg">
+                  <span className={`font-semibold text-neutral-900 dark:text-white ${isMobile ? "text-sm" : "text-base md:text-lg"}`}>
                     {faq.question}
                   </span>
                   <motion.div
                     animate={{ rotate: isOpen ? 0 : 0 }}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-900"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-900 dark:bg-white"
                   >
                     <motion.svg
                       animate={{ rotate: isOpen ? 180 : 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="h-4 w-4 text-white"
+                      className="h-4 w-4 text-white dark:text-neutral-900"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -127,14 +134,14 @@ export default function AboutQuestion() {
                       transition={{ duration: 0.35, ease: [0.25, 0.8, 0.25, 1] }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-5">
-                        <div className="h-px w-full bg-neutral-200 mb-4" />
+                      <div className={`${isMobile ? "px-4 pb-4" : "px-6 pb-5"}`}>
+                        <div className="h-px w-full bg-neutral-200 dark:bg-neutral-700 mb-4" />
                         <motion.p
                           initial={{ y: -8, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: -8, opacity: 0 }}
                           transition={{ duration: 0.3, delay: 0.05 }}
-                          className="text-sm leading-relaxed text-neutral-600"
+                          className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400"
                         >
                           {faq.answer}
                         </motion.p>
@@ -153,9 +160,9 @@ export default function AboutQuestion() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-12 rounded-2xl border border-neutral-100 bg-neutral-50 p-8 text-center"
+          className={`${isMobile ? "mt-8" : "mt-12"} rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 ${isMobile ? "p-5" : "p-8"} text-center`}
         >
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
             Không tìm thấy câu trả lời bạn cần?
           </p>
           <a

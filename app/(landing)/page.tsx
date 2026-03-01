@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <RegisterDialogProvider>
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
-      <main className={`min-h-screen bg-white ${showSplash ? "overflow-hidden h-screen" : ""}`}>
+      <main className={`min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300 ${showSplash ? "overflow-hidden h-screen" : ""}`}>
         <Headers />
         <HeroSection />
           <Problem />

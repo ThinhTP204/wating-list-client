@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { FancyText } from "@/components/ui/fancy-text";
+import { useIsMobile } from "@/hooks/useMobile";
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -10,6 +11,7 @@ interface SplashScreenProps {
 
 export default function SplashScreen({ onFinish }: SplashScreenProps) {
   const [isExiting, setIsExiting] = useState(false);
+  const isMobile = useIsMobile();
 
   const handleTextComplete = useCallback(() => {
     // Small pause after text animation, then start exit
@@ -30,12 +32,14 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.06)_0%,transparent_70%)]" />
 
           {/* Main text */}
-          <div className="relative flex flex-col items-center gap-2">
+          <div className="relative flex flex-col items-center gap-2 px-4">
             <FancyText
-              className="text-6xl md:text-8xl lg:text-9xl font-black leading-none tracking-tighter text-neutral-200"
+              className={`${
+                isMobile ? "text-4xl" : "text-6xl md:text-8xl lg:text-9xl"
+              } font-black leading-none tracking-tighter text-neutral-200`}
               fillClassName="bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-black"
-              stagger={0.1}
-              duration={1.2}
+              stagger={isMobile ? 0.07 : 0.1}
+              duration={isMobile ? 0.9 : 1.2}
               delay={0.3}
               onComplete={handleTextComplete}
             >
@@ -46,10 +50,12 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.6 }}
-              className="mt-3"
+              transition={{ duration: 0.6, delay: isMobile ? 1.2 : 1.6 }}
+              className={isMobile ? "mt-2" : "mt-3"}
             >
-              <span className="text-sm md:text-base font-medium tracking-widest uppercase text-neutral-400">
+              <span className={`${
+                isMobile ? "text-xs" : "text-sm md:text-base"
+              } font-medium tracking-widest uppercase text-neutral-400`}>
                 Nền tảng quản lí ca làm #1 Việt Nam
               </span>
             </motion.div>
@@ -60,11 +66,11 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{
-              duration: 2.2,
+              duration: isMobile ? 1.6 : 2.2,
               delay: 0.3,
               ease: [0.25, 0.1, 0.25, 1],
             }}
-            className="absolute bottom-0 left-0 h-1 w-full origin-left bg-gradient-to-r from-emerald-400 to-cyan-400"
+            className={`absolute bottom-0 left-0 ${isMobile ? "h-1.5" : "h-1"} w-full origin-left bg-gradient-to-r from-emerald-400 to-cyan-400`}
           />
         </motion.div>
       )}

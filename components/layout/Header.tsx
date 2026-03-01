@@ -15,6 +15,7 @@ import { Button } from "../ui/button";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useRegisterDialog } from "@/hooks/useRegisterDialog";
 import SparklesIcon from "@/components/ui/sparkles-icon";
+import { ChainThemeToggle } from "@/components/ui/chain-theme-toggle";
 
 const navItems = [
   { name: "Trang chủ", link: "/" },
@@ -48,10 +49,15 @@ export default function Header() {
           <NavItems items={navItems} />
 
           <div className="relative z-20 flex items-center gap-4">
-            <Button variant="default" className="bg-black text-white font-bold" onClick={openRegister}>
-              Trải nghiệm ngay
-              <SparklesIcon size={16} className="ml-1" />
-            </Button>
+            <div className="relative">
+              <Button variant="default" className="bg-black dark:bg-white dark:text-black text-white font-bold" onClick={openRegister}>
+                Trải nghiệm ngay
+                <SparklesIcon size={16} className="ml-1" />
+              </Button>
+              <div className="absolute left-1/2 -translate-x-1/2 top-full z-40 flex flex-col items-center pointer-events-auto">
+                <ChainThemeToggle />
+              </div>
+            </div>
           </div>
         </NavBody>
 
@@ -86,7 +92,7 @@ export default function Header() {
             ))}
             <div className="flex w-full flex-col gap-4 pt-2">
               <Button
-                className="w-full bg-black rounded-md px-4 py-2 text-base font-bold"
+                className="w-full bg-black dark:bg-white dark:text-black rounded-md px-4 py-2 text-base font-bold"
                 onClick={() => { setIsMobileMenuOpen(false); openRegister(); }}
               >
                 Trải nghiệm ngay
@@ -96,6 +102,7 @@ export default function Header() {
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
+
     </div>
   );
 }

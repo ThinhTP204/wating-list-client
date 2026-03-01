@@ -85,11 +85,11 @@ export default function BackgroundRippleEffectDemo() {
         {!isMobile && (
           <div className="flex items-center justify-center">
             <SafeImage
-              src="/macbook.svg"
+              src="/mac-noback.png"
               alt="Wokki dashboard trên macbook"
-              width={720}
-              height={480}
-              className=" max-w-7xl object-cover"
+              width={960}
+              height={640}
+              className=" h-80 w-full object-cover"
               priority
             />
           </div>

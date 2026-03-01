@@ -35,20 +35,20 @@ const fadeUp = {
 
 export default function Solution() {
   return (
-    <section id="giai-phap" className="w-full bg-white py-20 md:py-28 scroll-mt-16">
+    <section id="giai-phap" className="w-full bg-white dark:bg-neutral-950 py-20 md:py-28 scroll-mt-16 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6">
         {/* ── Header ── */}
         <div className="mb-14 text-center">
-          <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-neutral-500">
+          <span className="inline-block rounded-full border border-neutral-300 dark:border-neutral-700 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
             Giải pháp toàn diện
           </span>
-          <h2 className="mt-4 text-3xl font-bold text-neutral-900 md:text-4xl lg:text-5xl">
+          <h2 className="mt-4 text-3xl font-bold text-neutral-900 dark:text-white md:text-4xl lg:text-5xl">
             Giải pháp &{" "}
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
               Tính năng
             </span>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-neutral-500">
+          <p className="mx-auto mt-4 max-w-2xl text-base text-neutral-500 dark:text-neutral-400">
             Từ thu thập lịch rảnh, AI xếp ca, chấm công GPS đến sàn đổi ca và
             báo cáo tự động — tất cả trên một nền tảng duy nhất.
           </p>
@@ -65,7 +65,7 @@ export default function Solution() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             custom={0}
-            className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 p-7 lg:col-span-5"
+            className="group relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-7 lg:col-span-5"
           >
             {/* Feature icons row */}
             <div className="mb-16 flex items-center gap-3">
@@ -76,7 +76,7 @@ export default function Solution() {
                     className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
                       i < 2
                         ? "border-emerald-200 bg-emerald-50 text-emerald-500"
-                        : "border-neutral-200 bg-white text-neutral-400"
+                        : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -85,12 +85,12 @@ export default function Solution() {
               )}
             </div>
 
-            <h3 className="text-xl font-bold leading-snug text-neutral-900">
+            <h3 className="text-xl font-bold leading-snug text-neutral-900 dark:text-white">
               Thiết lập dữ liệu
               <br />
               đầu vào
             </h3>
-            <p className="mt-2.5 text-sm leading-relaxed text-neutral-500">
+            <p className="mt-2.5 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
               Xây dựng nền tảng dữ liệu để AI có đủ thông tin vận hành — từ
               lịch rảnh, tiêu chuẩn ca đến lịch học của nhân viên.
             </p>
@@ -103,7 +103,7 @@ export default function Solution() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             custom={1}
-            className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 p-7 lg:col-span-7"
+            className="group relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-7 lg:col-span-7"
           >
             {/* Dot pattern background */}
             <div
@@ -116,12 +116,12 @@ export default function Solution() {
             />
 
             <div className="relative">
-              <h3 className="text-lg font-semibold text-neutral-900">
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
                 AI xếp ca
                 <br />
                 <span className="text-neutral-400">thông minh</span>
               </h3>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-neutral-500">
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
                 Thuật toán AI phân tích hàng nghìn biến số để tạo lịch ca tối
                 ưu — cân bằng chi phí, sở thích nhân viên và nhu cầu kinh
                 doanh.
@@ -137,7 +137,7 @@ export default function Solution() {
               <p className="mt-3 text-6xl font-bold text-neutral-900 md:text-7xl">
                 85%
               </p>
-              <p className="text-xl font-semibold text-neutral-500">
+              <p className="text-xl font-semibold text-neutral-500 dark:text-neutral-400">
                 Thời gian tiết kiệm
               </p>
             </div>
@@ -152,7 +152,7 @@ export default function Solution() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             custom={2}
-            className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 p-7 lg:col-span-8"
+            className="group relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-7 lg:col-span-8"
           >
             <div className="flex flex-col gap-8 md:flex-row md:items-end">
               {/* Left content */}
@@ -163,7 +163,7 @@ export default function Solution() {
                     (Icon, i) => (
                       <div
                         key={i}
-                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-neutral-400 transition-colors duration-200 hover:border-emerald-300 hover:text-emerald-500"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 transition-colors duration-200 hover:border-emerald-300 hover:text-emerald-500"
                       >
                         <Icon className="h-5 w-5" />
                       </div>
@@ -171,12 +171,12 @@ export default function Solution() {
                   )}
                 </div>
 
-                <h3 className="text-xl font-bold leading-snug text-neutral-900">
+                <h3 className="text-xl font-bold leading-snug text-neutral-900 dark:text-white">
                   Vận hành &
                   <br />
                   Chấm công thực tế
                 </h3>
-                <p className="mt-2.5 max-w-sm text-sm leading-relaxed text-neutral-500">
+                <p className="mt-2.5 max-w-sm text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
                   Theo dõi và ghi nhận hoạt động tại cửa hàng theo thời gian
                   thực — từ check-in GPS đến cảnh báo đi trễ.
                 </p>
@@ -236,13 +236,13 @@ export default function Solution() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             custom={3}
-            className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 p-7 lg:col-span-4 lg:row-span-2"
+            className="group relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-7 lg:col-span-4 lg:row-span-2"
           >
             <span className="inline-block rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-600">
               Tổng quan nền tảng
             </span>
 
-            <p className="mt-4 text-sm leading-relaxed text-neutral-500">
+            <p className="mt-4 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
               Hệ thống quản lý ca làm toàn diện — được thiết kế dành riêng cho
               ngành F&B và bán lẻ tại Việt Nam.
             </p>
@@ -262,7 +262,7 @@ export default function Solution() {
                     <span className="text-2xl font-extrabold bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
                       {stat.value}
                     </span>
-                    <p className="text-xs text-neutral-500">{stat.label}</p>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">{stat.label}</p>
                   </div>
                 </div>
               ))}
@@ -291,7 +291,7 @@ export default function Solution() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             custom={4}
-            className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 p-7 lg:col-span-4"
+            className="group relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-7 lg:col-span-4"
           >
             {/* Feature icons */}
             <div className="mb-5 flex items-center gap-2.5">
@@ -302,7 +302,7 @@ export default function Solution() {
                     className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
                       i < 3
                         ? "border-emerald-200 bg-emerald-50 text-emerald-500"
-                        : "border-neutral-200 bg-white text-neutral-400"
+                        : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -311,12 +311,12 @@ export default function Solution() {
               )}
             </div>
 
-            <h3 className="text-xl font-bold leading-snug text-neutral-900">
+            <h3 className="text-xl font-bold leading-snug text-neutral-900 dark:text-white">
               Tương tác &
               <br />
               Sự linh hoạt
             </h3>
-            <p className="mt-2.5 text-sm leading-relaxed text-neutral-500">
+            <p className="mt-2.5 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
               Biến quy trình hành chính khô khan thành trải nghiệm cộng đồng —
               nơi nhân viên chủ động và gắn kết.
             </p>
@@ -330,7 +330,7 @@ export default function Solution() {
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2">
                   <IconSparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500" />
-                  <span className="text-xs text-neutral-500">{item}</span>
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">{item}</span>
                 </div>
               ))}
             </div>
@@ -343,14 +343,14 @@ export default function Solution() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             custom={5}
-            className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 p-7 lg:col-span-4"
+            className="group relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-7 lg:col-span-4"
           >
-            <h3 className="text-lg font-semibold text-neutral-900">
+            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
               Báo cáo &
               <br />
               <span className="text-neutral-400">Tổng kết</span>
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-500">
+            <p className="mt-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
               Dữ liệu hoá toàn bộ hiệu quả làm việc — từ giờ công, chi phí
               nhân sự đến lịch sử thay đổi ca.
             </p>
@@ -366,7 +366,7 @@ export default function Solution() {
                 <div key={bar.label}>
                   <div className="mb-1 flex items-center justify-between">
                     <span className="text-xs text-neutral-400">{bar.label}</span>
-                    <span className="text-xs font-medium text-neutral-500">
+                    <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
                       {bar.w}
                     </span>
                   </div>
@@ -386,7 +386,7 @@ export default function Solution() {
                 (Icon, i) => (
                   <div
                     key={i}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-400"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500"
                   >
                     <Icon className="h-4 w-4" />
                   </div>

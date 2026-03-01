@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Compare } from "@/components/ui/compare";
 import { useIsMobile } from "@/hooks/useMobile";
+import { useTheme } from "next-themes";
 
 const oldContent = {
   badge: "Cách cũ",
@@ -49,6 +50,7 @@ const newContent = {
 export default function Problem() {
   const [sliderPercent, setSliderPercent] = useState(2);
   const isMobile = useIsMobile();
+  const { resolvedTheme } = useTheme();
   const [isHovering, setIsHovering] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -80,24 +82,26 @@ export default function Problem() {
   return (
     <section
       id="van-de"
-      className="w-full bg-white py-24 scroll-mt-16"
+      className={`w-full bg-white dark:bg-neutral-950 scroll-mt-16 transition-colors duration-300 ${isMobile ? "py-14" : "py-24"}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="mx-auto max-w-7xl px-6">
+      <div className={`mx-auto max-w-7xl ${isMobile ? "px-4" : "px-6"}`}>
         {/* Section header */}
-        <div className="mb-14 text-center">
-          <span className="inline-block rounded-full border border-neutral-300 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-neutral-500">
+        <div className={`${isMobile ? "mb-8" : "mb-14"} text-center`}>
+          <span className="inline-block rounded-full border border-neutral-300 dark:border-neutral-700 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
             Vấn đề gặp phải
           </span>
-          <h2 className="mt-4 text-3xl font-bold text-neutral-900 md:text-4xl lg:text-5xl">
+          <h2 className={`mt-4 font-bold text-neutral-900 dark:text-white ${isMobile ? "text-2xl" : "text-3xl md:text-4xl lg:text-5xl"}`}>
             Trước và sau khi dùng{" "}
               <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                 Wokki
               </span>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base text-neutral-500">
-            Kéo thanh trượt để thấy sự khác biệt. Nội dung sẽ thay đổi theo từng phía.
+          <p className={`mx-auto mt-4 max-w-xl text-neutral-500 dark:text-neutral-400 ${isMobile ? "text-sm" : "text-base"}`}>
+            {isMobile
+              ? "Vuốt thanh trượt để thấy sự khác biệt."
+              : "Kéo thanh trượt để thấy sự khác biệt. Nội dung sẽ thay đổi theo từng phía."}
           </p>
         </div>
 
@@ -116,12 +120,12 @@ export default function Problem() {
             </div>
 
             {/* Title */}
-            <h3 className="text-2xl font-bold text-neutral-900 transition-all duration-500 md:text-3xl">
+            <h3 className="text-2xl font-bold text-neutral-900 dark:text-white transition-all duration-500 md:text-3xl">
               {content.title}
             </h3>
 
             {/* Description */}
-            <p className="mt-4 text-sm leading-relaxed text-neutral-500 transition-all duration-500">
+            <p className="mt-4 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 transition-all duration-500">
               {content.description}
             </p>
 
@@ -157,7 +161,7 @@ export default function Problem() {
 
             {/* Indicator */}
             <div className="mt-8 flex items-center gap-3">
-              <div className="relative h-1.5 w-32 overflow-hidden rounded-full bg-neutral-200">
+              <div className="relative h-1.5 w-32 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
                 <div
                   className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-red-500 to-emerald-500 transition-all duration-200"
                   style={{ width: `${sliderPercent}%` }}
@@ -184,8 +188,10 @@ export default function Problem() {
             }}
           >
             <Compare
+              // key={resolvedTheme}
+              // firstImage={resolvedTheme === "dark" ? "/good-way-dark.png" : "/good-way-no-back.png"}
               firstImage="/good-way.png"
-              secondImage="/old-way.png"
+              secondImage="/old-way-no-back.png"
               className="h-[420px] w-full max-w-lg rounded-2xl"
               slideMode={isMobile ? "drag" : "hover"}
               showHandlebar
@@ -197,15 +203,15 @@ export default function Problem() {
         </div>
 
         {/* Bottom stat bar */}
-        <div className="mt-12 grid grid-cols-1 gap-4 rounded-2xl bg-neutral-100 p-6 sm:grid-cols-3">
+        <div className={`${isMobile ? "mt-8" : "mt-12"} grid ${isMobile ? "grid-cols-1 gap-3" : "grid-cols-1 gap-4 sm:grid-cols-3"} rounded-2xl bg-neutral-100 dark:bg-neutral-900 ${isMobile ? "p-4" : "p-6"}`}>
           {[
             { stat: "85%", label: "doanh nghiệp gặp sai sót phân ca thủ công" },
             { stat: "323K+", label: "cửa hàng F&B tại Việt Nam cần giải pháp" },
             { stat: "60%", label: "việc làm do SMEs tạo ra — cần quản lý tốt hơn" },
           ].map(({ stat, label }) => (
             <div key={stat} className="text-center">
-              <p className="text-3xl font-extrabold text-neutral-900">{stat}</p>
-              <p className="mt-1 text-xs text-neutral-500">{label}</p>
+              <p className={`font-extrabold text-neutral-900 dark:text-white ${isMobile ? "text-2xl" : "text-3xl"}`}>{stat}</p>
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{label}</p>
             </div>
           ))}
         </div>

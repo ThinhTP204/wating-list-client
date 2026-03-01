@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useRegisterDialog } from "@/hooks/useRegisterDialog";
+import SparklesIcon from "@/components/ui/sparkles-icon";
 
 const navItems = [
   { name: "Trang chủ", link: "/" },
@@ -49,6 +50,7 @@ export default function Header() {
           <div className="relative z-20 flex items-center gap-4">
             <Button variant="default" className="bg-black text-white font-bold" onClick={openRegister}>
               Trải nghiệm ngay
+              <SparklesIcon size={16} className="ml-1" />
             </Button>
           </div>
         </NavBody>
@@ -88,6 +90,7 @@ export default function Header() {
                 onClick={() => { setIsMobileMenuOpen(false); openRegister(); }}
               >
                 Trải nghiệm ngay
+                <SparklesIcon size={16} className="ml-1" />
               </Button>
             </div>
           </MobileNavMenu>

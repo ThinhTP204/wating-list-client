@@ -5,22 +5,25 @@ import { useRegister } from "@/hooks/useRegister";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import RocketIcon from "@/components/ui/rocket-icon";
+import ShieldCheck from "@/components/ui/shield-check";
+import FilledBellIcon from "@/components/ui/filled-bell-icon";
 
 type ContactType = "email" | "phone";
 
 const benefits = [
   {
-    icon: "⚡",
+    icon: <RocketIcon size={22} className="text-emerald-500" />,
     title: "Truy cập sớm",
     desc: "Nhận quyền dùng thử trước khi ra mắt chính thức.",
   },
   {
-    icon: "🎁",
+    icon: <ShieldCheck size={22} className="text-emerald-500" />,
     title: "Miễn phí hoàn toàn",
     desc: "Không cần thẻ tín dụng, không ràng buộc.",
   },
   {
-    icon: "🔔",
+    icon: <FilledBellIcon size={22} className="text-emerald-500" />,
     title: "Thông báo ưu tiên",
     desc: "Nhận thông tin cập nhật tính năng mới nhất.",
   },
@@ -37,11 +40,12 @@ export default function Register() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!referralCode) return;
     mutate({
       email: contactType === "email" ? email : "",
       phone_number: contactType === "phone" ? phone : "",
       full_name: fullName,
-      referral_code: referralCode || undefined,
+      referral_code: referralCode,
     });
   };
 
@@ -70,7 +74,7 @@ export default function Register() {
           <div className="flex flex-col gap-6">
             {benefits.map((b) => (
               <div key={b.title} className="flex items-start gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-neutral-50 text-xl">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-neutral-50">
                   {b.icon}
                 </div>
                 <div>
@@ -134,22 +138,20 @@ export default function Register() {
                     <button
                       type="button"
                       onClick={() => setContactType("email")}
-                      className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${
-                        contactType === "email"
+                      className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${contactType === "email"
                           ? "bg-black text-white shadow-sm"
                           : "text-neutral-500 hover:text-neutral-700"
-                      }`}
+                        }`}
                     >
                       Email
                     </button>
                     <button
                       type="button"
                       onClick={() => setContactType("phone")}
-                      className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${
-                        contactType === "phone"
+                      className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${contactType === "phone"
                           ? "bg-black text-white shadow-sm"
                           : "text-neutral-500 hover:text-neutral-700"
-                      }`}
+                        }`}
                     >
                       Số điện thoại
                     </button>
@@ -163,7 +165,9 @@ export default function Register() {
                       htmlFor="email"
                       className="mb-1.5 block text-sm font-medium text-neutral-700"
                     >
-                      Email
+                      Email{" "}
+                      <span className="font-normal text-red-500">*</span>
+
                     </Label>
                     <Input
                       id="email"
@@ -181,7 +185,9 @@ export default function Register() {
                       htmlFor="phone"
                       className="mb-1.5 block text-sm font-medium text-neutral-700"
                     >
-                      Số điện thoại
+                      Số điện thoại{" "}
+                      <span className="font-normal text-red-500">*</span>
+
                     </Label>
                     <Input
                       id="phone"
@@ -201,7 +207,8 @@ export default function Register() {
                     htmlFor="full_name"
                     className="mb-1.5 block text-sm font-medium text-neutral-700"
                   >
-                    Họ và tên
+                    Họ và tên{" "}
+                    <span className="font-normal text-red-500">*</span>
                   </Label>
                   <Input
                     id="full_name"
@@ -221,9 +228,7 @@ export default function Register() {
                     className="mb-2.5 block text-sm font-medium text-neutral-700"
                   >
                     Người giới thiệu{" "}
-                    <span className="font-normal text-neutral-400">
-                      (tuỳ chọn)
-                    </span>
+                    <span className="font-normal text-red-500">*</span>
                   </Label>
                   <div className="grid grid-cols-2 gap-2.5">
                     {([
@@ -242,19 +247,17 @@ export default function Register() {
                           onClick={() =>
                             setReferralCode(selected ? "" : name)
                           }
-                          className={`group relative flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-all duration-200 ${
-                            selected
+                          className={`group relative flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-all duration-200 ${selected
                               ? "border-emerald-300 bg-emerald-50 shadow-sm ring-1 ring-emerald-200"
                               : "border-neutral-200 bg-neutral-50/50 hover:border-neutral-300 hover:bg-neutral-50"
-                          }`}
+                            }`}
                         >
                           {/* Avatar */}
                           <div
-                            className={`relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 transition-all duration-200 ${
-                              selected
+                            className={`relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 transition-all duration-200 ${selected
                                 ? "ring-emerald-400"
                                 : "ring-neutral-200 group-hover:ring-neutral-300"
-                            }`}
+                              }`}
                           >
                             <img
                               src={avatar}
@@ -265,16 +268,14 @@ export default function Register() {
                           {/* Info */}
                           <div className="min-w-0 flex-1">
                             <p
-                              className={`text-sm font-semibold truncate transition-colors duration-200 ${
-                                selected ? "text-emerald-800" : "text-neutral-800"
-                              }`}
+                              className={`text-sm font-semibold truncate transition-colors duration-200 ${selected ? "text-emerald-800" : "text-neutral-800"
+                                }`}
                             >
                               {name}
                             </p>
                             <p
-                              className={`text-[11px] truncate transition-colors duration-200 ${
-                                selected ? "text-emerald-600" : "text-neutral-400"
-                              }`}
+                              className={`text-[11px] truncate transition-colors duration-200 ${selected ? "text-emerald-600" : "text-neutral-400"
+                                }`}
                             >
                               {role}
                             </p>
@@ -301,7 +302,7 @@ export default function Register() {
 
                 <Button
                   type="submit"
-                  disabled={isPending}
+                  disabled={isPending || !referralCode}
                   size="lg"
                   className="w-full bg-black text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-neutral-800 disabled:opacity-60 disabled:translate-y-0"
                 >

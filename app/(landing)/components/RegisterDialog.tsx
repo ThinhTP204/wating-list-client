@@ -26,11 +26,12 @@ export default function RegisterDialog() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!referralCode) return;
     mutate({
       email: contactType === "email" ? email : "",
       phone_number: contactType === "phone" ? phone : "",
       full_name: fullName,
-      referral_code: referralCode || undefined,
+      referral_code: referralCode,
     });
   };
 
@@ -85,22 +86,20 @@ export default function RegisterDialog() {
                   <button
                     type="button"
                     onClick={() => setContactType("email")}
-                    className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${
-                      contactType === "email"
-                        ? "bg-black text-white shadow-sm"
-                        : "text-neutral-500 hover:text-neutral-700"
-                    }`}
+                    className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${contactType === "email"
+                      ? "bg-black text-white shadow-sm"
+                      : "text-neutral-500 hover:text-neutral-700"
+                      }`}
                   >
                     Email
                   </button>
                   <button
                     type="button"
                     onClick={() => setContactType("phone")}
-                    className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${
-                      contactType === "phone"
-                        ? "bg-black text-white shadow-sm"
-                        : "text-neutral-500 hover:text-neutral-700"
-                    }`}
+                    className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${contactType === "phone"
+                      ? "bg-black text-white shadow-sm"
+                      : "text-neutral-500 hover:text-neutral-700"
+                      }`}
                   >
                     Số điện thoại
                   </button>
@@ -112,9 +111,11 @@ export default function RegisterDialog() {
                 <div>
                   <Label
                     htmlFor="dialog-email"
-                    className="mb-1.5 block text-sm font-medium text-neutral-700"
+                    className="mb-2.5 block text-sm font-medium text-neutral-700"
                   >
-                    Email
+                    Email{" "}
+                    <span className="font-normal text-red-500">*</span>
+
                   </Label>
                   <Input
                     id="dialog-email"
@@ -130,9 +131,11 @@ export default function RegisterDialog() {
                 <div>
                   <Label
                     htmlFor="dialog-phone"
-                    className="mb-1.5 block text-sm font-medium text-neutral-700"
+                    className="mb-2.5 block text-sm font-medium text-neutral-700"
                   >
-                    Số điện thoại
+                    Số điện thoại{" "}
+                    <span className="font-normal text-red-500">*</span>
+
                   </Label>
                   <Input
                     id="dialog-phone"
@@ -150,9 +153,11 @@ export default function RegisterDialog() {
               <div>
                 <Label
                   htmlFor="dialog-full_name"
-                  className="mb-1.5 block text-sm font-medium text-neutral-700"
+                  className="mb-2.5 block text-sm font-medium text-neutral-700"
                 >
-                  Họ và tên
+                  Họ và tên{" "}
+                  <span className="font-normal text-red-500">*</span>
+
                 </Label>
                 <Input
                   id="dialog-full_name"
@@ -169,7 +174,7 @@ export default function RegisterDialog() {
               <div>
                 <Label className="mb-2.5 block text-sm font-medium text-neutral-700">
                   Người giới thiệu{" "}
-                  <span className="font-normal text-neutral-400">(tuỳ chọn)</span>
+                  <span className="font-normal text-red-500">*</span>
                 </Label>
                 <div className="grid grid-cols-2 gap-2">
                   {([
@@ -186,18 +191,16 @@ export default function RegisterDialog() {
                         key={name}
                         type="button"
                         onClick={() => setReferralCode(selected ? "" : name)}
-                        className={`group relative flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all duration-200 ${
-                          selected
-                            ? "border-emerald-300 bg-emerald-50 shadow-sm ring-1 ring-emerald-200"
-                            : "border-neutral-200 bg-neutral-50/50 hover:border-neutral-300 hover:bg-neutral-50"
-                        }`}
+                        className={`group relative flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all duration-200 ${selected
+                          ? "border-emerald-300 bg-emerald-50 shadow-sm ring-1 ring-emerald-200"
+                          : "border-neutral-200 bg-neutral-50/50 hover:border-neutral-300 hover:bg-neutral-50"
+                          }`}
                       >
                         <div
-                          className={`relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-2 transition-all duration-200 ${
-                            selected
-                              ? "ring-emerald-400"
-                              : "ring-neutral-200 group-hover:ring-neutral-300"
-                          }`}
+                          className={`relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-2 transition-all duration-200 ${selected
+                            ? "ring-emerald-400"
+                            : "ring-neutral-200 group-hover:ring-neutral-300"
+                            }`}
                         >
                           <img
                             src={avatar}
@@ -207,16 +210,14 @@ export default function RegisterDialog() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <p
-                            className={`text-xs font-semibold truncate transition-colors duration-200 ${
-                              selected ? "text-emerald-800" : "text-neutral-800"
-                            }`}
+                            className={`text-xs font-semibold truncate transition-colors duration-200 ${selected ? "text-emerald-800" : "text-neutral-800"
+                              }`}
                           >
                             {name}
                           </p>
                           <p
-                            className={`text-[10px] truncate transition-colors duration-200 ${
-                              selected ? "text-emerald-600" : "text-neutral-400"
-                            }`}
+                            className={`text-[10px] truncate transition-colors duration-200 ${selected ? "text-emerald-600" : "text-neutral-400"
+                              }`}
                           >
                             {role}
                           </p>
@@ -242,7 +243,7 @@ export default function RegisterDialog() {
 
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isPending || !referralCode}
                 size="lg"
                 className="w-full bg-black text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-neutral-800 disabled:opacity-60 disabled:translate-y-0"
               >

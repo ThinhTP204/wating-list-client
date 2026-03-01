@@ -1,12 +1,12 @@
 "use client";
-import React from "react";
-import Image from "next/image";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 import { Button } from "@/components/ui/button";
 import SafeImage from "./ui/SafeImage";
 import { PointerHighlight } from "./ui/pointer-highlight";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useRegisterDialog } from "@/hooks/useRegisterDialog";
+import RocketIcon from "@/components/ui/rocket-icon";
+import ArrowNarrowRightIcon from "@/components/ui/arrow-narrow-right-icon";
 
 const badges = ["F&B", "Bán lẻ", "Dịch vụ", "Part-time"];
 
@@ -57,6 +57,7 @@ export default function BackgroundRippleEffectDemo() {
               className="bg-black px-8 py-6 text-base font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
             >
               Trải nghiệm ngay
+              <RocketIcon size={18} className="ml-1" />
             </Button>
             <Button
               size="lg"
@@ -64,7 +65,10 @@ export default function BackgroundRippleEffectDemo() {
               className="border-neutral-300 px-8 py-6 text-base font-semibold text-neutral-700 transition-all duration-200 hover:-translate-y-0.5 dark:border-neutral-600 dark:text-neutral-300"
               asChild
             >
-              <a href="#van-de">Tìm hiểu thêm</a>
+              <a href="#van-de" className="inline-flex items-center gap-1">
+                Tìm hiểu thêm
+                <ArrowNarrowRightIcon size={18} />
+              </a>
             </Button>
           </div>
 

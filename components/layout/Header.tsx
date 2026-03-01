@@ -70,10 +70,17 @@ export default function Header() {
             >
               wokki
             </Link>
-            <MobileNavToggle
-              isOpen={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            />
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <MobileNavToggle
+                  isOpen={isMobileMenuOpen}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                />
+                <div className="absolute left-1/2 -translate-x-1/2 top-full z-[60] flex flex-col items-center pointer-events-auto">
+                  <ChainThemeToggle />
+                </div>
+              </div>
+            </div>
           </MobileNavHeader>
 
           <MobileNavMenu

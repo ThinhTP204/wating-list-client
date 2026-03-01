@@ -26,18 +26,18 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 0.96 }}
           transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-neutral-950"
         >
           {/* Subtle top gradient */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.06)_0%,transparent_70%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.1)_0%,transparent_70%)]" />
 
           {/* Main text */}
           <div className="relative flex flex-col items-center gap-2 px-4">
             <FancyText
               className={`${
                 isMobile ? "text-4xl" : "text-6xl md:text-8xl lg:text-9xl"
-              } font-black leading-none tracking-tighter text-neutral-200`}
-              fillClassName="bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-black"
+              } font-black leading-none tracking-tighter text-neutral-200 dark:text-neutral-800`}
+              fillClassName="bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-black dark:text-white"
               stagger={isMobile ? 0.07 : 0.1}
               duration={isMobile ? 0.9 : 1.2}
               delay={0.3}
@@ -55,7 +55,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
             >
               <span className={`${
                 isMobile ? "text-xs" : "text-sm md:text-base"
-              } font-medium tracking-widest uppercase text-neutral-400`}>
+              } font-medium tracking-widest uppercase text-neutral-400 dark:text-neutral-500`}>
                 Nền tảng quản lí ca làm #1 Việt Nam
               </span>
             </motion.div>

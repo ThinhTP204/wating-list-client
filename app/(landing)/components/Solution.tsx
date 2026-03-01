@@ -134,7 +134,7 @@ export default function Solution() {
               </div>
 
               {/* Big stat */}
-              <p className="mt-3 text-6xl font-bold text-neutral-900 md:text-7xl">
+              <p className="mt-3 text-6xl font-bold text-neutral-900 dark:text-white md:text-7xl">
                 85%
               </p>
               <p className="text-xl font-semibold text-neutral-500 dark:text-neutral-400">
@@ -184,7 +184,7 @@ export default function Solution() {
 
               {/* Right — big stat + feature circles */}
               <div className="text-right">
-                <p className="text-5xl font-bold text-neutral-900 md:text-6xl">
+                <p className="text-5xl font-bold text-neutral-900 dark:text-white md:text-6xl">
                   323K+
                 </p>
                 <p className="text-base font-medium text-neutral-400">

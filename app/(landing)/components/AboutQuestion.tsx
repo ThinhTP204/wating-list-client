@@ -88,7 +88,7 @@ export default function AboutQuestion() {
                 {/* Question */}
                 <button
                   onClick={() => toggle(index)}
-                  className={`flex w-full items-center justify-between gap-4 text-left ${isMobile ? "px-4 py-4" : "px-6 py-5"}`}
+                  className={`cursor-pointer flex w-full items-center justify-between gap-4 text-left ${isMobile ? "px-4 py-4" : "px-6 py-5"}`}
                 >
                   <span className={`font-semibold text-neutral-900 dark:text-white ${isMobile ? "text-sm" : "text-base md:text-lg"}`}>
                     {faq.question}

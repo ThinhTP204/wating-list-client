@@ -131,7 +131,7 @@ export default function Subscription() {
           <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-1">
             <button
               onClick={() => setBilling("monthly")}
-              className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
+              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
                 billing === "monthly"
                   ? "bg-black text-white shadow-sm"
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
@@ -141,7 +141,7 @@ export default function Subscription() {
             </button>
             <button
               onClick={() => setBilling("yearly")}
-              className={`rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
+              className={`cursor-pointer rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
                 billing === "yearly"
                   ? "bg-black text-white shadow-sm"
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
@@ -233,7 +233,7 @@ export default function Subscription() {
                 {/* CTA */}
                 <a
                   href="#dang-ky"
-                  className={`block w-full rounded-xl py-3 text-center text-sm font-semibold transition-all duration-200 ${
+                  className={`cursor-pointer block w-full rounded-xl py-3 text-center text-sm font-semibold transition-all duration-200 ${
                     plan.featured
                       ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-md shadow-emerald-200/50 hover:shadow-lg hover:shadow-emerald-200/70"
                       : "border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-400"

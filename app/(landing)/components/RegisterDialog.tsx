@@ -108,7 +108,7 @@ export default function RegisterDialog() {
                   <button
                     type="button"
                     onClick={() => setContactType(contactType === "email" ? "phone" : "email")}
-                    className="text-xs font-medium text-emerald-500 hover:text-emerald-600 transition-colors"
+                    className="cursor-pointer text-xs font-medium text-emerald-500 hover:text-emerald-600 transition-colors"
                   >
                     Dùng {contactType === "email" ? "SĐT" : "Email"} thay
                   </button>
@@ -157,7 +157,7 @@ export default function RegisterDialog() {
                         key={name}
                         type="button"
                         onClick={() => setReferralCode(selected ? "" : name)}
-                        className={`group relative flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all duration-200 ${
+                        className={`cursor-pointer group relative flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all duration-200 ${
                           selected
                             ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950 shadow-sm ring-1 ring-emerald-200 dark:ring-emerald-800"
                             : "border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-800"

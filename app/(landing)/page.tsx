@@ -12,6 +12,7 @@ import Footer from "@/components/layout/Footer";
 import { useIsMobile } from "@/hooks/useMobile";
 import { RegisterDialogProvider } from "@/hooks/useRegisterDialog";
 import SplashScreen from "@/components/SplashScreen";
+import Conclusion from "./components/Conclusion";
 
 export default function Home() {
   const isMobile = useIsMobile();
@@ -28,6 +29,7 @@ export default function Home() {
         <Subscription />
         <Register />
         <AboutQuestion />
+        <Conclusion />
         <Footer />
         <RegisterDialog />
       </main>

@@ -8,7 +8,7 @@ import { useRegisterDialog } from "@/hooks/useRegisterDialog";
 import RocketIcon from "@/components/ui/rocket-icon";
 import ArrowNarrowRightIcon from "@/components/ui/arrow-narrow-right-icon";
 
-const badges = ["F&B", "Bán lẻ", "Dịch vụ", "Part-time"];
+const badges = ["Nền tảng quản lí ca làm #1 Việt Nam"];
 
 export default function BackgroundRippleEffectDemo() {
   const isMobile = useIsMobile();
@@ -28,7 +28,7 @@ export default function BackgroundRippleEffectDemo() {
             {badges.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-neutral-200 bg-white/70 px-3 py-1 text-xs font-medium text-neutral-600 backdrop-blur-sm dark:border-neutral-700 dark:bg-neutral-900/70 dark:text-neutral-400"
+                className="rounded-full border border-neutral-200 bg-white/70 px-3 py-1 text-sm font-medium text-neutral-600 backdrop-blur-sm dark:border-neutral-700 dark:bg-neutral-900/70 dark:text-neutral-400"
               >
                 {tag}
               </span>
@@ -36,10 +36,10 @@ export default function BackgroundRippleEffectDemo() {
           </div>
 
           <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-neutral-900 md:text-5xl lg:text-6xl dark:text-white">
-            Nền tảng quản lí ca làm{" "}
+            Tiết kiệm chi phí quản lí nhân sự đến{" "}
             <PointerHighlight containerClassName="inline-block">
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              #1 Việt Nam.
+              40%.
             </span>
             </PointerHighlight>
           </h1>

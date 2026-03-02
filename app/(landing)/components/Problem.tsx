@@ -5,86 +5,139 @@ import { Compare } from "@/components/ui/compare";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useTheme } from "next-themes";
 
-const oldContent = {
-  badge: "Cách cũ",
-  badgeColor: "text-red-400",
-  badgeBg: "bg-red-50",
-  dotColor: "bg-red-400",
-  title: "Quản lý ca thủ công đang kìm hãm bạn",
-  description:
-    "Hơn 85% doanh nghiệp F&B và bán lẻ gặp hậu quả tiêu cực từ việc phân ca bằng Excel, giấy tờ và nhắn tin rời rạc.",
-  items: [
-    "Xếp ca thủ công bằng Excel, giấy tờ rời rạc",
-    "Thông báo qua Zalo, Messenger — dễ bị bỏ lỡ",
-    "Trùng ca, thiếu người vào giờ cao điểm",
-    "Không kiểm soát được giờ công thực tế",
-    "Mất hàng giờ mỗi tuần chỉ để lập lịch",
-  ],
-  iconPath: "M6 18L18 6M6 6l12 12",
-  iconColor: "text-red-400",
-  iconBg: "bg-red-100",
-  textColor: "text-neutral-600",
-};
+const oldItems = [
+  "Xếp ca thủ công bằng Excel, giấy tờ rời rạc",
+  "Thông báo qua Zalo, Messenger — dễ bị bỏ lỡ",
+  "Trùng ca, thiếu người vào giờ cao điểm",
+  "Không kiểm soát được giờ công thực tế",
+  "Mất hàng giờ mỗi tuần chỉ để lập lịch",
+];
 
-const newContent = {
-  badge: "Với Wokki",
-  badgeColor: "text-emerald-400",
-  badgeBg: "bg-emerald-50",
-  dotColor: "bg-emerald-400",
-  title: "Xếp ca thông minh, vận hành trơn tru",
-  description:
-    "Wokki tự động hóa toàn bộ quy trình xếp ca, chấm công và điều phối nhân sự — giúp bạn tập trung vào việc phát triển kinh doanh.",
-  items: [
-    "AI tự động xếp ca tối ưu trong vài giây",
-    "Thông báo lịch làm ngay trên điện thoại",
-    "Cảnh báo thông minh khi thiếu nhân sự",
-    "Chấm công GPS & IoT theo thời gian thực",
-    "Sàn đổi ca minh bạch, duyệt một chạm",
-  ],
-  iconPath: "M5 13l4 4L19 7",
-  iconColor: "text-emerald-400",
-  iconBg: "bg-emerald-100",
-  textColor: "text-neutral-600",
-};
+const newItems = [
+  "AI tự động xếp ca tối ưu trong vài giây",
+  "Thông báo lịch làm ngay trên điện thoại",
+  "Cảnh báo thông minh khi thiếu nhân sự",
+  "Chấm công GPS & IoT theo thời gian thực",
+  "Sàn đổi ca minh bạch, duyệt một chạm",
+];
+
+const SWEEP_DURATION = 5000; // 0→100% in 5s
+const HOLD_DURATION = 1000;  // pause at 100% only
+const FULL_CYCLE = SWEEP_DURATION * 2 + HOLD_DURATION; // forward + hold + backward (no hold at 0%)
+const ITEM_COUNT = oldItems.length;
+
+// Each item reveals between 50%–100%, evenly spaced
+function getItemThreshold(index: number) {
+  return 50 + (index * 50) / ITEM_COUNT;
+}
+
+function calcProgress(elapsed: number): number {
+  const t = elapsed % FULL_CYCLE;
+  if (t < SWEEP_DURATION) {
+    // Phase 1: 0→100%
+    return (t / SWEEP_DURATION) * 100;
+  } else if (t < SWEEP_DURATION + HOLD_DURATION) {
+    // Phase 2: hold at 100%
+    return 100;
+  } else {
+    // Phase 3: 100→0%
+    return (1 - (t - SWEEP_DURATION - HOLD_DURATION) / SWEEP_DURATION) * 100;
+  }
+}
 
 export default function Problem() {
-  const [sliderPercent, setSliderPercent] = useState(2);
+  const [progress, setProgress] = useState(0); // 0–100
   const isMobile = useIsMobile();
   const { resolvedTheme } = useTheme();
-  const [isHovering, setIsHovering] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const rafRef = useRef<number | null>(null);
+  const elapsedRef = useRef(0);
+  const lastTimestampRef = useRef<number | null>(null);
+  const autoResumeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
-  // Auto-switch between old (2%) and new (98%) every 2 seconds
+  // IntersectionObserver: start animation when section is in viewport
   useEffect(() => {
-    if (isHovering) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Smooth animation loop using requestAnimationFrame
+  useEffect(() => {
+    if (!isVisible || isDragging) {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
       }
+      lastTimestampRef.current = null;
       return;
     }
 
-    intervalRef.current = setInterval(() => {
-      setSliderPercent((prev) => (prev <= 50 ? 98 : 2));
-    }, 5000);
+    lastTimestampRef.current = null;
+
+    const animate = (timestamp: number) => {
+      if (lastTimestampRef.current === null) {
+        lastTimestampRef.current = timestamp;
+      }
+      const delta = timestamp - lastTimestampRef.current;
+      lastTimestampRef.current = timestamp;
+      elapsedRef.current += delta;
+
+      const newProgress = calcProgress(elapsedRef.current);
+      setProgress(newProgress);
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
     };
-  }, [isHovering]);
+  }, [isVisible, isDragging]);
 
-  const handleMouseEnter = useCallback(() => setIsHovering(true), []);
-  const handleMouseLeave = useCallback(() => setIsHovering(false), []);
+  // Sync elapsed time when user drags so auto-animation resumes from correct position
+  const syncElapsedToProgress = useCallback((p: number) => {
+    // Map progress back to elapsed time (phase 1: 0→100%)
+    elapsedRef.current = (p / 100) * SWEEP_DURATION;
+  }, []);
 
-  const isOldSide = sliderPercent <= 50;
-  const content = isOldSide ? oldContent : newContent;
+  const handleDragStart = useCallback(() => {
+    setIsDragging(true);
+    if (autoResumeTimerRef.current) {
+      clearTimeout(autoResumeTimerRef.current);
+      autoResumeTimerRef.current = null;
+    }
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    // Resume auto-animation after 2s of inactivity
+    autoResumeTimerRef.current = setTimeout(() => {
+      syncElapsedToProgress(progress);
+      setIsDragging(false);
+    }, 2000);
+  }, [progress, syncElapsedToProgress]);
+
+  const handlePercentageChange = useCallback((percent: number) => {
+    setProgress(percent);
+  }, []);
+
+  const isGoodSide = progress > 50;
 
   return (
     <section
+      ref={sectionRef}
       id="van-de"
       className={`w-full bg-white dark:bg-neutral-950 scroll-mt-16 transition-colors duration-300 ${isMobile ? "py-14" : "py-24"}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
     >
       <div className={`mx-auto max-w-7xl ${isMobile ? "px-4" : "px-6"}`}>
         {/* Section header */}
@@ -100,90 +153,148 @@ export default function Problem() {
           </h2>
           <p className={`mx-auto mt-4 max-w-xl text-neutral-500 dark:text-neutral-400 ${isMobile ? "text-sm" : "text-base"}`}>
             {isMobile
-              ? "Vuốt thanh trượt để thấy sự khác biệt."
-              : "Kéo thanh trượt để thấy sự khác biệt. Nội dung sẽ thay đổi theo từng phía."}
+              ? "Xem sự khác biệt khi dùng Wokki."
+              : "Xem thanh tiến trình để thấy sự khác biệt. Nội dung sẽ thay đổi theo từng giai đoạn."}
           </p>
         </div>
 
         {/* Main two-column layout */}
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-          {/* LEFT — Dynamic content */}
+        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
+          {/* LEFT — Comparison list */}
           <div className="flex flex-col">
-            {/* Badge */}
-            <div
-              className={`mb-5 inline-flex w-fit items-center gap-2 rounded-full px-4 py-1.5 transition-all duration-500 ${content.badgeBg}`}
-            >
-              <span className={`h-2 w-2 rounded-full ${content.dotColor}`} />
-              <span className={`text-xs font-semibold uppercase tracking-widest ${content.badgeColor}`}>
-                {content.badge}
-              </span>
+            {/* Badge row */}
+            <div className="mb-5 flex items-center gap-3">
+              <div className="inline-flex items-center gap-2 rounded-full bg-red-50 px-4 py-1.5">
+                <span className="h-2 w-2 rounded-full bg-red-400" />
+                <span className="text-xs font-semibold uppercase tracking-widest text-red-400">
+                  Cách cũ
+                </span>
+              </div>
+              <div
+                className={`inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 transition-all duration-500 ${
+                  isGoodSide ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
+                }`}
+              >
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="text-xs font-semibold uppercase tracking-widest text-emerald-400">
+                  Với Wokki
+                </span>
+              </div>
             </div>
 
             {/* Title */}
             <h3 className="text-2xl font-bold text-neutral-900 dark:text-white transition-all duration-500 md:text-3xl">
-              {content.title}
+              {isGoodSide
+                ? "Xếp ca thông minh, vận hành trơn tru"
+                : "Quản lý ca thủ công đang kìm hãm bạn"}
             </h3>
 
             {/* Description */}
             <p className="mt-4 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 transition-all duration-500">
-              {content.description}
+              {isGoodSide
+                ? "Wokki tự động hóa toàn bộ quy trình xếp ca, chấm công và điều phối nhân sự — giúp bạn tập trung vào việc phát triển kinh doanh."
+                : "Hơn 85% doanh nghiệp F&B và bán lẻ gặp hậu quả tiêu cực từ việc phân ca bằng Excel, giấy tờ và nhắn tin rời rạc."}
             </p>
 
-            {/* List */}
-            <ul className="mt-8 space-y-3">
-              {content.items.map((item, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-3 transition-all duration-300"
-                  style={{ transitionDelay: `${i * 40}ms` }}
-                >
-                  <span
-                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${content.iconBg}`}
-                  >
-                    <svg
-                      className={`h-3 w-3 ${content.iconColor}`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={3}
+            {/* Comparison list */}
+            <ul className="mt-8 space-y-4">
+              {oldItems.map((oldItem, i) => {
+                const threshold = getItemThreshold(i);
+                const showNew = progress >= threshold;
+
+                return (
+                  <li key={i} className="flex items-start gap-4">
+                    {/* Old item — always visible */}
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100">
+                        <svg
+                          className="h-3 w-3 text-red-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </span>
+                      <span className={`text-sm transition-all duration-300 ${showNew ? "text-neutral-400 line-through" : "text-neutral-600 dark:text-neutral-300"}`}>
+                        {oldItem}
+                      </span>
+                    </div>
+
+                    {/* Arrow */}
+                    <div
+                      className={`flex items-center shrink-0 transition-all duration-500 ${
+                        showNew ? "opacity-100" : "opacity-0"
+                      }`}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d={content.iconPath}
-                      />
-                    </svg>
-                  </span>
-                  <span className={`text-sm ${content.textColor}`}>{item}</span>
-                </li>
-              ))}
+                      <svg className="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+
+                    {/* New item — appears inline */}
+                    <div
+                      className={`flex items-start gap-3 flex-1 min-w-0 transition-all duration-500 ${
+                        showNew
+                          ? "opacity-100 translate-x-0"
+                          : "opacity-0 -translate-x-3"
+                      }`}
+                    >
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                        <svg
+                          className="h-3 w-3 text-emerald-500"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={3}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </span>
+                      <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                        {newItems[i]}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
 
-            {/* Indicator */}
-            <div className="mt-8 flex items-center gap-3">
-              <div className="relative h-1.5 w-32 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+            {/* Progress bar */}
+            <div className="mt-8 flex flex-col gap-2">
+              <div className="flex items-center justify-between text-xs text-neutral-400">
+                <span className={!isGoodSide ? "font-semibold text-red-400" : ""}>Cách cũ</span>
+                <span className={isGoodSide ? "font-semibold text-emerald-500" : ""}>Với Wokki</span>
+              </div>
+              <div className="relative h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
                 <div
-                  className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-red-500 to-emerald-500 transition-all duration-200"
-                  style={{ width: `${sliderPercent}%` }}
+                  className="absolute inset-y-0 left-0 rounded-full transition-colors duration-300"
+                  style={{
+                    width: `${progress}%`,
+                    background: progress <= 50
+                      ? `linear-gradient(to right, #ef4444, #f87171)`
+                      : `linear-gradient(to right, #ef4444, #10b981)`,
+                  }}
                 />
               </div>
-              <span className="text-xs text-neutral-400">
-                {sliderPercent <= 50 ? "← cách cũ" : "với wokki →"}
-              </span>
             </div>
           </div>
 
           {/* RIGHT — Compare slider */}
-          <div className="flex justify-center pointer-events-none">
+          <div className="flex justify-center">
             <Compare
               firstImage="/good-way.png"
               secondImage="/old-way-no-back.png"
               className="h-[420px] w-full max-w-lg rounded-2xl"
-              slideMode="hover"
+              slideMode="drag"
               showHandlebar
               autoplay={false}
-              controlledPercentage={isHovering ? undefined : sliderPercent}
-              initialSliderPercentage={2}
+              controlledPercentage={isDragging ? undefined : progress}
+              initialSliderPercentage={0}
+              onPercentageChange={handlePercentageChange}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
             />
           </div>
         </div>

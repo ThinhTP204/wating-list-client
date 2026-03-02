@@ -17,6 +17,9 @@ interface CompareProps {
   showHandlebar?: boolean;
   autoplay?: boolean;
   autoplayDuration?: number;
+  onPercentageChange?: (percent: number) => void;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 }
 export const Compare = ({
   firstImage = "",
@@ -30,6 +33,9 @@ export const Compare = ({
   showHandlebar = true,
   autoplay = false,
   autoplayDuration = 5000,
+  onPercentageChange,
+  onDragStart,
+  onDragEnd,
 }: CompareProps) => {
   const [sliderXPercent, setSliderXPercent] = useState(initialSliderPercentage);
 
@@ -96,16 +102,18 @@ export const Compare = ({
     (clientX: number) => {
       if (slideMode === "drag") {
         setIsDragging(true);
+        onDragStart?.();
       }
     },
-    [slideMode]
+    [slideMode, onDragStart]
   );
 
   const handleEnd = useCallback(() => {
     if (slideMode === "drag") {
       setIsDragging(false);
+      onDragEnd?.();
     }
-  }, [slideMode]);
+  }, [slideMode, onDragEnd]);
 
   const handleMove = useCallback(
     (clientX: number) => {
@@ -113,13 +121,14 @@ export const Compare = ({
       if (slideMode === "hover" || (slideMode === "drag" && isDragging)) {
         const rect = sliderRef.current.getBoundingClientRect();
         const x = clientX - rect.left;
-        const percent = (x / rect.width) * 100;
+        const percent = Math.max(0, Math.min(100, (x / rect.width) * 100));
         requestAnimationFrame(() => {
-          setSliderXPercent(Math.max(0, Math.min(100, percent)));
+          setSliderXPercent(percent);
+          onPercentageChange?.(percent);
         });
       }
     },
-    [slideMode, isDragging]
+    [slideMode, isDragging, onPercentageChange]
   );
 
   const handleMouseDown = useCallback(
@@ -180,7 +189,6 @@ export const Compare = ({
             left: `${sliderXPercent}%`,
             top: "0",
             zIndex: 40,
-            transition: controlledPercentage !== undefined && !isMouseOver ? "left 0.6s ease-in-out" : "none",
           }}
           transition={{ duration: 0 }}
         >
@@ -213,7 +221,6 @@ export const Compare = ({
               )}
               style={{
                 clipPath: `inset(0 ${100 - sliderXPercent}% 0 0)`,
-                transition: controlledPercentage !== undefined && !isMouseOver ? "clip-path 0.6s ease-in-out" : "none",
               }}
               transition={{ duration: 0 }}
             >

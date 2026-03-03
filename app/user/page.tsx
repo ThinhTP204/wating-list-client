@@ -34,6 +34,7 @@ export default function UserPage() {
   const [showKey, setShowKey] = useState(false);
   const [page, setPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
   const { data, isLoading, isFetching, isError, error, refetch } = useUsers({
     apiKey: submittedKey,
@@ -56,10 +57,12 @@ export default function UserPage() {
       onSuccess: () => {
         toast.success(`Đã xóa người dùng ${deleteTarget.name}`);
         setDeleteTarget(null);
+        setDeleteConfirmText("");
       },
       onError: (err) => {
         toast.error(err?.message || "Xóa thất bại. Vui lòng thử lại.");
         setDeleteTarget(null);
+        setDeleteConfirmText("");
       },
     });
   };
@@ -241,7 +244,7 @@ export default function UserPage() {
       </div>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+      <Dialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) { setDeleteTarget(null); setDeleteConfirmText(""); } }}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Xác nhận xóa</DialogTitle>
@@ -250,9 +253,21 @@ export default function UserPage() {
             Bạn có chắc chắn muốn xóa người dùng{" "}
             <span className="font-semibold text-foreground">{deleteTarget?.name}</span>? Hành động này không thể hoàn tác.
           </p>
+          <div className="space-y-1.5">
+            <p className="text-xs text-muted-foreground">
+              Nhập <span className="font-mono font-semibold text-foreground">mật khẩu</span> để xác nhận:
+            </p>
+            <Input
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder="Nhập mật khẩu xác nhận..."
+              className="font-mono text-sm"
+              autoComplete="off"
+            />
+          </div>
           <DialogFooter className="gap-2">
             <DialogClose asChild>
-              <Button variant="outline" size="sm" disabled={isDeleting}>
+              <Button variant="outline" size="sm" disabled={isDeleting} onClick={() => setDeleteConfirmText("")}>
                 Hủy
               </Button>
             </DialogClose>
@@ -260,7 +275,7 @@ export default function UserPage() {
               variant="destructive"
               size="sm"
               onClick={confirmDelete}
-              disabled={isDeleting}
+              disabled={isDeleting || deleteConfirmText !== "xoacaiconcac"}
             >
               {isDeleting ? "Đang xóa..." : "Xóa"}
             </Button>

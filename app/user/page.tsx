@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useUsers } from "@/hooks/useUser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -25,7 +25,7 @@ export default function UserPage() {
   const [showKey, setShowKey] = useState(false);
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isError, error } = useUsers({
+  const { data, isLoading, isFetching, isError, error, refetch } = useUsers({
     apiKey: submittedKey,
     page,
     limit: PAGE_SIZE,
@@ -97,6 +97,16 @@ export default function UserPage() {
                   </span>
                 )}
               </CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                disabled={isFetching}
+                className="flex-shrink-0 gap-2"
+              >
+                <RefreshCw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
+                Tải lại
+              </Button>
             </CardHeader>
             <CardContent className="p-0">
               {isError && (

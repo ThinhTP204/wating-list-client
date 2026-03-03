@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useUsers, useDeleteUser, useReferralStats } from "@/hooks/useUser";
+import { useIsMobile } from "@/hooks/useMobile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, RefreshCw, Trash2, Users, Tag, BarChart3 } from "lucide-react";
@@ -56,6 +57,8 @@ export default function UserPage() {
     (s) => s.referral_code && s.referral_code.toLowerCase() !== "unknown"
   );
   const maxReferralUsers = referralStats.length > 0 ? Math.max(...referralStats.map((s) => s.total_users)) : 0;
+  const isMobile = useIsMobile();
+  const statsCols = isMobile ? Math.min(referralStats.length, 2) : Math.min(referralStats.length, 6);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,11 +86,25 @@ export default function UserPage() {
     <div className="min-h-screen bg-background p-6 md:p-10">
       <div className="mx-auto max-w-6xl space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Danh sách người dùng</h1>
-          <p className="mt-1 text-muted-foreground text-sm">
-            Nhập API key để xác thực và tải dữ liệu người dùng.
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Danh sách người dùng</h1>
+            <p className="mt-1 text-muted-foreground text-sm">
+              Nhập API key để xác thực và tải dữ liệu người dùng.
+            </p>
+          </div>
+          {submittedKey && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => { refetch(); refetchReferral(); }}
+              disabled={isFetching || isReferralFetching}
+              className="flex-shrink-0 gap-2 mt-1"
+            >
+              <RefreshCw className={`h-4 w-4 ${isFetching || isReferralFetching ? "animate-spin" : ""}`} />
+              Tải lại
+            </Button>
+          )}
         </div>
 
         {/* API Key Input */}
@@ -139,16 +156,6 @@ export default function UserPage() {
                   </Badge>
                 )}
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => refetchReferral()}
-                disabled={isReferralFetching}
-                className="flex-shrink-0 gap-2"
-              >
-                <RefreshCw className={`h-4 w-4 ${isReferralFetching ? "animate-spin" : ""}`} />
-                Tải lại
-              </Button>
             </CardHeader>
             <CardContent>
               {isReferralLoading ? (
@@ -161,7 +168,7 @@ export default function UserPage() {
                   <div
                     className="grid gap-3"
                     style={{
-                      gridTemplateColumns: `repeat(${Math.min(referralStats.length, 6)}, minmax(0, 1fr))`,
+                      gridTemplateColumns: `repeat(${statsCols}, minmax(0, 1fr))`,
                     }}
                   >
                     {referralStats.map((stat) => {
@@ -233,16 +240,6 @@ export default function UserPage() {
                   </span>
                 )}
               </CardTitle>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => refetch()}
-                disabled={isFetching}
-                className="flex-shrink-0 gap-2"
-              >
-                <RefreshCw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
-                Tải lại
-              </Button>
             </CardHeader>
             <CardContent className="p-0">
               {isError && (

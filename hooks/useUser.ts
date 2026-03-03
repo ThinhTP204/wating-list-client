@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteUser, fetchUsers } from "@/lib/api/services/fetchUser";
-import { DeleteUserResponse, UserListResponse } from "@/types/models";
+import { deleteUser, fetchReferralStats, fetchUsers } from "@/lib/api/services/fetchUser";
+import { DeleteUserResponse, ReferralStatsResponse, UserListResponse } from "@/types/models";
 import { ApiError } from "@/lib/api/core";
 import { QUERY_KEYS } from "@/lib/constants";
 
@@ -15,6 +15,14 @@ export function useUsers({ page = 1, limit = 10, apiKey, enabled = true }: UseUs
   return useQuery<UserListResponse, ApiError>({
     queryKey: [QUERY_KEYS.USERS, page, limit, apiKey],
     queryFn: () => fetchUsers({ page, limit, apiKey }),
+    enabled: enabled && !!apiKey,
+  });
+}
+
+export function useReferralStats({ apiKey, enabled = true }: { apiKey: string; enabled?: boolean }) {
+  return useQuery<ReferralStatsResponse, ApiError>({
+    queryKey: [QUERY_KEYS.REFERRAL_STATS, apiKey],
+    queryFn: () => fetchReferralStats({ apiKey }),
     enabled: enabled && !!apiKey,
   });
 }

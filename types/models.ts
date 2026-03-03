@@ -28,6 +28,19 @@ export interface UserListResponse {
   metadata?: Record<string, object>;
 }
 
+// Referral Stats Response
+export interface ReferralStat {
+  referral_code: string;
+  total_users: number;
+}
+
+export interface ReferralStatsResponse {
+  success: boolean;
+  message: string;
+  data: ReferralStat[];
+  metadata?: Record<string, object>;
+}
+
 // Delete User Response
 export interface DeleteUserErrorDetail {
   loc: [string, number];

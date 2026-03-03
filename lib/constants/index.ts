@@ -10,6 +10,7 @@ export const AUTH_TOKEN_KEY = "auth-token";
 export const QUERY_KEYS = {
   USER: "user",
   USERS: "users",
+  REFERRAL_STATS: "referral-stats",
   PRODUCTS: "products",
   ORDERS: "orders",
   REGISTER: "register",

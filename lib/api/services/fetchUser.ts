@@ -1,5 +1,5 @@
 import apiService from "@/lib/api/core";
-import { DeleteUserResponse, UserListResponse } from "@/types/models";
+import { DeleteUserResponse, ReferralStatsResponse, UserListResponse } from "@/types/models";
 
 export interface FetchUsersParams {
   page?: number;
@@ -26,6 +26,23 @@ export async function fetchUsers({
 export interface DeleteUserParams {
   userId: string;
   apiKey: string;
+}
+
+export interface FetchReferralStatsParams {
+  apiKey: string;
+}
+
+export async function fetchReferralStats({
+  apiKey,
+}: FetchReferralStatsParams): Promise<ReferralStatsResponse> {
+  const response = await apiService.request<ReferralStatsResponse>({
+    method: "GET",
+    url: "/api/v1/users/referral-stats",
+    headers: {
+      "x-api-key": apiKey,
+    },
+  });
+  return response.data;
 }
 
 export async function deleteUser({

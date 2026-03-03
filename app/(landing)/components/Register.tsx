@@ -88,7 +88,7 @@ export default function Register() {
               <div>
                 <div className="mb-1.5 flex items-center justify-between">
                   <Label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                    {contactType === "email" ? "Email" : "Số điện thoại"}{" "}
+                    {contactType === "email" ? "Email của bạn" : "Số điện thoại của bạn"}{" "}
                     <span className="font-normal text-red-500">*</span>
                   </Label>
                   <button

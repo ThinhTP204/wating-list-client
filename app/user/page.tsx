@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useUsers, useDeleteUser, useReferralStats } from "@/hooks/useUser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, RefreshCw, Trash2, Users, Tag, BarChart3, AlertTriangle } from "lucide-react";
+import { Eye, EyeOff, RefreshCw, Trash2, Users, Tag, BarChart3 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -52,9 +52,10 @@ export default function UserPage() {
     refetch: refetchReferral,
   } = useReferralStats({ apiKey: submittedKey, enabled: !!submittedKey });
 
-  const referralStats = referralData?.data ?? [];
+  const referralStats = (referralData?.data ?? []).filter(
+    (s) => s.referral_code && s.referral_code.toLowerCase() !== "unknown"
+  );
   const maxReferralUsers = referralStats.length > 0 ? Math.max(...referralStats.map((s) => s.total_users)) : 0;
-  const minReferralUsers = referralStats.length > 1 ? Math.min(...referralStats.map((s) => s.total_users)) : -1;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,18 +158,20 @@ export default function UserPage() {
                   ))}
                 </div>
               ) : referralStats.length > 0 ? (
-                  <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                  <div
+                    className="grid gap-3"
+                    style={{
+                      gridTemplateColumns: `repeat(${Math.min(referralStats.length, 6)}, minmax(0, 1fr))`,
+                    }}
+                  >
                     {referralStats.map((stat) => {
                       const isLeader = stat.total_users === maxReferralUsers && maxReferralUsers > 0;
-                      const isLowest = stat.total_users === minReferralUsers && minReferralUsers >= 0;
                       return (
                         <div
                           key={stat.referral_code}
                           className={`relative flex flex-col gap-2 rounded-xl border p-4 transition-all duration-300 ${
                             isLeader
                               ? "border-orange-400 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/40 dark:to-amber-950/40 shadow-md shadow-orange-200 dark:shadow-orange-900/30 scale-[1.03]"
-                              : isLowest
-                              ? "border-red-300 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/40 dark:to-rose-950/40 shadow-sm shadow-red-200 dark:shadow-red-900/30"
                               : "bg-muted/30 hover:bg-muted/50 border-border"
                           }`}
                         >
@@ -181,20 +184,16 @@ export default function UserPage() {
                             </span>
                           )}
                           <div className={`flex items-center gap-1.5 ${
-                            isLeader ? "text-orange-500" : isLowest ? "text-red-500" : "text-muted-foreground"
+                            isLeader ? "text-orange-500" : "text-muted-foreground"
                           }`}>
-                            {isLowest ? (
-                              <AlertTriangle className="h-3.5 w-3.5 animate-pulse" />
-                            ) : (
-                              <Tag className="h-3.5 w-3.5" />
-                            )}
+                            <Tag className="h-3.5 w-3.5" />
                             <span className="text-xs font-medium uppercase tracking-wide">
-                              {isLeader ? "Dẫn đầu" : isLowest ? "Cảnh báo" : "Mã"}
+                              {isLeader ? "Dẫn đầu" : "Mã"}
                             </span>
                           </div>
                           <p
                             className={`font-mono text-sm font-semibold truncate ${
-                              isLeader ? "text-orange-700 dark:text-orange-300" : isLowest ? "text-red-700 dark:text-red-300" : ""
+                              isLeader ? "text-orange-700 dark:text-orange-300" : ""
                             }`}
                             title={stat.referral_code}
                           >
@@ -202,10 +201,10 @@ export default function UserPage() {
                           </p>
                           <div className="flex items-center gap-1.5 mt-auto">
                             <Users className={`h-4 w-4 ${
-                              isLeader ? "text-orange-500" : isLowest ? "text-red-500" : "text-primary"
+                              isLeader ? "text-orange-500" : "text-primary"
                             }`} />
                             <span className={`text-xl font-bold ${
-                              isLeader ? "text-orange-600 dark:text-orange-400" : isLowest ? "text-red-600 dark:text-red-400" : ""
+                              isLeader ? "text-orange-600 dark:text-orange-400" : ""
                             }`}>
                               {stat.total_users.toLocaleString()}
                             </span>

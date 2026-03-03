@@ -1,5 +1,5 @@
 import apiService from "@/lib/api/core";
-import { UserListResponse } from "@/types/models";
+import { DeleteUserResponse, UserListResponse } from "@/types/models";
 
 export interface FetchUsersParams {
   page?: number;
@@ -16,6 +16,25 @@ export async function fetchUsers({
     method: "GET",
     url: "/api/v1/users",
     params: { page, limit },
+    headers: {
+      "x-api-key": apiKey,
+    },
+  });
+  return response.data;
+}
+
+export interface DeleteUserParams {
+  userId: string;
+  apiKey: string;
+}
+
+export async function deleteUser({
+  userId,
+  apiKey,
+}: DeleteUserParams): Promise<DeleteUserResponse> {
+  const response = await apiService.request<DeleteUserResponse>({
+    method: "DELETE",
+    url: `/api/v1/users/${userId}`,
     headers: {
       "x-api-key": apiKey,
     },

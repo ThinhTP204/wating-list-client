@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useUsers } from "@/hooks/useUser";
+import { useUsers, useDeleteUser } from "@/hooks/useUser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, RefreshCw } from "lucide-react";
+import { Eye, EyeOff, RefreshCw, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -16,6 +16,15 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const PAGE_SIZE = 10;
 
@@ -24,6 +33,7 @@ export default function UserPage() {
   const [submittedKey, setSubmittedKey] = useState("");
   const [showKey, setShowKey] = useState(false);
   const [page, setPage] = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
 
   const { data, isLoading, isFetching, isError, error, refetch } = useUsers({
     apiKey: submittedKey,
@@ -32,10 +42,26 @@ export default function UserPage() {
     enabled: !!submittedKey,
   });
 
+  const { mutate: handleDelete, isPending: isDeleting } = useDeleteUser(submittedKey);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
     setSubmittedKey(inputKey.trim());
+  };
+
+  const confirmDelete = () => {
+    if (!deleteTarget) return;
+    handleDelete(deleteTarget.id, {
+      onSuccess: () => {
+        toast.success(`Đã xóa người dùng ${deleteTarget.name}`);
+        setDeleteTarget(null);
+      },
+      onError: (err) => {
+        toast.error(err?.message || "Xóa thất bại. Vui lòng thử lại.");
+        setDeleteTarget(null);
+      },
+    });
   };
 
   return (
@@ -135,6 +161,7 @@ export default function UserPage() {
                         <TableHead>Trạng thái</TableHead>
                         <TableHead>Hoạt động</TableHead>
                         <TableHead>Ngày tạo</TableHead>
+                        <TableHead className="w-12" />
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -163,6 +190,16 @@ export default function UserPage() {
                             </TableCell>
                             <TableCell className="text-sm text-muted-foreground">
                               {new Date(user.created_at).toLocaleDateString("vi-VN")}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                onClick={() => setDeleteTarget({ id: user.id, name: user.full_name })}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))
@@ -202,6 +239,34 @@ export default function UserPage() {
           </Card>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Xác nhận xóa</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Bạn có chắc chắn muốn xóa người dùng{" "}
+            <span className="font-semibold text-foreground">{deleteTarget?.name}</span>? Hành động này không thể hoàn tác.
+          </p>
+          <DialogFooter className="gap-2">
+            <DialogClose asChild>
+              <Button variant="outline" size="sm" disabled={isDeleting}>
+                Hủy
+              </Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={confirmDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Đang xóa..." : "Xóa"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -28,6 +28,19 @@ export interface UserListResponse {
   metadata?: Record<string, object>;
 }
 
+// Delete User Response
+export interface DeleteUserErrorDetail {
+  loc: [string, number];
+  msg: string;
+  type: string;
+  input: string;
+  ctx: Record<string, unknown>;
+}
+
+export interface DeleteUserResponse {
+  detail: DeleteUserErrorDetail[];
+}
+
 // User Model
 export interface User {
   id: string;

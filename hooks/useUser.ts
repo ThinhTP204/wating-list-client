@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchUsers } from "@/lib/api/services/fetchUser";
-import { UserListResponse } from "@/types/models";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteUser, fetchUsers } from "@/lib/api/services/fetchUser";
+import { DeleteUserResponse, UserListResponse } from "@/types/models";
 import { ApiError } from "@/lib/api/core";
 import { QUERY_KEYS } from "@/lib/constants";
 
@@ -16,5 +16,15 @@ export function useUsers({ page = 1, limit = 10, apiKey, enabled = true }: UseUs
     queryKey: [QUERY_KEYS.USERS, page, limit, apiKey],
     queryFn: () => fetchUsers({ page, limit, apiKey }),
     enabled: enabled && !!apiKey,
+  });
+}
+
+export function useDeleteUser(apiKey: string) {
+  const queryClient = useQueryClient();
+  return useMutation<DeleteUserResponse, ApiError, string>({
+    mutationFn: (userId: string) => deleteUser({ userId, apiKey }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
+    },
   });
 }

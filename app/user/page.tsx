@@ -156,6 +156,20 @@ export default function UserPage() {
                   </Badge>
                 )}
               </div>
+              <div className="flex items-center gap-3">
+                <p className="text-xs text-muted-foreground italic hidden sm:block">
+                  Buồn vì không đủ KPI ? 😢
+                </p>
+                <a
+                  href="https://spotifak.darrenak.id.vn/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 text-white text-xs font-medium px-3 py-1.5 transition-colors"
+                >
+                  <span>🎵</span>
+                  Giải sầu
+                </a>
+              </div>
             </CardHeader>
             <CardContent>
               {isReferralLoading ? (

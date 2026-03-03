@@ -11,7 +11,6 @@ export function useRegister() {
     mutationKey: [QUERY_KEYS.REGISTER],
     mutationFn: fetchRegister,
     onSuccess: (data) => {
-      toast.success(data.message || "Đăng ký thành công!");
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.REGISTER] });
     },
     onError: (error) => {

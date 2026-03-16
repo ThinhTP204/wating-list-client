@@ -16,7 +16,7 @@ function highlightNumbers(title: string) {
     /[\d,.]+[%x+]?/.test(part) ? (
       <span
         key={i}
-        className="relative inline-block bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
+        className="relative inline-block bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent"
       >
         {part}
       </span>
@@ -108,21 +108,21 @@ const Feature = ({
     >
       {/* Hover background gradient */}
       {index < 4 && (
-        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-300 absolute inset-0 h-full w-full bg-gradient-to-t from-emerald-50/80 via-emerald-50/30 to-transparent dark:from-emerald-950/40 dark:via-emerald-950/10 pointer-events-none" />
+        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-300 absolute inset-0 h-full w-full bg-gradient-to-t from-[#f5f0ff]/80 via-[#f5f0ff]/30 to-transparent dark:from-[#1a0a3d]/40 dark:via-[#1a0a3d]/10 pointer-events-none" />
       )}
       {index >= 4 && (
-        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-300 absolute inset-0 h-full w-full bg-gradient-to-b from-emerald-50/80 via-emerald-50/30 to-transparent dark:from-emerald-950/40 dark:via-emerald-950/10 pointer-events-none" />
+        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-300 absolute inset-0 h-full w-full bg-gradient-to-b from-[#f5f0ff]/80 via-[#f5f0ff]/30 to-transparent dark:from-[#1a0a3d]/40 dark:via-[#1a0a3d]/10 pointer-events-none" />
       )}
 
       {/* Icon */}
-      <div className="mb-4 relative z-10 px-10 text-neutral-400 group-hover/feature:text-emerald-500 transition-colors duration-300">
+      <div className="mb-4 relative z-10 px-10 text-neutral-400 group-hover/feature:text-[#8f58e4] transition-colors duration-300">
         {icon}
       </div>
 
       {/* Title with accent bar */}
       <div className="text-lg font-bold mb-2 relative z-10 px-10">
-        <div className="absolute left-0 inset-y-0 h-6 group-hover/feature:h-8 w-1 rounded-tr-full rounded-br-full bg-neutral-300 dark:bg-neutral-700 group-hover/feature:bg-gradient-to-b group-hover/feature:from-emerald-400 group-hover/feature:to-cyan-400 transition-all duration-300 origin-center" />
-        <span className="group-hover/feature:translate-x-2 transition duration-300 inline-block text-neutral-800 dark:text-neutral-100 group-hover/feature:text-emerald-700 dark:group-hover/feature:text-emerald-300">
+        <div className="absolute left-0 inset-y-0 h-6 group-hover/feature:h-8 w-1 rounded-tr-full rounded-br-full bg-neutral-300 dark:bg-neutral-700 group-hover/feature:bg-gradient-to-b group-hover/feature:from-[#402093] group-hover/feature:to-[#8f58e4] transition-all duration-300 origin-center" />
+        <span className="group-hover/feature:translate-x-2 transition duration-300 inline-block text-neutral-800 dark:text-neutral-100 group-hover/feature:text-[#402093] dark:group-hover/feature:text-[#c4b5fd]">
           {highlightNumbers(title)}
         </span>
       </div>

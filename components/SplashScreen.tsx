@@ -29,7 +29,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-neutral-950"
         >
           {/* Subtle top gradient */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.1)_0%,transparent_70%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(143,88,228,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(143,88,228,0.1)_0%,transparent_70%)]" />
 
           {/* Main text */}
           <div className="relative flex flex-col items-center gap-2 px-4">
@@ -37,7 +37,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
               className={`${
                 isMobile ? "text-4xl" : "text-6xl md:text-8xl lg:text-9xl"
               } font-black leading-none tracking-tighter text-neutral-200 dark:text-neutral-800`}
-              fillClassName="bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-black dark:text-white"
+              fillClassName="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-black dark:text-white"
               stagger={isMobile ? 0.07 : 0.1}
               duration={isMobile ? 0.9 : 1.2}
               delay={0.3}
@@ -70,7 +70,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
               delay: 0.3,
               ease: [0.25, 0.1, 0.25, 1],
             }}
-            className={`absolute bottom-0 left-0 ${isMobile ? "h-1.5" : "h-1"} w-full origin-left bg-gradient-to-r from-emerald-400 to-cyan-400`}
+            className={`absolute bottom-0 left-0 ${isMobile ? "h-1.5" : "h-1"} w-full origin-left bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7]`}
           />
         </motion.div>
       )}

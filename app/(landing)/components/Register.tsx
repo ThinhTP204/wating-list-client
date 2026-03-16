@@ -39,7 +39,7 @@ export default function Register() {
           </span>
           <h2 className="mt-4 text-3xl font-bold text-neutral-900 dark:text-white md:text-4xl lg:text-5xl">
             Sẵn sàng dùng thử{" "}
-            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
               Wokki?
             </span>
           </h2>
@@ -52,7 +52,7 @@ export default function Register() {
         <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-8 md:p-10 shadow-sm">
           {isSuccess ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950 text-3xl">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f5f0ff] dark:bg-[#1a0a3d] text-3xl">
                 🎉
               </div>
               <p className="text-xl font-bold text-neutral-900 dark:text-white">
@@ -94,7 +94,7 @@ export default function Register() {
                   <button
                     type="button"
                     onClick={() => setContactType(contactType === "email" ? "phone" : "email")}
-                    className="cursor-pointer text-xs font-medium text-emerald-500 hover:text-emerald-600 transition-colors"
+                    className="cursor-pointer text-xs font-medium text-[#8f58e4] hover:text-[#5e34b7] transition-colors"
                   >
                     Dùng {contactType === "email" ? "SĐT" : "Email"} thay
                   </button>
@@ -144,27 +144,27 @@ export default function Register() {
                         onClick={() => setReferralCode(selected ? "" : name)}
                         className={`cursor-pointer group relative flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-all duration-200 ${
                           selected
-                            ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950 shadow-sm ring-1 ring-emerald-200 dark:ring-emerald-800"
+                            ? "border-[#8f58e4] dark:border-[#a87aec] bg-[#f5f0ff] dark:bg-[#1a0a3d] shadow-sm ring-1 ring-[#c4b5fd] dark:ring-[#8f58e4]"
                             : "border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-800"
                         }`}
                       >
                         <div
                           className={`relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 transition-all duration-200 ${
-                            selected ? "ring-emerald-400" : "ring-neutral-200 group-hover:ring-neutral-300"
+                            selected ? "ring-[#8f58e4]" : "ring-neutral-200 group-hover:ring-neutral-300"
                           }`}
                         >
                           <img src={avatar} alt={name} className="h-full w-full object-cover" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className={`text-sm font-semibold truncate transition-colors duration-200 ${selected ? "text-emerald-800 dark:text-emerald-300" : "text-neutral-800 dark:text-neutral-200"}`}>
+                          <p className={`text-sm font-semibold truncate transition-colors duration-200 ${selected ? "text-[#402093] dark:text-[#c4b5fd]" : "text-neutral-800 dark:text-neutral-200"}`}>
                             {name}
                           </p>
-                          <p className={`text-[11px] truncate transition-colors duration-200 ${selected ? "text-emerald-600 dark:text-emerald-400" : "text-neutral-400 dark:text-neutral-500"}`}>
+                          <p className={`text-[11px] truncate transition-colors duration-200 ${selected ? "text-[#5e34b7] dark:text-[#a87aec]" : "text-neutral-400 dark:text-neutral-500"}`}>
                             {role}
                           </p>
                         </div>
                         {selected && (
-                          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-sm">
+                          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-[#402093] to-[#8f58e4] shadow-sm">
                             <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
@@ -180,7 +180,7 @@ export default function Register() {
                 type="submit"
                 disabled={isPending || !referralCode}
                 size="lg"
-                className="w-full bg-black dark:bg-white text-white dark:text-black font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-60 disabled:translate-y-0"
+                className="w-full bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#8f58e4]/30 disabled:opacity-60 disabled:translate-y-0"
               >
                 <RocketIcon size={18} className="mr-2" />
                 {isPending ? "Đang gửi..." : "Đăng ký ngay"}

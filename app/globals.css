@@ -2,6 +2,21 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/*
+  ==============================================================================
+  WOOKKI BRAND COLOR SYSTEM
+  ==============================================================================
+
+  Primary Gradient: linear-gradient(90deg, #402093, #8f58e4, #5e34b7)
+
+  Color Palette:
+  - Primary (Deep Purple): #402093     → Main brand color, buttons, CTAs
+  - Secondary (Medium Purple): #5e34b7 → Secondary elements, accents
+  - Accent (Light Purple): #8f58e4    → Highlights, hover states
+
+  ==============================================================================
+*/
+
 html {
   scroll-behavior: smooth;
 }
@@ -12,25 +27,27 @@ body {
 
 @custom-variant dark (&:is(.dark *));
 
-/* ===== BLACK & WHITE THEME VARIABLES ===== */
+/* ===== BRAND COLOR SYSTEM - Based on #402093 → #8f58e4 → #5e34b7 ===== */
 :root {
   /* Base */
 
-  /* Primary - Black */
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  /* Primary Brand Colors - Light Mode */
+  --primary: #402093;
+  --primary-foreground: #ffffff;
+  --primary-light: #5e34b7;
+  --primary-lighter: #8f58e4;
 
-  /* Secondary - Light Gray */
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  /* Secondary - Light Mode */
+  --secondary: #f5f3ff;
+  --secondary-foreground: #402093;
 
-  /* Accent - Light Gray */
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  /* Accent - Light Mode */
+  --accent: #f3e8ff;
+  --accent-foreground: #402093;
 
   /* Muted */
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted: #f5f3ff;
+  --muted-foreground: #6b7280;
 
   /* Destructive */
   --destructive: oklch(0.577 0.245 27.325);
@@ -39,7 +56,7 @@ body {
   /* Border & Input */
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: #8f58e4;
 
   /* Border Radius */
   --radius: 0.625rem;
@@ -53,19 +70,23 @@ body {
   --popover-foreground: oklch(0.145 0 0);
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+
+  /* Chart Colors - Purple Theme */
+  --chart-1: #402093;
+  --chart-2: #5e34b7;
+  --chart-3: #8f58e4;
+  --chart-4: #a78bfa;
+  --chart-5: #c4b5fd;
+
+  /* Sidebar - Light Mode */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-primary: #402093;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f3e8ff;
+  --sidebar-accent-foreground: #402093;
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: #8f58e4;
 }
 
 @theme inline {
@@ -97,10 +118,15 @@ body {
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
 
   /* Fonts */
   --font-sans: var(--font-ubuntu);
   --font-mono: var(--font-ubuntu);
+
+  /* Sidebar */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -109,14 +135,29 @@ body {
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+
+  /* Chart */
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+
+  /* ============================================================
+     BRAND COLOR SCALE — Purple Gradient System
+     Gradient: linear-gradient(90deg, #402093, #8f58e4, #5e34b7)
+     ============================================================ */
+  --color-brand-50:  #f5f0ff;
+  --color-brand-100: #ede5fd;
+  --color-brand-200: #d8bffa;
+  --color-brand-300: #c09af5;
+  --color-brand-400: #a87aec;
+  --color-brand-500: #8f58e4;
+  --color-brand-600: #7244cc;
+  --color-brand-700: #5e34b7;
+  --color-brand-800: #402093;
+  --color-brand-900: #2d1570;
+  --color-brand-950: #1a0a3d;
 }
 
 @layer base {
@@ -132,6 +173,7 @@ body {
   }
 }
 
+/* ===== DARK MODE - Purple Theme ===== */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -139,31 +181,46 @@ body {
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+
+  /* Primary - Purple Brand in Dark Mode */
+  --primary: #8f58e4;
+  --primary-foreground: #ffffff;
+  --primary-light: #a87aec;
+  --primary-lighter: #c4b5fd;
+
+  /* Secondary - Dark Mode */
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+
+  /* Accent - Dark Mode */
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
+
+  /* Muted - Dark Mode */
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --ring: #a87aec;
+
+  /* Chart Colors - Dark Mode */
+  --chart-1: #a87aec;
+  --chart-2: #8f58e4;
+  --chart-3: #5e34b7;
+  --chart-4: #402093;
+  --chart-5: #c4b5fd;
+
+  /* Sidebar - Dark Mode */
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: #8f58e4;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: #a87aec;
 }
 
 @keyframes fireFlicker {
@@ -172,4 +229,37 @@ body {
   50%  { transform: scale(1.05) rotate(-3deg); filter: brightness(1.1); }
   75%  { transform: scale(1.2)  rotate(5deg);  filter: brightness(1.3); }
   100% { transform: scale(1.1)  rotate(-4deg); filter: brightness(1.15); }
+}
+
+/* ===== BRAND GRADIENT UTILITIES ===== */
+
+/* Main gradient: 90° — #402093 → #8f58e4 → #5e34b7 */
+.bg-gradient-brand {
+  background: linear-gradient(90deg, #402093, #8f58e4, #5e34b7);
+}
+
+/* Diagonal variant */
+.bg-gradient-brand-diagonal {
+  background: linear-gradient(135deg, #402093, #8f58e4, #5e34b7);
+}
+
+/* Vertical variant */
+.bg-gradient-brand-vertical {
+  background: linear-gradient(180deg, #402093, #8f58e4, #5e34b7);
+}
+
+/* Gradient text */
+.text-gradient-brand {
+  background: linear-gradient(90deg, #402093, #8f58e4, #5e34b7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Subtle brand tint for section backgrounds */
+.bg-brand-tint {
+  background: linear-gradient(135deg, #f5f0ff 0%, #ffffff 100%);
+}
+.dark .bg-brand-tint {
+  background: linear-gradient(135deg, #1a0a3d 0%, oklch(0.145 0 0) 100%);
 }

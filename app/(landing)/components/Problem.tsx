@@ -147,7 +147,7 @@ export default function Problem() {
           </span>
           <h2 className={`mt-4 font-bold text-neutral-900 dark:text-white ${isMobile ? "text-2xl" : "text-3xl md:text-4xl lg:text-5xl"}`}>
             Trước và sau khi dùng{" "}
-              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
                 Wokki
               </span>
           </h2>
@@ -171,12 +171,12 @@ export default function Problem() {
                 </span>
               </div>
               <div
-                className={`inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 transition-all duration-500 ${
+                className={`inline-flex items-center gap-2 rounded-full bg-[#f5f0ff] px-4 py-1.5 transition-all duration-500 ${
                   isGoodSide ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
                 }`}
               >
-                <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                <span className="text-xs font-semibold uppercase tracking-widest text-emerald-400">
+                <span className="h-2 w-2 rounded-full bg-[#8f58e4]" />
+                <span className="text-xs font-semibold uppercase tracking-widest text-[#8f58e4]">
                   Với Wokki
                 </span>
               </div>
@@ -228,7 +228,7 @@ export default function Problem() {
                         showNew ? "opacity-100" : "opacity-0"
                       }`}
                     >
-                      <svg className="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="h-4 w-4 text-[#8f58e4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
                     </div>
@@ -241,9 +241,9 @@ export default function Problem() {
                           : "opacity-0 -translate-x-3"
                       }`}
                     >
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#ede5fd]">
                         <svg
-                          className="h-3 w-3 text-emerald-500"
+                          className="h-3 w-3 text-[#8f58e4]"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -252,7 +252,7 @@ export default function Problem() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       </span>
-                      <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                      <span className="text-sm font-medium text-[#5e34b7] dark:text-[#8f58e4]">
                         {newItems[i]}
                       </span>
                     </div>
@@ -265,7 +265,7 @@ export default function Problem() {
             <div className="mt-8 flex flex-col gap-2">
               <div className="flex items-center justify-between text-xs text-neutral-400">
                 <span className={!isGoodSide ? "font-semibold text-red-400" : ""}>Cách cũ</span>
-                <span className={isGoodSide ? "font-semibold text-emerald-500" : ""}>Với Wokki</span>
+                <span className={isGoodSide ? "font-semibold text-[#8f58e4]" : ""}>Với Wokki</span>
               </div>
               <div className="relative h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
                 <div

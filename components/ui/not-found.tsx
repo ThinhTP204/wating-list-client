@@ -80,11 +80,11 @@ export default function NotFound({
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <h1 className="text-[10rem] md:text-[14rem] font-extrabold leading-none tracking-tighter select-none">
-            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
               4
             </span>
             <span className="text-neutral-200">0</span>
-            <span className="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
               4
             </span>
           </h1>

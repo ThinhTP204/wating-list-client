@@ -25,7 +25,7 @@ const Conclusion: React.FC = () => {
         >
           <Ballpit
             count={120}
-            colors={[0x22d3ee, 0x6366f1, 0xa855f7]}
+            colors={[0x402093, 0x8f58e4, 0x5e34b7]}
             ambientIntensity={0.8}
             lightIntensity={180}
             minSize={0.35}
@@ -43,14 +43,14 @@ const Conclusion: React.FC = () => {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-6 py-20 text-center md:px-10 md:py-28">
-        <span className="mb-4 inline-flex rounded-full border border-emerald-300/30 bg-emerald-400/10 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-200">
+        <span className="mb-4 inline-flex rounded-full border border-[#c4b5fd]/30 bg-[#8f58e4]/10 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-[#c4b5fd]">
           Sẵn sàng thay đổi
         </span>
 
         <h2 className="text-3xl font-extrabold leading-tight text-white md:text-5xl lg:text-6xl">
           Quản lý ca làm
           <br />
-          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
             thông minh hơn bao giờ hết.
           </span>
         </h2>

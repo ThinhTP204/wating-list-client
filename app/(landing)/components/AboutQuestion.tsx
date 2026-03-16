@@ -58,7 +58,7 @@ export default function AboutQuestion() {
           </span>
           <h2 className={`mt-4 font-bold text-neutral-900 dark:text-white ${isMobile ? "text-2xl" : "text-3xl md:text-4xl lg:text-5xl"}`}>
             Câu hỏi{" "}
-            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
               thường gặp
             </span>
           </h2>
@@ -79,7 +79,7 @@ export default function AboutQuestion() {
                 initial={false}
                 animate={{
                   backgroundColor: isOpen
-                    ? (isDark ? "rgb(6 78 59)" : "rgb(240 253 244)")
+                    ? (isDark ? "rgb(26 10 61)" : "rgb(245 240 255)")
                     : (isDark ? "rgb(23 23 23)" : "rgb(250 250 250)"),
                 }}
                 transition={{ duration: 0.25 }}
@@ -95,12 +95,12 @@ export default function AboutQuestion() {
                   </span>
                   <motion.div
                     animate={{ rotate: isOpen ? 0 : 0 }}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-900 dark:bg-white"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7]"
                   >
                     <motion.svg
                       animate={{ rotate: isOpen ? 180 : 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="h-4 w-4 text-white dark:text-neutral-900"
+                      className="h-4 w-4 text-white"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

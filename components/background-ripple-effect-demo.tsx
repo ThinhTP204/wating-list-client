@@ -38,7 +38,7 @@ export default function BackgroundRippleEffectDemo() {
           <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-neutral-900 md:text-5xl lg:text-6xl dark:text-white">
             Tiết kiệm chi phí quản lí nhân sự đến{" "}
             <PointerHighlight containerClassName="inline-block">
-            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
               40%.
             </span>
             </PointerHighlight>

@@ -28,6 +28,10 @@ const buttonVariants = cva(
           'bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 text-white hover:opacity-90',
         glass:
           'bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20',
+        brand:
+          'bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white shadow-sm hover:opacity-90 hover:shadow-md hover:shadow-[#8f58e4]/30',
+        'brand-outline':
+          'border border-[#8f58e4] text-[#402093] dark:text-[#a87aec] bg-transparent hover:bg-[#f5f0ff] dark:hover:bg-[#1a0a3d] hover:border-[#5e34b7]',
       },
       size: {
         default: 'h-9 px-4 py-2',

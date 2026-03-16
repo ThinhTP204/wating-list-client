@@ -136,7 +136,7 @@ export default function UserPage() {
               </Button>
             </form>
             {submittedKey && (
-              <p className="mt-2 text-xs text-green-600 dark:text-green-400">
+              <p className="mt-2 text-xs text-[#5e34b7] dark:text-[#a87aec]">
                 ✓ API key đã được áp dụng.
               </p>
             )}

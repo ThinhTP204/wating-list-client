@@ -14,7 +14,7 @@ export default function Blog() {
           </span>
           <h4 className={`mt-4 font-bold text-neutral-900 dark:text-white dark:text-white ${isMobile ? "text-2xl" : "text-3xl md:text-4xl lg:text-5xl"}`}>
             Lợi ích{" "}
-            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent font-bold">
+            <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent font-bold">
               thực tế
             </span>{" "}
             khi dùng Wokki

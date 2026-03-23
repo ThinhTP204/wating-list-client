@@ -106,6 +106,32 @@ export function getMockEmployees(boardId: string): EmployeeSalaryRow[] {
   return base.map((e, i) => ({ ...e, id: `emp-${i + 1}`, order: i + 1 }));
 }
 
+// ─── Salary Scale types ──────────────────────────────────────────────────────
+
+export interface SalaryScaleEntry {
+  id: string;
+  position: string;
+  code: string;
+  rank: number;
+  priority: number;
+  minSalary: number;
+  maxSalary: number;
+}
+
+export const MOCK_SALARY_SCALE: SalaryScaleEntry[] = [
+  { id: "sc-1",  position: "Quản lý",     code: "M1", rank: 3, priority: 1, minSalary: 6_000_000,  maxSalary: 7_000_000  },
+  { id: "sc-2",  position: "Quản lý",     code: "M2", rank: 3, priority: 2, minSalary: 7_000_000,  maxSalary: 8_000_000  },
+  { id: "sc-3",  position: "Quản lý",     code: "M3", rank: 3, priority: 3, minSalary: 8_000_000,  maxSalary: 10_000_000 },
+  { id: "sc-4",  position: "Nhân viên",   code: "P1", rank: 1, priority: 1, minSalary: 2_000_000,  maxSalary: 3_000_000  },
+  { id: "sc-5",  position: "Nhân viên",   code: "P2", rank: 1, priority: 2, minSalary: 3_000_000,  maxSalary: 4_000_000  },
+  { id: "sc-6",  position: "Nhân viên",   code: "P3", rank: 2, priority: 1, minSalary: 4_000_000,  maxSalary: 5_000_000  },
+  { id: "sc-7",  position: "Trưởng nhóm", code: "T1", rank: 2, priority: 1, minSalary: 4_000_000,  maxSalary: 5_000_000  },
+  { id: "sc-8",  position: "Trưởng nhóm", code: "T2", rank: 2, priority: 2, minSalary: 5_000_000,  maxSalary: 6_000_000  },
+  { id: "sc-9",  position: "Trưởng nhóm", code: "T3", rank: 3, priority: 1, minSalary: 6_000_000,  maxSalary: 7_000_000  },
+  { id: "sc-10", position: "Giám đốc",    code: "D1", rank: 5, priority: 1, minSalary: 20_000_000, maxSalary: 30_000_000 },
+  { id: "sc-11", position: "Giám đốc",    code: "D2", rank: 5, priority: 2, minSalary: 30_000_000, maxSalary: 50_000_000 },
+];
+
 export const MOCK_SALARY_BOARDS: SalaryBoard[] = [
   {
     id: "1",

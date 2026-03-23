@@ -2,7 +2,10 @@
 
 import { motion } from "motion/react";
 import { SalaryBoard, SalaryColumn, SALARY_TYPE_META, TIME_CALC_META, STATUS_META } from "./types";
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+
+const MotionRow = motion(TableRow);
 
 interface Props {
   board: SalaryBoard;
@@ -94,49 +97,47 @@ export default function SalaryDetailInfo({ board, columns }: Props) {
           <span className="ml-auto text-xs text-neutral-400">{columns.length} cột</span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-neutral-50 dark:bg-neutral-900/50 border-b border-neutral-100 dark:border-neutral-800">
-                {["Cột", "Tên hiển thị", "Từ khóa", "Loại", "Công thức"].map((h) => (
-                  <th
-                    key={h}
-                    className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wide"
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/60">
-              {columns.map((col, i) => (
-                <motion.tr
-                  key={col.key}
-                  initial={{ opacity: 0, x: -4 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + i * 0.04 }}
-                  className="hover:bg-neutral-50 dark:hover:bg-neutral-900/40 transition-colors"
+        <Table>
+          <TableHeader className="bg-neutral-50 dark:bg-neutral-900/50">
+            <TableRow className="border-b border-neutral-100 dark:border-neutral-800 hover:bg-transparent">
+              {["Cột", "Tên hiển thị", "Từ khóa", "Loại", "Công thức"].map((h) => (
+                <TableHead
+                  key={h}
+                  className="px-4 py-3 text-left text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wide"
                 >
-                  <td className="px-4 py-3">
-                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#402093] to-[#8f58e4] flex items-center justify-center text-white text-xs font-bold">
-                      {col.key}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 font-medium text-neutral-800 dark:text-white">{col.title}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-neutral-500 dark:text-neutral-400">{col.keyword}</td>
-                  <td className="px-4 py-3">
-                    <span className={cn("inline-flex px-2 py-0.5 rounded-md text-xs font-medium", TYPE_BADGE[col.type].cls)}>
-                      {TYPE_BADGE[col.type].label}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 font-mono text-xs text-neutral-400 dark:text-neutral-500">
-                    {col.formula ?? "—"}
-                  </td>
-                </motion.tr>
+                  {h}
+                </TableHead>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-neutral-100 dark:divide-neutral-800/60">
+            {columns.map((col, i) => (
+              <MotionRow
+                key={col.key}
+                initial={{ opacity: 0, x: -4 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 + i * 0.04 }}
+                className="hover:bg-neutral-50 dark:hover:bg-neutral-900/40"
+              >
+                <TableCell className="px-4 py-3">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#402093] to-[#8f58e4] flex items-center justify-center text-white text-xs font-bold">
+                    {col.key}
+                  </div>
+                </TableCell>
+                <TableCell className="px-4 py-3 font-medium text-neutral-800 dark:text-white">{col.title}</TableCell>
+                <TableCell className="px-4 py-3 font-mono text-xs text-neutral-500 dark:text-neutral-400">{col.keyword}</TableCell>
+                <TableCell className="px-4 py-3">
+                  <span className={cn("inline-flex px-2 py-0.5 rounded-md text-xs font-medium", TYPE_BADGE[col.type].cls)}>
+                    {TYPE_BADGE[col.type].label}
+                  </span>
+                </TableCell>
+                <TableCell className="px-4 py-3 font-mono text-xs text-neutral-400 dark:text-neutral-500">
+                  {col.formula ?? "—"}
+                </TableCell>
+              </MotionRow>
+            ))}
+          </TableBody>
+        </Table>
       </motion.div>
     </div>
   );

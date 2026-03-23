@@ -47,6 +47,65 @@ export const STATUS_META: Record<SalaryStatus, { label: string; bg: string; text
   },
 };
 
+// ─── Detail types ────────────────────────────────────────────────────────────
+
+export interface EmployeeSalaryRow {
+  id: string;
+  order: number;
+  name: string;
+  department: string;
+  position: string;
+  basicSalary: number;
+  accommodation: number;
+  responsibility: number;
+  totalBasic: number;
+  actualSalary: number;
+  status: "paid" | "pending" | "hold";
+}
+
+export interface SalaryColumn {
+  key: string;       // "A", "B", ...
+  title: string;
+  keyword: string;
+  type: "system" | "formula" | "manual";
+  formula?: string;
+}
+
+export const EMPLOYEE_STATUS_META: Record<
+  EmployeeSalaryRow["status"],
+  { label: string; dot: string }
+> = {
+  paid:    { label: "Đã trả",    dot: "bg-emerald-500" },
+  pending: { label: "Chờ duyệt", dot: "bg-amber-400"   },
+  hold:    { label: "Tạm giữ",   dot: "bg-red-400"      },
+};
+
+export const MOCK_COLUMNS: SalaryColumn[] = [
+  { key: "A", title: "Số thứ tự",      keyword: "STT",              type: "system"  },
+  { key: "B", title: "Họ và tên",       keyword: "NHANVIEN_TENNV",   type: "system"  },
+  { key: "C", title: "Phòng ban",       keyword: "NHANVIEN_PHONGBAN",type: "system"  },
+  { key: "D", title: "Chức vụ",         keyword: "NHANVIEN_CHUCVU",  type: "system"  },
+  { key: "E", title: "Lương cơ bản",    keyword: "LUONG_COBAN",      type: "manual"  },
+  { key: "F", title: "Phụ cấp ở trọ",  keyword: "PHU_CAP_O_TRO",    type: "formula", formula: "E * 0.05" },
+  { key: "G", title: "Phụ cấp trách nhiệm", keyword: "PHU_CAP_TN",  type: "formula", formula: "E * 0.015" },
+  { key: "H", title: "Tổng lương cơ bản", keyword: "TONG_LUONG_CB", type: "formula", formula: "E + F + G" },
+  { key: "I", title: "Lương thực nhận", keyword: "LUONG_THUC_NHAN", type: "formula", formula: "H - BHXH" },
+];
+
+export function getMockEmployees(boardId: string): EmployeeSalaryRow[] {
+  const base: Omit<EmployeeSalaryRow, "id" | "order">[] = [
+    { name: "Nguyễn Văn An",     department: "Kinh doanh", position: "Trưởng phòng",          basicSalary: 25_000_000, accommodation: 1_000_000, responsibility: 500_000, totalBasic: 26_500_000, actualSalary: 24_800_000, status: "paid"    },
+    { name: "Trần Thị Bảo",      department: "Marketing",  position: "Nhân viên kinh doanh",  basicSalary: 15_000_000, accommodation:   600_000, responsibility: 200_000, totalBasic: 15_800_000, actualSalary: 14_700_000, status: "paid"    },
+    { name: "Lê Minh Châu",      department: "Kỹ thuật",   position: "Lập trình viên",        basicSalary: 22_000_000, accommodation:   800_000, responsibility: 300_000, totalBasic: 23_100_000, actualSalary: 21_600_000, status: "pending" },
+    { name: "Phạm Thị Dung",     department: "Nhân sự",    position: "Chuyên viên nhân sự",   basicSalary: 12_000_000, accommodation:   500_000, responsibility: 150_000, totalBasic: 12_650_000, actualSalary: 11_800_000, status: "paid"    },
+    { name: "Hoàng Văn Em",      department: "Kỹ thuật",   position: "QA Engineer",           basicSalary: 18_000_000, accommodation:   700_000, responsibility: 250_000, totalBasic: 18_950_000, actualSalary: 17_700_000, status: "pending" },
+    { name: "Vũ Thị Phương",     department: "Kinh doanh", position: "Nhân viên kinh doanh",  basicSalary: 13_500_000, accommodation:   550_000, responsibility: 100_000, totalBasic: 14_150_000, actualSalary: 13_200_000, status: "hold"    },
+    { name: "Đặng Quốc Hùng",    department: "Marketing",  position: "Thiết kế đồ họa",       basicSalary: 14_000_000, accommodation:   500_000, responsibility: 100_000, totalBasic: 14_600_000, actualSalary: 13_600_000, status: "paid"    },
+  ];
+  void boardId;
+  return base.map((e, i) => ({ ...e, id: `emp-${i + 1}`, order: i + 1 }));
+}
+
 export const MOCK_SALARY_BOARDS: SalaryBoard[] = [
   {
     id: "1",

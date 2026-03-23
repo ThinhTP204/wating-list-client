@@ -8,13 +8,14 @@ import { cn } from "@/lib/utils";
 
 interface SalaryTableProps {
   boards: SalaryBoard[];
+  onSelect: (board: SalaryBoard) => void;
   onEdit: (board: SalaryBoard) => void;
   onDelete: (board: SalaryBoard) => void;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default function SalaryTable({ boards, onEdit, onDelete }: SalaryTableProps) {
+export default function SalaryTable({ boards, onSelect, onEdit, onDelete }: SalaryTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
 
@@ -82,9 +83,12 @@ export default function SalaryTable({ boards, onEdit, onDelete }: SalaryTablePro
                           <span className="text-white text-xs font-bold">₫</span>
                         </div>
                         <div>
-                          <div className="font-medium text-sm text-neutral-900 dark:text-white leading-tight">
+                          <button
+                            onClick={() => onSelect(board)}
+                            className="font-medium text-sm text-neutral-900 dark:text-white leading-tight hover:text-purple-700 dark:hover:text-purple-300 transition-colors text-left"
+                          >
                             {board.name}
-                          </div>
+                          </button>
                           <div className="flex items-center gap-1 mt-0.5">
                             <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
                               {board.keyword}

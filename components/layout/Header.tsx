@@ -4,7 +4,6 @@ import {
   NavBody,
   NavItems,
   MobileNav,
-  NavbarButton,
   MobileNavHeader,
   MobileNavToggle,
   MobileNavMenu,
@@ -23,6 +22,7 @@ const navItems = [
   { name: "Vấn đề gặp phải", link: "#van-de" },
   { name: "Lợi ích", link: "#blog" },
   { name: "Dịch vụ", link: "#bang-gia" },
+  { name: "Mô hình", link: "/features" },
 ];
 
 export default function Header() {

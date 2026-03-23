@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -10,79 +8,106 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calendar, ChevronLeft, ChevronRight, Users } from "lucide-react";
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  RefreshCw,
+  Upload,
+  Users,
+} from "lucide-react";
 
 type EmployeeStatus = "all" | "active" | "no-attendance";
 
+const MONTH_NAMES = [
+  "Tháng 1", "Tháng 2", "Tháng 3",  "Tháng 4",
+  "Tháng 5", "Tháng 6", "Tháng 7",  "Tháng 8",
+  "Tháng 9", "Tháng 10","Tháng 11", "Tháng 12",
+];
+
 interface TimekeepingFiltersProps {
-  onWeekChange: (weekOffset: number) => void;
+  month: number;        // 1-12
+  year: number;
+  currentMonth: number; // offset from current month
+  onMonthChange: (monthOffset: number) => void;
   onStatusChange: (status: EmployeeStatus) => void;
+  viewMode: "employee" | "shift";
+  onViewModeChange: (mode: "employee" | "shift") => void;
+  onExport: () => void;
+  onImport: () => void;
 }
 
 export default function TimekeepingFilters({
-  onWeekChange,
+  month,
+  year,
+  currentMonth,
+  onMonthChange,
   onStatusChange,
+  viewMode,
+  onViewModeChange,
+  onExport,
+  onImport,
 }: TimekeepingFiltersProps) {
-  const [currentWeek, setCurrentWeek] = useState(0);
-
-  const handlePrevWeek = () => {
-    const newWeek = currentWeek - 1;
-    setCurrentWeek(newWeek);
-    onWeekChange(newWeek);
-  };
-
-  const handleNextWeek = () => {
-    const newWeek = currentWeek + 1;
-    setCurrentWeek(newWeek);
-    onWeekChange(newWeek);
-  };
-
-  const handleStatusChange = (value: string) => {
-    onStatusChange(value as EmployeeStatus);
-  };
-
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-[#8f58e4]" />
-          <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-            Tuần
-          </span>
-        </div>
-        <div className="flex items-center gap-1">
+    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
+      {/* Left */}
+      <div className="flex flex-wrap items-center gap-3">
+        {/* Month navigator */}
+        <div className="flex items-center gap-1 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-2 py-1.5 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <Calendar className="w-4 h-4 text-[#8f58e4] mr-1 shrink-0" />
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
-            className="h-8 w-8"
-            onClick={handlePrevWeek}
+            className="h-7 w-7 hover:bg-[#8f58e4]/10 hover:text-[#8f58e4] transition-colors"
+            onClick={() => onMonthChange(currentMonth - 1)}
+            aria-label="Tháng trước"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span className="text-sm px-3 min-w-[100px] text-center">
-            {currentWeek === 0
-              ? "Tuần này"
-              : currentWeek > 0
-              ? `${currentWeek} tuần sau`
-              : `${Math.abs(currentWeek)} tuần trước`}
+          <span className="text-sm font-semibold min-w-[140px] text-center text-neutral-800 dark:text-neutral-200 select-none">
+            {MONTH_NAMES[month - 1]} — {year}
           </span>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
-            className="h-8 w-8"
-            onClick={handleNextWeek}
-            disabled={currentWeek >= 0}
+            className="h-7 w-7 hover:bg-[#8f58e4]/10 hover:text-[#8f58e4] transition-colors"
+            onClick={() => onMonthChange(currentMonth + 1)}
+            aria-label="Tháng sau"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
-      </div>
 
-      <div className="flex items-center gap-3 w-full sm:w-auto">
+        {/* View mode toggle */}
+        <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-lg p-0.5 border border-neutral-200 dark:border-neutral-700">
+          <button
+            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
+              viewMode === "employee"
+                ? "bg-white dark:bg-neutral-700 text-[#8f58e4] shadow-sm ring-1 ring-[#8f58e4]/20"
+                : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+            }`}
+            onClick={() => onViewModeChange("employee")}
+          >
+            Theo nhân viên
+          </button>
+          <button
+            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
+              viewMode === "shift"
+                ? "bg-white dark:bg-neutral-700 text-[#8f58e4] shadow-sm ring-1 ring-[#8f58e4]/20"
+                : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+            }`}
+            onClick={() => onViewModeChange("shift")}
+          >
+            Theo ca
+          </button>
+        </div>
+
+        {/* Status filter */}
         <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-neutral-500" />
-          <Select defaultValue="all" onValueChange={handleStatusChange}>
-            <SelectTrigger className="w-[180px]">
+          <Users className="w-4 h-4 text-neutral-400 shrink-0" />
+          <Select defaultValue="all" onValueChange={(v) => onStatusChange(v as EmployeeStatus)}>
+            <SelectTrigger className="w-[180px] h-8 text-sm">
               <SelectValue placeholder="Trạng thái nhân viên" />
             </SelectTrigger>
             <SelectContent>
@@ -92,6 +117,37 @@ export default function TimekeepingFilters({
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      {/* Right: Actions */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 text-xs gap-1.5 group hover:border-[#8f58e4]/50 hover:text-[#8f58e4] transition-colors"
+          onClick={() => onMonthChange(0)}
+          title="Về tháng hiện tại"
+        >
+          <RefreshCw className="w-3.5 h-3.5 transition-transform duration-500 group-hover:rotate-180" />
+          Tháng này
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 text-xs gap-1.5 text-emerald-600 border-emerald-200 hover:bg-emerald-50 hover:shadow-sm dark:text-emerald-400 dark:border-emerald-800 dark:hover:bg-emerald-900/20 transition-all"
+          onClick={onExport}
+        >
+          <Download className="w-3.5 h-3.5" />
+          Xuất file
+        </Button>
+        <Button
+          size="sm"
+          className="h-8 text-xs gap-1.5 bg-[#8f58e4] hover:bg-[#7a47cc] hover:shadow-md text-white transition-all"
+          onClick={onImport}
+        >
+          <Upload className="w-3.5 h-3.5" />
+          Nhập dữ liệu
+        </Button>
       </div>
     </div>
   );

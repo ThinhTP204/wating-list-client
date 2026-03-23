@@ -74,7 +74,7 @@ export default function EmployeesPage() {
           </div>
           <button
             onClick={() => { setEditingEmployee(null); setIsModalOpen(true); }}
-            className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all"
+            className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all"
           >
             + Thêm nhân viên
           </button>

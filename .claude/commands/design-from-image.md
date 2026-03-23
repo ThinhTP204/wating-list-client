@@ -57,6 +57,7 @@ Phân tích hình ảnh tham khảo + context để lên ý tưởng và sinh ra
 ## Output
 
 ### Phase 1 output:
+
 ```
 🎨 Design Analysis
 [Phân tích layout, colors, patterns từ hình]
@@ -68,4 +69,5 @@ Phân tích hình ảnh tham khảo + context để lên ý tưởng và sinh ra
 ```
 
 ### Phase 2 output:
+
 Full TSX component(s) với mock data, sẵn sàng render.

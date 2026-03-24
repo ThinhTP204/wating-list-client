@@ -2,18 +2,16 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Plus, Search, ArrowLeftRight, CheckCircle2, Users, UserCheck } from "lucide-react";
+import { Plus, Search, ArrowLeftRight, CheckCircle2, UserCheck, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { ShiftSwapPost, AvailableEmployee, MOCK_POSTS, MOCK_AVAILABLE, MIN_DAYS_AHEAD } from "./components/types";
 import ShiftSwapCard from "./components/ShiftSwapCard";
 import AvailableCard from "./components/AvailableCard";
 import ShiftSwapDialog from "./components/ShiftSwapDialog";
 import AvailableDialog from "./components/AvailableDialog";
-import { cn } from "@/lib/utils";
 
 const BRANCHES = ["all", "Chi nhánh Quận 1", "Chi nhánh Quận 3", "Chi nhánh Quận 7", "Trụ sở chính"];
 
@@ -53,7 +51,6 @@ export default function Page() {
   const filteredSwap = useMemo(() =>
     posts.filter((p) => {
       if (p.status === "expired") return false;
-      // Chỉ hiển thị ca cách ít nhất MIN_DAYS_AHEAD ngày
       if (p.status === "open" && new Date(p.myShift.date) < minDate) return false;
       if (branchFilter !== "all" && p.branch !== branchFilter) return false;
       if (search) {
@@ -78,12 +75,9 @@ export default function Page() {
     [available, search, branchFilter]
   );
 
-  const stats = [
-    { label: "Cần đổi ca",     value: posts.filter((p) => p.status === "open").length,    cls: "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400",   icon: ArrowLeftRight },
-    { label: "Sẵn sàng nhận",  value: available.length,                                   cls: "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400", icon: UserCheck },
-    { label: "Đã khớp",        value: posts.filter((p) => p.status === "matched").length, cls: "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400",           icon: CheckCircle2 },
-    { label: "Tổng tham gia",  value: posts.length + available.length,                    cls: "bg-neutral-50 dark:bg-neutral-900/50 text-neutral-600 dark:text-neutral-400", icon: Users },
-  ];
+  const openSwapCount   = posts.filter((p) => p.status === "open").length;
+  const matchedCount    = posts.filter((p) => p.status === "matched").length;
+  const totalActive     = openSwapCount + available.length;
 
   const handleSaveSwap     = (p: ShiftSwapPost)      => setPosts((prev) => [p, ...prev]);
   const handleAcceptSwap   = (p: ShiftSwapPost)      => setPosts((prev) => prev.map((x) => x.id === p.id ? { ...x, status: "matched" as const } : x));
@@ -93,45 +87,115 @@ export default function Page() {
 
   return (
     <div className="flex-1 flex flex-col h-[calc(100vh-3.5rem)] overflow-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+
+      {/* ── Hero Banner ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className="relative bg-gradient-to-br from-[#1e0d4a] via-[#402093] to-[#6940c4] overflow-hidden"
+      >
+        {/* Decorative circles */}
+        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full bg-white/5 pointer-events-none" />
+        <div className="absolute top-6 right-36 w-20 h-20 rounded-full bg-white/5 pointer-events-none" />
+        <div className="absolute -bottom-8 right-20 w-36 h-36 rounded-full bg-white/5 pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-24 h-24 rounded-full bg-purple-400/10 pointer-events-none" />
+
+        <div className="relative px-6 pt-7 pb-6">
+          <div className="flex items-end justify-between gap-4 flex-wrap">
+            <div>
+              {/* Live indicator */}
+              <div className="flex items-center gap-2 mb-3">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                </span>
+                <span className="text-[11px] text-white/55 font-medium uppercase tracking-widest">
+                  {totalActive} đang hoạt động
+                </span>
+              </div>
+
+              <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1.5">
+                Shift Exchange
+              </h1>
+              <p className="text-sm text-purple-200/70">
+                Linh hoạt lịch làm việc — cùng đồng nghiệp hỗ trợ nhau
+              </p>
+
+              {/* Inline stats */}
+              <div className="flex items-center gap-5 mt-4 flex-wrap">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-md bg-white/15 flex items-center justify-center">
+                    <ArrowLeftRight className="w-2.5 h-2.5 text-purple-200" />
+                  </div>
+                  <span className="text-white font-bold text-sm">{openSwapCount}</span>
+                  <span className="text-white/45 text-xs">cần đổi</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-md bg-white/15 flex items-center justify-center">
+                    <UserCheck className="w-2.5 h-2.5 text-emerald-300" />
+                  </div>
+                  <span className="text-white font-bold text-sm">{available.length}</span>
+                  <span className="text-white/45 text-xs">sẵn sàng</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-md bg-white/15 flex items-center justify-center">
+                    <CheckCircle2 className="w-2.5 h-2.5 text-blue-300" />
+                  </div>
+                  <span className="text-white font-bold text-sm">{matchedCount}</span>
+                  <span className="text-white/45 text-xs">đã khớp</span>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA buttons */}
+            <div className="flex items-center gap-2 shrink-0">
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+                <Button
+                  size="sm"
+                  onClick={() => setAvailOpen(true)}
+                  className="gap-1.5 text-xs bg-white/12 border border-white/25 text-white hover:bg-white/22 backdrop-blur-sm shadow-none"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Đăng sẵn sàng
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+                <Button
+                  size="sm"
+                  onClick={() => setSwapOpen(true)}
+                  className="gap-1.5 text-xs bg-white text-[#402093] hover:bg-white/90 font-semibold shadow-none border-0"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Đăng đổi ca
+                </Button>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
       <div className="p-6 space-y-6">
 
-        {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Sàn Đổi Ca</h1>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-            Tìm người nhận ca hoặc đăng sẵn sàng nhận ca từ đồng nghiệp
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.07 }}
-              className="bg-white dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 flex items-center gap-4"
-            >
-              <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0", s.cls)}>
-                <s.icon className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-xl font-bold text-neutral-900 dark:text-white">{s.value}</div>
-                <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">{s.label}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
         {/* Filter bar */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="flex flex-col sm:flex-row gap-3"
+        >
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
-            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm theo tên, bộ phận..." className="pl-9 text-sm" />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Tìm theo tên, bộ phận..."
+              className="pl-9 text-sm focus-visible:ring-[#8f58e4]"
+            />
           </div>
           <Select value={branchFilter} onValueChange={setBranch}>
-            <SelectTrigger className="sm:min-w-[200px] text-sm">
+            <SelectTrigger className="sm:min-w-[200px] text-sm gap-2 focus:ring-[#8f58e4]">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -140,7 +204,7 @@ export default function Page() {
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </motion.div>
 
         {/* Split layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -186,9 +250,6 @@ export default function Page() {
               )}
             </AnimatePresence>
           </div>
-
-          {/* Vertical divider (desktop only) */}
-          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 pointer-events-none" />
 
           {/* ── Right: Cần đổi ca ── */}
           <div className="space-y-4">
@@ -239,9 +300,6 @@ export default function Page() {
             </AnimatePresence>
           </div>
         </div>
-
-        {/* Mobile divider between panels */}
-        <Separator className="lg:hidden" />
 
       </div>
 

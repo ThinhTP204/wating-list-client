@@ -9,6 +9,7 @@ const tabs = [
   { name: "Nhân viên", tab: "employees" },
   { name: "Chấm công", tab: "time-keeping" },
   { name: "Yêu cầu", tab: "request" },
+  { name: "Đổi ca (NV)", tab: "request-user" },
   { name: "Lương", tab: "salary" },
   { name: "Công việc", tab: "task" },
 ];

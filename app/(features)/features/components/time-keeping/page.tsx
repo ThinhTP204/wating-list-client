@@ -259,28 +259,33 @@ export default function Page() {
 
       {/* ── Legend ── */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.12 }}
-        className="flex flex-wrap items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.12 }}
+        className="mb-3 border border-neutral-200 dark:border-neutral-800 rounded-xl bg-white dark:bg-neutral-900 shadow-sm overflow-hidden"
       >
-        {(Object.keys(ATTENDANCE_COLORS) as AttendanceStatus[])
-          .filter((s) => s !== "not-yet")
-          .map((status) => {
+        <div className="flex items-center gap-0 divide-x divide-neutral-100 dark:divide-neutral-800 overflow-x-auto">
+          {/* Label */}
+          <div className="px-3 py-2 shrink-0 bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4]">
+            <p className="text-[10px] font-bold text-white/90 uppercase tracking-widest whitespace-nowrap">Chú thích</p>
+          </div>
+          {/* Items */}
+          {(Object.keys(ATTENDANCE_COLORS) as AttendanceStatus[]).map((status) => {
             const c = ATTENDANCE_COLORS[status];
             return (
               <div
                 key={status}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${c.bg} cursor-default group`}
-                title={c.label}
+                className="flex items-center gap-1.5 px-3 py-2 shrink-0 group cursor-default hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors"
               >
-                <div className={`w-1.5 h-1.5 rounded-full ${c.dot} transition-transform group-hover:scale-125`} />
-                <span className={`text-[11px] font-medium ${c.text}`}>{c.label}</span>
+                <div className={`w-2 h-2 rounded-full ${c.dot} shrink-0 transition-transform duration-150 group-hover:scale-125`} />
+                <span className={`text-[11px] font-medium whitespace-nowrap ${c.text}`}>{c.label}</span>
               </div>
             );
           })}
+        </div>
       </motion.div>
 
+      {/* ── Grid ── */}
       <TimekeepingGrid
         days={days}
         employees={employees}

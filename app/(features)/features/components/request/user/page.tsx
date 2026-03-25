@@ -3,19 +3,29 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  Plus, Search, ArrowLeftRight, UserCheck,
-  CheckCircle2, X, MapPin, Clock,
+  Plus,
+  Search,
+  ArrowLeftRight,
+  UserCheck,
+  CheckCircle2,
+  X,
+  MapPin,
+  Clock,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
-  MOCK_POSTS, MOCK_AVAILABLE,
-  ShiftSwapPost, AvailableEmployee,
-  STATUS_META, SHIFT_TYPE_META, MIN_DAYS_AHEAD,
+  MOCK_POSTS,
+  MOCK_AVAILABLE,
+  ShiftSwapPost,
+  AvailableEmployee,
+  STATUS_META,
+  SHIFT_TYPE_META,
+  MIN_DAYS_AHEAD,
 } from "../components/types";
-import ShiftSwapCard   from "../components/ShiftSwapCard";
-import AvailableCard   from "../components/AvailableCard";
+import ShiftSwapCard from "../components/ShiftSwapCard";
+import AvailableCard from "../components/AvailableCard";
 import ShiftSwapDialog from "../components/ShiftSwapDialog";
 import AvailableDialog from "../components/AvailableDialog";
 
@@ -45,62 +55,66 @@ function getMinSwapDate(): Date {
 type Tab = "swap" | "avail";
 
 const TABS: Array<{ id: Tab; label: string; Icon: React.ElementType }> = [
-  { id: "swap",  label: "Cần đổi ca",    Icon: ArrowLeftRight },
+  { id: "swap", label: "Cần đổi ca", Icon: ArrowLeftRight },
   { id: "avail", label: "Sẵn sàng nhận", Icon: UserCheck },
 ];
 
 // ── Component ──────────────────────────────────────────────────────────────
 export default function UserRequestPage() {
-  const [posts, setPosts]         = useState<ShiftSwapPost[]>(MOCK_POSTS);
+  const [posts, setPosts] = useState<ShiftSwapPost[]>(MOCK_POSTS);
   const [available, setAvailable] = useState<AvailableEmployee[]>(MOCK_AVAILABLE);
-  const [search, setSearch]       = useState("");
+  const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("swap");
-  const [swapOpen, setSwapOpen]   = useState(false);
+  const [swapOpen, setSwapOpen] = useState(false);
   const [availOpen, setAvailOpen] = useState(false);
 
-  const minDate     = getMinSwapDate();
-  const mySwapPost  = posts.find((p) => p.isOwn);
+  const minDate = getMinSwapDate();
+  const mySwapPost = posts.find((p) => p.isOwn);
   const myAvailPost = available.find((e) => e.isOwn);
-  const hasMatch    = mySwapPost?.status === "matched";
+  const hasMatch = mySwapPost?.status === "matched";
 
   // Marketplace — exclude own posts
-  const marketSwap = useMemo(() =>
-    posts.filter((p) => {
-      if (p.isOwn || p.status === "expired") return false;
-      if (p.status === "open" && new Date(p.myShift.date) < minDate) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        return p.authorName.toLowerCase().includes(q) || p.wantShift.toLowerCase().includes(q);
-      }
-      return true;
-    }),
+  const marketSwap = useMemo(
+    () =>
+      posts.filter((p) => {
+        if (p.isOwn || p.status === "expired") return false;
+        if (p.status === "open" && new Date(p.myShift.date) < minDate) return false;
+        if (search) {
+          const q = search.toLowerCase();
+          return p.authorName.toLowerCase().includes(q) || p.wantShift.toLowerCase().includes(q);
+        }
+        return true;
+      }),
     [posts, search]
   );
 
-  const marketAvail = useMemo(() =>
-    available.filter((e) => {
-      if (e.isOwn) return false;
-      if (new Date(e.availableDate) < new Date(new Date().toDateString())) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        return e.name.toLowerCase().includes(q) || e.department.toLowerCase().includes(q);
-      }
-      return true;
-    }),
+  const marketAvail = useMemo(
+    () =>
+      available.filter((e) => {
+        if (e.isOwn) return false;
+        if (new Date(e.availableDate) < new Date(new Date().toDateString())) return false;
+        if (search) {
+          const q = search.toLowerCase();
+          return e.name.toLowerCase().includes(q) || e.department.toLowerCase().includes(q);
+        }
+        return true;
+      }),
     [available, search]
   );
 
   const tabCount = { swap: marketSwap.length, avail: marketAvail.length };
 
-  const handleSaveSwap    = (p: ShiftSwapPost)     => setPosts((prev) => [p, ...prev]);
-  const handleAccept      = (p: ShiftSwapPost)     => setPosts((prev) => prev.map((x) => x.id === p.id ? { ...x, status: "matched" as const } : x));
-  const handleCancelSwap  = (p: ShiftSwapPost)     => setPosts((prev) => prev.filter((x) => x.id !== p.id));
-  const handleSaveAvail   = (e: AvailableEmployee) => setAvailable((prev) => [e, ...prev]);
-  const handleCancelAvail = (e: AvailableEmployee) => setAvailable((prev) => prev.filter((x) => x.id !== e.id));
+  const handleSaveSwap = (p: ShiftSwapPost) => setPosts((prev) => [p, ...prev]);
+  const handleAccept = (p: ShiftSwapPost) =>
+    setPosts((prev) => prev.map((x) => (x.id === p.id ? { ...x, status: "matched" as const } : x)));
+  const handleCancelSwap = (p: ShiftSwapPost) =>
+    setPosts((prev) => prev.filter((x) => x.id !== p.id));
+  const handleSaveAvail = (e: AvailableEmployee) => setAvailable((prev) => [e, ...prev]);
+  const handleCancelAvail = (e: AvailableEmployee) =>
+    setAvailable((prev) => prev.filter((x) => x.id !== e.id));
 
   return (
     <div className="flex-1 flex flex-col h-[calc(100vh-3.5rem)] overflow-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-
       {/* ── Personal Hero ─────────────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -114,7 +128,6 @@ export default function UserRequestPage() {
         <div className="absolute -bottom-8 left-1/3 w-36 h-36 rounded-full bg-indigo-400/10 pointer-events-none" />
 
         <div className="relative px-6 pt-6 pb-5 space-y-4">
-
           {/* User identity row */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -131,7 +144,8 @@ export default function UserRequestPage() {
                   <span className="text-purple-200/50 text-[11px]">{ME.department}</span>
                   <span className="text-white/20 text-[11px]">·</span>
                   <span className="text-purple-200/50 text-[11px] flex items-center gap-0.5">
-                    <MapPin className="w-2.5 h-2.5" />{ME.branch}
+                    <MapPin className="w-2.5 h-2.5" />
+                    {ME.branch}
                   </span>
                 </div>
               </div>
@@ -155,7 +169,6 @@ export default function UserRequestPage() {
 
           {/* My active posts */}
           <div className="flex flex-wrap gap-2">
-
             {/* My swap post chip */}
             <AnimatePresence mode="popLayout">
               {mySwapPost ? (
@@ -169,14 +182,21 @@ export default function UserRequestPage() {
                 >
                   <ArrowLeftRight className="w-3.5 h-3.5 text-purple-200/60 shrink-0" />
                   <div>
-                    <p className="text-[9px] text-white/45 uppercase tracking-widest font-semibold">Đổi ca của tôi</p>
+                    <p className="text-[9px] text-white/45 uppercase tracking-widest font-semibold">
+                      Đổi ca của tôi
+                    </p>
                     <p className="text-xs font-semibold text-white leading-tight">
                       {SHIFT_TYPE_META[mySwapPost.myShift.type].label}
                       <span className="text-white/60 font-normal"> · </span>
                       {mySwapPost.myShift.timeLabel}
                     </p>
                   </div>
-                  <Badge className={cn("border-transparent text-[10px] shrink-0", STATUS_META[mySwapPost.status].cls)}>
+                  <Badge
+                    className={cn(
+                      "border-transparent text-[10px] shrink-0",
+                      STATUS_META[mySwapPost.status].cls
+                    )}
+                  >
                     {STATUS_META[mySwapPost.status].label}
                   </Badge>
                   <button
@@ -217,11 +237,19 @@ export default function UserRequestPage() {
                 >
                   <UserCheck className="w-3.5 h-3.5 text-emerald-300/70 shrink-0" />
                   <div>
-                    <p className="text-[9px] text-white/45 uppercase tracking-widest font-semibold">Sẵn sàng nhận</p>
+                    <p className="text-[9px] text-white/45 uppercase tracking-widest font-semibold">
+                      Sẵn sàng nhận
+                    </p>
                     <p className="text-xs font-semibold text-white leading-tight flex items-center gap-1">
                       <Clock className="w-2.5 h-2.5 text-white/50" />
-                      {new Date(myAvailPost.availableDate).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" })}
-                      <span className="text-white/60 font-normal"> · {myAvailPost.availableShifts.length} ca</span>
+                      {new Date(myAvailPost.availableDate).toLocaleDateString("vi-VN", {
+                        day: "2-digit",
+                        month: "2-digit",
+                      })}
+                      <span className="text-white/60 font-normal">
+                        {" "}
+                        · {myAvailPost.availableShifts.length} ca
+                      </span>
                     </p>
                   </div>
                   <button
@@ -248,14 +276,12 @@ export default function UserRequestPage() {
                 </motion.button>
               )}
             </AnimatePresence>
-
           </div>
         </div>
       </motion.div>
 
       {/* ── Marketplace ───────────────────────────────────────────────────── */}
       <div className="flex-1 px-6 pt-5 pb-6 space-y-4">
-
         {/* Search */}
         <motion.div
           initial={{ opacity: 0, y: 6 }}
@@ -295,12 +321,14 @@ export default function UserRequestPage() {
               >
                 <Icon className="w-3.5 h-3.5 shrink-0" />
                 <span>{label}</span>
-                <span className={cn(
-                  "text-[10px] font-bold px-1.5 py-0.5 rounded-full transition-colors",
-                  isActive
-                    ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
-                    : "bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400"
-                )}>
+                <span
+                  className={cn(
+                    "text-[10px] font-bold px-1.5 py-0.5 rounded-full transition-colors",
+                    isActive
+                      ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
+                      : "bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400"
+                  )}
+                >
                   {tabCount[id]}
                 </span>
               </button>
@@ -380,11 +408,14 @@ export default function UserRequestPage() {
             </motion.div>
           )}
         </AnimatePresence>
-
       </div>
 
       <ShiftSwapDialog open={swapOpen} onClose={() => setSwapOpen(false)} onSave={handleSaveSwap} />
-      <AvailableDialog open={availOpen} onClose={() => setAvailOpen(false)} onSave={handleSaveAvail} />
+      <AvailableDialog
+        open={availOpen}
+        onClose={() => setAvailOpen(false)}
+        onSave={handleSaveAvail}
+      />
     </div>
   );
 }

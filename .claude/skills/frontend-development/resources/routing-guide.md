@@ -1,364 +1,225 @@
 # Routing Guide
 
-TanStack Router implementation with folder-based routing and lazy loading patterns.
+Next.js 16 App Router + `?tab=` query param pattern for feature navigation.
 
 ---
 
-## TanStack Router Overview
+## Overview
 
-**TanStack Router** with file-based routing:
-- Folder structure defines routes
-- Lazy loading for code splitting
-- Type-safe routing
-- Breadcrumb loaders
+This app uses the **Next.js App Router** with route groups:
 
----
+| Route Group | Purpose | Auth |
+|-------------|---------|------|
+| `(landing)` | Public landing page | No |
+| `(features)` | Main app features | Yes (middleware) |
+| `user/` | User account | Yes (middleware) |
 
-## Folder-Based Routing
-
-### Directory Structure
-
-```
-routes/
-  __root.tsx                    # Root layout
-  index.tsx                     # Home route (/)
-  posts/
-    index.tsx                   # /posts
-    create/
-      index.tsx                 # /posts/create
-    $postId.tsx                 # /posts/:postId (dynamic)
-  comments/
-    index.tsx                   # /comments
-```
-
-**Pattern**:
-- `index.tsx` = Route at that path
-- `$param.tsx` = Dynamic parameter
-- Nested folders = Nested routes
+`middleware.ts` protects all routes — unauthenticated users are redirected to login.
 
 ---
 
-## Basic Route Pattern
+## Features Tab Navigation
 
-### Example from posts/index.tsx
+Feature tabs are **NOT separate routes**. They use a single page with a `?tab=` query param.
 
-```typescript
-/**
- * Posts route component
- * Displays the main blog posts list
- */
-
-import { createFileRoute } from '@tanstack/react-router';
-import { lazy } from 'react';
-
-// Lazy load the page component
-const PostsList = lazy(() =>
-    import('@/features/posts/components/PostsList').then(
-        (module) => ({ default: module.PostsList }),
-    ),
-);
-
-export const Route = createFileRoute('/posts/')({
-    component: PostsPage,
-    // Define breadcrumb data
-    loader: () => ({
-        crumb: 'Posts',
-    }),
-});
-
-function PostsPage() {
-    return (
-        <PostsList
-            title='All Posts'
-            showFilters={true}
-        />
-    );
-}
-
-export default PostsPage;
+```
+/features?tab=dashboard
+/features?tab=calendar
+/features?tab=employees
+/features?tab=time-keeping
+/features?tab=request
+/features?tab=salary
+/features?tab=task
 ```
 
-**Key Points:**
-- Lazy load heavy components
-- `createFileRoute` with route path
-- `loader` for breadcrumb data
-- Page component renders content
-- Export both Route and component
+### Layout Pattern (`app/(features)/features/layout.tsx`)
 
----
+```tsx
+// app/(features)/features/layout.tsx
+"use client";
 
-## Lazy Loading Routes
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-### Named Export Pattern
+const TABS = [
+  { id: "dashboard", label: "Dashboard" },
+  { id: "calendar", label: "Calendar" },
+  { id: "employees", label: "Employees" },
+  { id: "time-keeping", label: "Time Keeping" },
+  { id: "request", label: "Request" },
+  { id: "salary", label: "Salary" },
+  { id: "task", label: "Task" },
+];
 
-```typescript
-import { lazy } from 'react';
+export default function FeaturesLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get("tab") ?? "dashboard";
 
-// For named exports, use .then() to map to default
-const MyPage = lazy(() =>
-    import('@/features/my-feature/components/MyPage').then(
-        (module) => ({ default: module.MyPage })
-    )
-);
-```
+  const handleTabChange = (tabId: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", tabId);
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
-### Default Export Pattern
-
-```typescript
-import { lazy } from 'react';
-
-// For default exports, simpler syntax
-const MyPage = lazy(() => import('@/features/my-feature/components/MyPage'));
-```
-
-### Why Lazy Load Routes?
-
-- Code splitting - smaller initial bundle
-- Faster initial page load
-- Load route code only when navigated to
-- Better performance
-
----
-
-## createFileRoute
-
-### Basic Configuration
-
-```typescript
-export const Route = createFileRoute('/my-route/')({
-    component: MyRoutePage,
-});
-
-function MyRoutePage() {
-    return <div>My Route Content</div>;
+  return (
+    <div className="min-h-screen">
+      <nav className="border-b">
+        <div className="flex gap-1 px-4">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => handleTabChange(tab.id)}
+              className={cn(
+                "px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors",
+                activeTab === tab.id
+                  ? "border-[#8f58e4] text-[#8f58e4]"
+                  : "border-transparent text-muted-foreground hover:text-gray-900 dark:hover:text-white"
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </nav>
+      <main>{children}</main>
+    </div>
+  );
 }
 ```
 
-### With Breadcrumb Loader
+### Page Component Pattern
 
-```typescript
-export const Route = createFileRoute('/my-route/')({
-    component: MyRoutePage,
-    loader: () => ({
-        crumb: 'My Route Title',
-    }),
-});
-```
+```tsx
+// app/(features)/features/page.tsx
+"use client";
 
-Breadcrumb appears in navigation/app bar automatically.
+import { useSearchParams } from "next/navigation";
+import DashboardTab from "./components/dashboard/DashboardTab";
+import CalendarTab from "./components/calendar/CalendarTab";
+import EmployeesTab from "./components/employees/EmployeesTab";
+// ... other tab components
 
-### With Data Loader
+export default function FeaturesPage() {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab") ?? "dashboard";
 
-```typescript
-export const Route = createFileRoute('/my-route/')({
-    component: MyRoutePage,
-    loader: async () => {
-        // Can prefetch data here
-        const data = await api.getData();
-        return { crumb: 'My Route', data };
-    },
-});
-```
-
-### With Search Params
-
-```typescript
-export const Route = createFileRoute('/search/')({
-    component: SearchPage,
-    validateSearch: (search: Record<string, unknown>) => {
-        return {
-            query: (search.query as string) || '',
-            page: Number(search.page) || 1,
-        };
-    },
-});
-
-function SearchPage() {
-    const { query, page } = Route.useSearch();
-    // Use query and page
+  return (
+    <div className="p-6">
+      {tab === "dashboard" && <DashboardTab />}
+      {tab === "calendar" && <CalendarTab />}
+      {tab === "employees" && <EmployeesTab />}
+      {tab === "time-keeping" && <TimekeepingTab />}
+      {tab === "request" && <RequestTab />}
+      {tab === "salary" && <SalaryTab />}
+      {tab === "task" && <TaskTab />}
+    </div>
+  );
 }
 ```
 
 ---
 
-## Dynamic Routes
+## Reading Search Params
 
-### Parameter Routes
+In Client Components:
 
-```typescript
-// routes/users/$userId.tsx
+```tsx
+"use client";
+import { useSearchParams, useRouter } from "next/navigation";
 
-export const Route = createFileRoute('/users/$userId')({
-    component: UserPage,
-});
+export default function MyComponent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-function UserPage() {
-    const { userId } = Route.useParams();
+  const currentTab = searchParams.get("tab");
+  const page = Number(searchParams.get("page") ?? "1");
 
-    return <UserProfile userId={userId} />;
+  const navigateToTab = (tab: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", tab);
+    router.push(`?${params.toString()}`);
+  };
 }
 ```
 
-### Multiple Parameters
+In Server Components (page.tsx):
 
-```typescript
-// routes/posts/$postId/comments/$commentId.tsx
+```tsx
+// app/(features)/features/page.tsx
+interface PageProps {
+  searchParams: { tab?: string; page?: string };
+}
 
-export const Route = createFileRoute('/posts/$postId/comments/$commentId')({
-    component: CommentPage,
-});
-
-function CommentPage() {
-    const { postId, commentId } = Route.useParams();
-
-    return <CommentEditor postId={postId} commentId={commentId} />;
+export default function FeaturesPage({ searchParams }: PageProps) {
+  const tab = searchParams.tab ?? "dashboard";
+  // ...
 }
 ```
 
 ---
 
-## Navigation
+## Auth / Middleware
+
+`middleware.ts` protects all `(features)` and `user/` routes.
+
+- Token stored in Redux auth slice
+- Axios reads it on every request via interceptor
+- 401 response → automatic logout + redirect to login
+
+---
+
+## Navigation Patterns
 
 ### Programmatic Navigation
 
-```typescript
-import { useNavigate } from '@tanstack/react-router';
+```tsx
+"use client";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export const MyComponent: React.FC = () => {
-    const navigate = useNavigate();
+export function TabSwitcher() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-    const handleClick = () => {
-        navigate({ to: '/posts' });
-    };
+  const goToEmployees = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", "employees");
+    router.push(`/features?${params.toString()}`);
+  };
 
-    return <Button onClick={handleClick}>View Posts</Button>;
-};
-```
-
-### With Parameters
-
-```typescript
-const handleNavigate = () => {
-    navigate({
-        to: '/users/$userId',
-        params: { userId: '123' },
-    });
-};
-```
-
-### With Search Params
-
-```typescript
-const handleSearch = () => {
-    navigate({
-        to: '/search',
-        search: { query: 'test', page: 1 },
-    });
-};
-```
-
----
-
-## Route Layout Pattern
-
-### Root Layout (__root.tsx)
-
-```typescript
-import { createRootRoute, Outlet } from '@tanstack/react-router';
-import { Box } from '@mui/material';
-import { CustomAppBar } from '~components/CustomAppBar';
-
-export const Route = createRootRoute({
-    component: RootLayout,
-});
-
-function RootLayout() {
-    return (
-        <Box>
-            <CustomAppBar />
-            <Box sx={{ p: 2 }}>
-                <Outlet />  {/* Child routes render here */}
-            </Box>
-        </Box>
-    );
+  return <button onClick={goToEmployees}>View Employees</button>;
 }
 ```
 
-### Nested Layouts
+### Link Component
 
-```typescript
-// routes/dashboard/index.tsx
-export const Route = createFileRoute('/dashboard/')({
-    component: DashboardLayout,
-});
+```tsx
+import Link from "next/link";
 
-function DashboardLayout() {
-    return (
-        <Box>
-            <DashboardSidebar />
-            <Box sx={{ flex: 1 }}>
-                <Outlet />  {/* Nested routes */}
-            </Box>
-        </Box>
-    );
-}
+<Link href="/features?tab=employees">
+  Go to Employees
+</Link>
 ```
 
----
+### Back Navigation
 
-## Complete Route Example
-
-```typescript
-/**
- * User profile route
- * Path: /users/:userId
- */
-
-import { createFileRoute } from '@tanstack/react-router';
-import { lazy } from 'react';
-import { SuspenseLoader } from '~components/SuspenseLoader';
-
-// Lazy load heavy component
-const UserProfile = lazy(() =>
-    import('@/features/users/components/UserProfile').then(
-        (module) => ({ default: module.UserProfile })
-    )
-);
-
-export const Route = createFileRoute('/users/$userId')({
-    component: UserPage,
-    loader: () => ({
-        crumb: 'User Profile',
-    }),
-});
-
-function UserPage() {
-    const { userId } = Route.useParams();
-
-    return (
-        <SuspenseLoader>
-            <UserProfile userId={userId} />
-        </SuspenseLoader>
-    );
-}
-
-export default UserPage;
+```tsx
+import { useRouter } from "next/navigation";
+const router = useRouter();
+router.back();
 ```
 
 ---
 
 ## Summary
 
-**Routing Checklist:**
-- ✅ Folder-based: `routes/my-route/index.tsx`
-- ✅ Lazy load components: `React.lazy(() => import())`
-- ✅ Use `createFileRoute` with route path
-- ✅ Add breadcrumb in `loader` function
-- ✅ Wrap in `SuspenseLoader` for loading states
-- ✅ Use `Route.useParams()` for dynamic params
-- ✅ Use `useNavigate()` for programmatic navigation
+- **Tabs**: `?tab=` query param — no separate routes for feature tabs
+- **Auth**: `middleware.ts` handles all protected route checks
+- **Client Components**: `useSearchParams()` + `useRouter()` for tab navigation
+- **Server Components**: Receive `searchParams` as page props
+- **No TanStack Router** — this is Next.js App Router only
 
 **See Also:**
-- [component-patterns.md](component-patterns.md) - Lazy loading patterns
-- [loading-and-error-states.md](loading-and-error-states.md) - SuspenseLoader usage
-- [complete-examples.md](complete-examples.md) - Full route examples
+- [component-patterns.md](component-patterns.md) — `"use client"` rules
+- [common-patterns.md](common-patterns.md) — Auth patterns with Redux

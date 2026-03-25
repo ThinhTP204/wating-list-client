@@ -1,101 +1,39 @@
 # TypeScript Standards
 
-TypeScript best practices for type safety and maintainability in React frontend code.
+TypeScript strict mode conventions for this project.
 
 ---
 
-## Strict Mode
+## Configuration
 
-### Configuration
-
-TypeScript strict mode is **enabled** in the project:
+TypeScript **strict mode** is enabled (`tsconfig.json`):
 
 ```json
-// tsconfig.json
 {
-    "compilerOptions": {
-        "strict": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true
-    }
+  "compilerOptions": {
+    "strict": true
+  }
 }
 ```
 
-**This means:**
-- No implicit `any` types
-- Null/undefined must be handled explicitly
-- Type safety enforced
+This enforces: no implicit `any`, strict null checks, and full type safety.
 
 ---
 
 ## No `any` Type
 
-### The Rule
-
 ```typescript
-// ❌ NEVER use any
-function handleData(data: any) {
-    return data.something;
-}
+// ❌ NEVER
+function handleData(data: any) { return data.something; }
 
-// ✅ Use specific types
-interface MyData {
-    something: string;
-}
+// ✅ Specific type
+function handleData(data: Employee) { return data.name; }
 
-function handleData(data: MyData) {
-    return data.something;
-}
-
-// ✅ Or use unknown for truly unknown data
+// ✅ unknown with type guard for truly unknown input
 function handleUnknown(data: unknown) {
-    if (typeof data === 'object' && data !== null && 'something' in data) {
-        return (data as MyData).something;
-    }
-}
-```
-
-**If you truly don't know the type:**
-- Use `unknown` (forces type checking)
-- Use type guards to narrow
-- Document why type is unknown
-
----
-
-## Explicit Return Types
-
-### Function Return Types
-
-```typescript
-// ✅ CORRECT - Explicit return type
-function getUser(id: number): Promise<User> {
-    return apiClient.get(`/users/${id}`);
-}
-
-function calculateTotal(items: Item[]): number {
-    return items.reduce((sum, item) => sum + item.price, 0);
-}
-
-// ❌ AVOID - Implicit return type (less clear)
-function getUser(id: number) {
-    return apiClient.get(`/users/${id}`);
-}
-```
-
-### Component Return Types
-
-```typescript
-// React.FC already provides return type (ReactElement)
-export const MyComponent: React.FC<Props> = ({ prop }) => {
-    return <div>{prop}</div>;
-};
-
-// For custom hooks
-function useMyData(id: number): { data: Data; isLoading: boolean } {
-    const [data, setData] = useState<Data | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    return { data: data!, isLoading };
+  if (typeof data === "object" && data !== null && "name" in data) {
+    return (data as Employee).name;
+  }
 }
 ```
 
@@ -103,148 +41,85 @@ function useMyData(id: number): { data: Data; isLoading: boolean } {
 
 ## Type Imports
 
-### Use 'type' Keyword
-
 ```typescript
-// ✅ CORRECT - Explicitly mark as type import
-import type { User } from '~types/user';
-import type { Post } from '~types/post';
-import type { SxProps, Theme } from '@mui/material';
+// ✅ CORRECT — import type keyword
+import type { Employee } from "@/types/employee";
+import type { ReactNode } from "react";
 
-// ❌ AVOID - Mixed value and type imports
-import { User } from '~types/user';  // Unclear if type or value
+// ❌ WRONG — unclear if type or value
+import { Employee } from "@/types/employee";
 ```
-
-**Benefits:**
-- Clearly separates types from values
-- Better tree-shaking
-- Prevents circular dependencies
-- TypeScript compiler optimization
 
 ---
 
-## Component Prop Interfaces
-
-### Interface Pattern
+## Prop Interfaces
 
 ```typescript
-/**
- * Props for MyComponent
- */
-interface MyComponentProps {
-    /** The user ID to display */
-    userId: number;
-
-    /** Optional callback when action completes */
-    onComplete?: () => void;
-
-    /** Display mode for the component */
-    mode?: 'view' | 'edit';
-
-    /** Additional CSS classes */
-    className?: string;
+// ✅ PascalCase, explicit, optional marked with ?
+interface EmployeeCardProps {
+  employee: Employee;
+  onSelect?: (id: string) => void;
+  variant?: "compact" | "full";
+  className?: string;
 }
 
-export const MyComponent: React.FC<MyComponentProps> = ({
-    userId,
-    onComplete,
-    mode = 'view',  // Default value
-    className,
-}) => {
-    return <div>...</div>;
-};
+function EmployeeCard({
+  employee,
+  onSelect,
+  variant = "full",
+  className,
+}: EmployeeCardProps) {
+  // ...
+}
 ```
 
-**Key Points:**
-- Separate interface for props
-- JSDoc comments for each prop
-- Optional props use `?`
-- Provide defaults in destructuring
+---
 
-### Props with Children
+## API Response Types (`types/`)
+
+All API response shapes must be typed in `types/`. Never use inline types for API data.
 
 ```typescript
-interface ContainerProps {
-    children: React.ReactNode;
-    title: string;
+// types/employee.ts
+export interface Employee {
+  id: string;
+  name: string;
+  email: string;
+  department: string;
+  position: string;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-// React.FC automatically includes children type, but be explicit
-export const Container: React.FC<ContainerProps> = ({ children, title }) => {
-    return (
-        <div>
-            <h2>{title}</h2>
-            {children}
-        </div>
-    );
-};
+export interface CreateEmployeePayload {
+  name: string;
+  email: string;
+  department: string;
+  position: string;
+}
+
+export type UpdateEmployeePayload = Partial<Omit<Employee, "id" | "createdAt" | "updatedAt">>;
 ```
 
 ---
 
 ## Utility Types
 
-### Partial<T>
-
 ```typescript
-// Make all properties optional
-type UserUpdate = Partial<User>;
+// Partial — all optional
+type EmployeeUpdate = Partial<Employee>;
 
-function updateUser(id: number, updates: Partial<User>) {
-    // updates can have any subset of User properties
-}
-```
+// Pick — specific fields
+type EmployeePreview = Pick<Employee, "id" | "name" | "department">;
 
-### Pick<T, K>
+// Omit — exclude fields
+type EmployeeWithoutDates = Omit<Employee, "createdAt" | "updatedAt">;
 
-```typescript
-// Select specific properties
-type UserPreview = Pick<User, 'id' | 'name' | 'email'>;
-
-const preview: UserPreview = {
-    id: 1,
-    name: 'John',
-    email: 'john@example.com',
-    // Other User properties not allowed
-};
-```
-
-### Omit<T, K>
-
-```typescript
-// Exclude specific properties
-type UserWithoutPassword = Omit<User, 'password' | 'passwordHash'>;
-
-const publicUser: UserWithoutPassword = {
-    id: 1,
-    name: 'John',
-    email: 'john@example.com',
-    // password and passwordHash not allowed
-};
-```
-
-### Required<T>
-
-```typescript
-// Make all properties required
-type RequiredConfig = Required<Config>;  // All optional props become required
-```
-
-### Record<K, V>
-
-```typescript
-// Type-safe object/map
-const userMap: Record<string, User> = {
-    'user1': { id: 1, name: 'John' },
-    'user2': { id: 2, name: 'Jane' },
-};
-
-// For styles
-import type { SxProps, Theme } from '@mui/material';
-
-const styles: Record<string, SxProps<Theme>> = {
-    container: { p: 2 },
-    header: { mb: 1 },
+// Record — object map
+const departmentColors: Record<string, string> = {
+  engineering: "#8f58e4",
+  hr: "#5e34b7",
 };
 ```
 
@@ -252,149 +127,82 @@ const styles: Record<string, SxProps<Theme>> = {
 
 ## Type Guards
 
-### Basic Type Guards
-
 ```typescript
-function isUser(data: unknown): data is User {
-    return (
-        typeof data === 'object' &&
-        data !== null &&
-        'id' in data &&
-        'name' in data
-    );
+function isEmployee(data: unknown): data is Employee {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "id" in data &&
+    "name" in data &&
+    "email" in data
+  );
 }
 
-// Usage
-if (isUser(response)) {
-    console.log(response.name);  // TypeScript knows it's User
+// Discriminated union for status
+type RequestStatus =
+  | { status: "pending" }
+  | { status: "approved"; approvedAt: string; approvedBy: string }
+  | { status: "rejected"; reason: string };
+
+function renderStatus(req: RequestStatus) {
+  if (req.status === "approved") {
+    return <p>Approved by {req.approvedBy}</p>;  // TypeScript knows approvedBy exists
+  }
+  if (req.status === "rejected") {
+    return <p>Rejected: {req.reason}</p>;  // TypeScript knows reason exists
+  }
+  return <p>Pending</p>;
 }
 ```
 
-### Discriminated Unions
+---
+
+## Null / Undefined Handling
 
 ```typescript
-type LoadingState =
-    | { status: 'idle' }
-    | { status: 'loading' }
-    | { status: 'success'; data: Data }
-    | { status: 'error'; error: Error };
+// Optional chaining
+const name = employee?.profile?.name;
 
-function Component({ state }: { state: LoadingState }) {
-    // TypeScript narrows type based on status
-    if (state.status === 'success') {
-        return <Display data={state.data} />;  // data available here
-    }
+// Nullish coalescing (prefer over || for falsy values)
+const displayName = employee?.name ?? "Unknown";
 
-    if (state.status === 'error') {
-        return <Error error={state.error} />;  // error available here
-    }
-
-    return <Loading />;
-}
+// Non-null assertion — use sparingly, only when certain
+const element = document.getElementById("root")!;
 ```
 
 ---
 
 ## Generic Types
 
-### Generic Functions
-
 ```typescript
-function getById<T>(items: T[], id: number): T | undefined {
-    return items.find(item => (item as any).id === id);
-}
-
-// Usage with type inference
-const users: User[] = [...];
-const user = getById(users, 123);  // Type: User | undefined
-```
-
-### Generic Components
-
-```typescript
-interface ListProps<T> {
-    items: T[];
-    renderItem: (item: T) => React.ReactNode;
-}
-
-export function List<T>({ items, renderItem }: ListProps<T>): React.ReactElement {
-    return (
-        <div>
-            {items.map((item, index) => (
-                <div key={index}>{renderItem(item)}</div>
-            ))}
-        </div>
-    );
+// Generic API response wrapper
+interface ApiResponse<T> {
+  data: T;
+  total: number;
+  page: number;
 }
 
 // Usage
-<List<User>
-    items={users}
-    renderItem={(user) => <UserCard user={user} />}
-/>
+async function getEmployees(): Promise<ApiResponse<Employee[]>> {
+  const { data } = await api.get("/employees");
+  return data;
+}
 ```
 
 ---
 
-## Type Assertions (Use Sparingly)
-
-### When to Use
+## Explicit Return Types on Service Functions
 
 ```typescript
-// ✅ OK - When you know more than TypeScript
-const element = document.getElementById('my-element') as HTMLInputElement;
-const value = element.value;
+// ✅ CORRECT — explicit return type
+export async function getEmployee(id: string): Promise<Employee> {
+  const { data } = await api.get(`/employees/${id}`);
+  return data;
+}
 
-// ✅ OK - API response that you've validated
-const response = await api.getData();
-const user = response.data as User;  // You know the shape
-```
-
-### When NOT to Use
-
-```typescript
-// ❌ AVOID - Circumventing type safety
-const data = getData() as any;  // WRONG - defeats TypeScript
-
-// ❌ AVOID - Unsafe assertion
-const value = unknownValue as string;  // Might not actually be string
-```
-
----
-
-## Null/Undefined Handling
-
-### Optional Chaining
-
-```typescript
-// ✅ CORRECT
-const name = user?.profile?.name;
-
-// Equivalent to:
-const name = user && user.profile && user.profile.name;
-```
-
-### Nullish Coalescing
-
-```typescript
-// ✅ CORRECT
-const displayName = user?.name ?? 'Anonymous';
-
-// Only uses default if null or undefined
-// (Different from || which triggers on '', 0, false)
-```
-
-### Non-Null Assertion (Use Carefully)
-
-```typescript
-// ✅ OK - When you're certain value exists
-const data = queryClient.getQueryData<Data>(['data'])!;
-
-// ⚠️ CAREFUL - Only use when you KNOW it's not null
-// Better to check explicitly:
-const data = queryClient.getQueryData<Data>(['data']);
-if (data) {
-    // Use data
+// ✅ OK for components — React.FC infers return type
+function EmployeeCard({ employee }: EmployeeCardProps) {
+  return <div>{employee.name}</div>;
 }
 ```
 
@@ -402,17 +210,15 @@ if (data) {
 
 ## Summary
 
-**TypeScript Checklist:**
-- ✅ Strict mode enabled
-- ✅ No `any` type (use `unknown` if needed)
-- ✅ Explicit return types on functions
-- ✅ Use `import type` for type imports
-- ✅ JSDoc comments on prop interfaces
-- ✅ Utility types (Partial, Pick, Omit, Required, Record)
-- ✅ Type guards for narrowing
-- ✅ Optional chaining and nullish coalescing
-- ❌ Avoid type assertions unless necessary
+- ✅ Strict mode enabled — no implicit `any`
+- ✅ `import type { Foo }` for type-only imports
+- ✅ All API shapes in `types/` — PascalCase interfaces
+- ✅ Prop interfaces PascalCase + optional `?` + default values in destructuring
+- ✅ Utility types: `Partial`, `Pick`, `Omit`, `Record`
+- ✅ Type guards for narrowing `unknown`
+- ✅ Discriminated unions for status/state
+- ❌ No `any` — use `unknown` + type guard if truly unknown
 
 **See Also:**
-- [component-patterns.md](component-patterns.md) - Component typing
-- [data-fetching.md](data-fetching.md) - API typing
+- [component-patterns.md](component-patterns.md) — Prop interface patterns
+- [data-fetching.md](data-fetching.md) — API return types

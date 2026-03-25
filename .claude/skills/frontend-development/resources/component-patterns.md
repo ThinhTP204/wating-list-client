@@ -1,502 +1,312 @@
 # Component Patterns
 
-Modern React component architecture for the application emphasizing type safety, lazy loading, and Suspense boundaries.
+Modern React component architecture for this Next.js 16 / React 19 application.
 
 ---
 
-## React.FC Pattern (PREFERRED)
+## `"use client"` Directive
 
-### Why React.FC
+**Default to Server Components.** Only add `"use client"` when the component:
+- Uses React hooks (`useState`, `useEffect`, `useQuery`, etc.)
+- Has event handlers (`onClick`, `onChange`, etc.)
+- Uses browser APIs
 
-All components use the `React.FC<Props>` pattern for:
-- Explicit type safety for props
-- Consistent component signatures
-- Clear prop interface documentation
-- Better IDE autocomplete
-
-### Basic Pattern
-
-```typescript
-import React from 'react';
-
-interface MyComponentProps {
-    /** User ID to display */
-    userId: number;
-    /** Optional callback when action occurs */
-    onAction?: () => void;
+```tsx
+// ✅ Server Component — no directive needed
+export default function EmployeeListPage() {
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Employees</h1>
+      <EmployeeListClient />  {/* delegate interactive parts */}
+    </div>
+  );
 }
 
-export const MyComponent: React.FC<MyComponentProps> = ({ userId, onAction }) => {
-    return (
-        <div>
-            User: {userId}
-        </div>
-    );
-};
-
-export default MyComponent;
-```
-
-**Key Points:**
-- Props interface defined separately with JSDoc comments
-- `React.FC<Props>` provides type safety
-- Destructure props in parameters
-- Default export at bottom
-
----
-
-## Lazy Loading Pattern
-
-### When to Lazy Load
-
-Lazy load components that are:
-- Heavy (DataGrid, charts, rich text editors)
-- Route-level components
-- Modal/dialog content (not shown initially)
-- Below-the-fold content
-
-### How to Lazy Load
-
-```typescript
-import React from 'react';
-
-// Lazy load heavy component
-const PostDataGrid = React.lazy(() =>
-    import('./grids/PostDataGrid')
-);
-
-// For named exports
-const MyComponent = React.lazy(() =>
-    import('./MyComponent').then(module => ({
-        default: module.MyComponent
-    }))
-);
-```
-
-**Example from PostTable.tsx:**
-
-```typescript
-/**
- * Main post table container component
- */
-import React, { useState, useCallback } from 'react';
-import { Box, Paper } from '@mui/material';
-
-// Lazy load PostDataGrid to optimize bundle size
-const PostDataGrid = React.lazy(() => import('./grids/PostDataGrid'));
-
-import { SuspenseLoader } from '~components/SuspenseLoader';
-
-export const PostTable: React.FC<PostTableProps> = ({ formId }) => {
-    return (
-        <Box>
-            <SuspenseLoader>
-                <PostDataGrid formId={formId} />
-            </SuspenseLoader>
-        </Box>
-    );
-};
-
-export default PostTable;
-```
-
----
-
-## Suspense Boundaries
-
-### SuspenseLoader Component
-
-**Import:**
-```typescript
-import { SuspenseLoader } from '~components/SuspenseLoader';
-// Or
-import { SuspenseLoader } from '@/components/SuspenseLoader';
-```
-
-**Usage:**
-```typescript
-<SuspenseLoader>
-    <LazyLoadedComponent />
-</SuspenseLoader>
-```
-
-**What it does:**
-- Shows loading indicator while lazy component loads
-- Smooth fade-in animation
-- Consistent loading experience
-- Prevents layout shift
-
-### Where to Place Suspense Boundaries
-
-**Route Level:**
-```typescript
-// routes/my-route/index.tsx
-const MyPage = lazy(() => import('@/features/my-feature/components/MyPage'));
-
-function Route() {
-    return (
-        <SuspenseLoader>
-            <MyPage />
-        </SuspenseLoader>
-    );
+// ✅ Client Component — uses hooks
+"use client";
+export default function EmployeeListClient() {
+  const { data, isLoading } = useEmployees();
+  // ...
 }
 ```
-
-**Component Level:**
-```typescript
-function ParentComponent() {
-    return (
-        <Box>
-            <Header />
-            <SuspenseLoader>
-                <HeavyDataGrid />
-            </SuspenseLoader>
-        </Box>
-    );
-}
-```
-
-**Multiple Boundaries:**
-```typescript
-function Page() {
-    return (
-        <Box>
-            <SuspenseLoader>
-                <HeaderSection />
-            </SuspenseLoader>
-
-            <SuspenseLoader>
-                <MainContent />
-            </SuspenseLoader>
-
-            <SuspenseLoader>
-                <Sidebar />
-            </SuspenseLoader>
-        </Box>
-    );
-}
-```
-
-Each section loads independently, better UX.
 
 ---
 
 ## Component Structure Template
 
-### Recommended Order
+```tsx
+"use client";  // Only if needed
 
-```typescript
-/**
- * Component description
- * What it does, when to use it
- */
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Box, Paper, Button } from '@mui/material';
-import type { SxProps, Theme } from '@mui/material';
-import { useSuspenseQuery } from '@tanstack/react-query';
+// 1. External imports
+import { useState, useCallback, useMemo } from "react";
+import { motion } from "motion/react";
+import { Plus, Search } from "lucide-react";
 
-// Feature imports
-import { myFeatureApi } from '../api/myFeatureApi';
-import type { MyData } from '~types/myData';
+// 2. @/lib imports
+import { cn } from "@/lib/utils";
 
-// Component imports
-import { SuspenseLoader } from '~components/SuspenseLoader';
+// 3. @/hooks imports
+import { useEmployees, useCreateEmployee } from "@/hooks/useEmployees";
 
-// Hooks
-import { useAuth } from '@/hooks/useAuth';
-import { useMuiSnackbar } from '@/hooks/useMuiSnackbar';
+// 4. @/components imports
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
-// 1. PROPS INTERFACE (with JSDoc)
-interface MyComponentProps {
-    /** The ID of the entity to display */
-    entityId: number;
-    /** Optional callback when action completes */
-    onComplete?: () => void;
-    /** Display mode */
-    mode?: 'view' | 'edit';
+// 5. @/types imports
+import type { Employee } from "@/types/employee";
+
+// Props interface — PascalCase, explicit
+interface EmployeeCardProps {
+  employee: Employee;
+  onSelect?: (id: string) => void;
+  className?: string;
 }
 
-// 2. STYLES (if inline and <100 lines)
-const componentStyles: Record<string, SxProps<Theme>> = {
-    container: {
-        p: 2,
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    header: {
-        mb: 2,
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-};
+// Component definition
+function EmployeeCard({ employee, onSelect, className }: EmployeeCardProps) {
+  // Hooks first
+  const [expanded, setExpanded] = useState(false);
 
-// 3. COMPONENT DEFINITION
-export const MyComponent: React.FC<MyComponentProps> = ({
-    entityId,
-    onComplete,
-    mode = 'view',
-}) => {
-    // 4. HOOKS (in this order)
-    // - Context hooks first
-    const { user } = useAuth();
-    const { showSuccess, showError } = useMuiSnackbar();
+  // Memoized values
+  const initials = useMemo(
+    () => employee.name.split(" ").map((n) => n[0]).join(""),
+    [employee.name]
+  );
 
-    // - Data fetching
-    const { data } = useSuspenseQuery({
-        queryKey: ['myEntity', entityId],
-        queryFn: () => myFeatureApi.getEntity(entityId),
-    });
+  // Event handlers with useCallback (when passed to children)
+  const handleSelect = useCallback(() => {
+    onSelect?.(employee.id);
+  }, [employee.id, onSelect]);
 
-    // - Local state
-    const [selectedItem, setSelectedItem] = useState<string | null>(null);
-    const [isEditing, setIsEditing] = useState(mode === 'edit');
+  // Render
+  return (
+    <Card
+      className={cn("cursor-pointer hover:shadow-md transition-shadow", className)}
+      onClick={handleSelect}
+    >
+      <CardContent className="flex items-center gap-3 p-4">
+        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] flex items-center justify-center text-white font-semibold text-sm">
+          {initials}
+        </div>
+        <div>
+          <p className="font-medium text-gray-900 dark:text-white">{employee.name}</p>
+          <p className="text-sm text-muted-foreground">{employee.position}</p>
+        </div>
+        <Badge variant="secondary" className="ml-auto">{employee.department}</Badge>
+      </CardContent>
+    </Card>
+  );
+}
 
-    // - Memoized values
-    const filteredData = useMemo(() => {
-        return data.filter(item => item.active);
-    }, [data]);
-
-    // - Effects
-    useEffect(() => {
-        // Setup
-        return () => {
-            // Cleanup
-        };
-    }, []);
-
-    // 5. EVENT HANDLERS (with useCallback)
-    const handleItemSelect = useCallback((itemId: string) => {
-        setSelectedItem(itemId);
-    }, []);
-
-    const handleSave = useCallback(async () => {
-        try {
-            await myFeatureApi.updateEntity(entityId, { /* data */ });
-            showSuccess('Entity updated successfully');
-            onComplete?.();
-        } catch (error) {
-            showError('Failed to update entity');
-        }
-    }, [entityId, onComplete, showSuccess, showError]);
-
-    // 6. RENDER
-    return (
-        <Box sx={componentStyles.container}>
-            <Box sx={componentStyles.header}>
-                <h2>My Component</h2>
-                <Button onClick={handleSave}>Save</Button>
-            </Box>
-
-            <Paper sx={{ p: 2 }}>
-                {filteredData.map(item => (
-                    <div key={item.id}>{item.name}</div>
-                ))}
-            </Paper>
-        </Box>
-    );
-};
-
-// 7. EXPORT (default export at bottom)
-export default MyComponent;
+// Default export at bottom
+export default EmployeeCard;
 ```
 
 ---
 
-## Component Separation
+## Loading State Pattern
 
-### When to Split Components
+Use `<Skeleton>` with the same layout dimensions as the actual content.
 
-**Split into multiple components when:**
-- Component exceeds 300 lines
-- Multiple distinct responsibilities
-- Reusable sections
-- Complex nested JSX
-
-**Example:**
-
-```typescript
-// ❌ AVOID - Monolithic
-function MassiveComponent() {
-    // 500+ lines
-    // Search logic
-    // Filter logic
-    // Grid logic
-    // Action panel logic
+```tsx
+// ✅ CORRECT — Skeleton preserves layout
+function EmployeeCardSkeleton() {
+  return (
+    <Card className="p-4">
+      <div className="flex items-center gap-3">
+        <Skeleton className="h-10 w-10 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-3 w-24" />
+        </div>
+      </div>
+    </Card>
+  );
 }
 
-// ✅ PREFERRED - Modular
-function ParentContainer() {
+function EmployeeList() {
+  const { data, isLoading } = useEmployees();
+
+  if (isLoading) {
     return (
-        <Box>
-            <SearchAndFilter onFilter={handleFilter} />
-            <DataGrid data={filteredData} />
-            <ActionPanel onAction={handleAction} />
-        </Box>
+      <div className="space-y-3">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <EmployeeCardSkeleton key={i} />
+        ))}
+      </div>
     );
+  }
+
+  return (
+    <div className="space-y-3">
+      {data?.map((emp) => <EmployeeCard key={emp.id} employee={emp} />)}
+    </div>
+  );
 }
 ```
 
-### When to Keep Together
+---
 
-**Keep in same file when:**
-- Component < 200 lines
+## Empty State Pattern
+
+```tsx
+import { Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+function EmptyEmployeeState({ onAdd }: { onAdd: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 text-center">
+      <div className="h-16 w-16 rounded-full bg-purple-100 dark:bg-purple-950 flex items-center justify-center mb-4">
+        <Users className="h-8 w-8 text-[#8f58e4]" />
+      </div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+        No employees yet
+      </h3>
+      <p className="text-sm text-muted-foreground mb-4">
+        Add your first employee to get started.
+      </p>
+      <Button variant="brand" onClick={onAdd}>
+        <Plus className="h-4 w-4 mr-2" />
+        Add Employee
+      </Button>
+    </div>
+  );
+}
+```
+
+---
+
+## List with Search
+
+```tsx
+"use client";
+
+import { useState, useMemo } from "react";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useEmployees } from "@/hooks/useEmployees";
+import EmployeeCard from "./EmployeeCard";
+
+export default function EmployeeList() {
+  const [search, setSearch] = useState("");
+  const { data = [], isLoading } = useEmployees();
+
+  const filtered = useMemo(() => {
+    if (!search) return data;
+    const q = search.toLowerCase();
+    return data.filter(
+      (emp) =>
+        emp.name.toLowerCase().includes(q) ||
+        emp.department.toLowerCase().includes(q)
+    );
+  }, [data, search]);
+
+  return (
+    <div className="space-y-4">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          className="pl-9"
+          placeholder="Search employees..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => <EmployeeCardSkeleton key={i} />)}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {filtered.map((emp) => (
+            <EmployeeCard key={emp.id} employee={emp} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+## When to Split Components
+
+**Split when:**
+- Component exceeds 250–300 lines
+- Multiple distinct responsibilities
+- Section is reusable
+
+**Keep together when:**
+- < 200 lines
 - Tightly coupled logic
 - Not reusable elsewhere
-- Simple presentation component
 
 ---
 
 ## Export Patterns
 
-### Named Const + Default Export (PREFERRED)
+```tsx
+// ✅ PREFERRED — default export for page/feature components
+export default function EmployeeList() { ... }
 
-```typescript
-export const MyComponent: React.FC<Props> = ({ ... }) => {
-    // Component logic
-};
+// ✅ Named export for reusable UI pieces
+export function EmployeeCard({ employee }: EmployeeCardProps) { ... }
 
-export default MyComponent;
-```
-
-**Why:**
-- Named export for testing/refactoring
-- Default export for lazy loading convenience
-- Both options available to consumers
-
-### Lazy Loading Named Exports
-
-```typescript
-const MyComponent = React.lazy(() =>
-    import('./MyComponent').then(module => ({
-        default: module.MyComponent
-    }))
-);
+// ✅ Both — when used both internally and externally
+export function EmployeeCard({ ... }: ...) { ... }
+export default EmployeeCard;
 ```
 
 ---
 
-## Component Communication
+## Props Pattern
 
-### Props Down, Events Up
-
-```typescript
-// Parent
-function Parent() {
-    const [selectedId, setSelectedId] = useState<string | null>(null);
-
-    return (
-        <Child
-            data={data}                    // Props down
-            onSelect={setSelectedId}       // Events up
-        />
-    );
+```tsx
+// ✅ Explicit interface, optional with defaults, className always accepted
+interface CardProps {
+  title: string;
+  description?: string;
+  variant?: "default" | "highlighted";
+  onAction?: () => void;
+  className?: string;
 }
 
-// Child
-interface ChildProps {
-    data: Data[];
-    onSelect: (id: string) => void;
+function MyCard({
+  title,
+  description,
+  variant = "default",
+  onAction,
+  className,
+}: CardProps) {
+  return (
+    <Card className={cn(
+      variant === "highlighted" && "border-[#8f58e4]",
+      className
+    )}>
+      ...
+    </Card>
+  );
 }
-
-export const Child: React.FC<ChildProps> = ({ data, onSelect }) => {
-    return (
-        <div onClick={() => onSelect(data[0].id)}>
-            {/* Content */}
-        </div>
-    );
-};
-```
-
-### Avoid Prop Drilling
-
-**Use context for deep nesting:**
-```typescript
-// ❌ AVOID - Prop drilling 5+ levels
-<A prop={x}>
-  <B prop={x}>
-    <C prop={x}>
-      <D prop={x}>
-        <E prop={x} />  // Finally uses it here
-      </D>
-    </C>
-  </B>
-</A>
-
-// ✅ PREFERRED - Context or TanStack Query
-const MyContext = createContext<MyData | null>(null);
-
-function Provider({ children }) {
-    const { data } = useSuspenseQuery({ ... });
-    return <MyContext.Provider value={data}>{children}</MyContext.Provider>;
-}
-
-function DeepChild() {
-    const data = useContext(MyContext);
-    // Use data directly
-}
-```
-
----
-
-## Advanced Patterns
-
-### Compound Components
-
-```typescript
-// Card.tsx
-export const Card: React.FC<CardProps> & {
-    Header: typeof CardHeader;
-    Body: typeof CardBody;
-    Footer: typeof CardFooter;
-} = ({ children }) => {
-    return <Paper>{children}</Paper>;
-};
-
-Card.Header = CardHeader;
-Card.Body = CardBody;
-Card.Footer = CardFooter;
-
-// Usage
-<Card>
-    <Card.Header>Title</Card.Header>
-    <Card.Body>Content</Card.Body>
-    <Card.Footer>Actions</Card.Footer>
-</Card>
-```
-
-### Render Props (Rare, but useful)
-
-```typescript
-interface DataProviderProps {
-    children: (data: Data) => React.ReactNode;
-}
-
-export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
-    const { data } = useSuspenseQuery({ ... });
-    return <>{children(data)}</>;
-};
-
-// Usage
-<DataProvider>
-    {(data) => <Display data={data} />}
-</DataProvider>
 ```
 
 ---
 
 ## Summary
 
-**Modern Component Recipe:**
-1. `React.FC<Props>` with TypeScript
-2. Lazy load if heavy: `React.lazy(() => import())`
-3. Wrap in `<SuspenseLoader>` for loading
-4. Use `useSuspenseQuery` for data
-5. Import aliases (@/, ~types, ~components)
-6. Event handlers with `useCallback`
-7. Default export at bottom
-8. No early returns for loading states
+1. `"use client"` — only for hooks/events; default to Server Components
+2. Import order: external → `@/lib` → `@/hooks` → `@/components` → `@/types`
+3. shadcn/ui first — never raw HTML for interactive elements
+4. Loading states: `<Skeleton>` preserving layout
+5. `cn()` for conditional classes + always accept `className` prop
+6. Export default at bottom; named exports for shared components
+7. Lists: stable `key` from data ID, never array index
 
 **See Also:**
-- [data-fetching.md](data-fetching.md) - useSuspenseQuery details
-- [loading-and-error-states.md](loading-and-error-states.md) - Suspense best practices
-- [complete-examples.md](complete-examples.md) - Full working examples
+- [data-fetching.md](data-fetching.md) — useQuery patterns
+- [styling-guide.md](styling-guide.md) — Tailwind + design system
+- [complete-examples.md](complete-examples.md) — Full working examples

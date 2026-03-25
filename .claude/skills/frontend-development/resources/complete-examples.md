@@ -1,872 +1,523 @@
 # Complete Examples
 
-Full working examples combining all modern patterns: React.FC, lazy loading, Suspense, useSuspenseQuery, styling, routing, and error handling.
+Full working examples aligned with this project's stack: Next.js 16, React 19, Tailwind CSS v4, shadcn/ui, React Query, Redux Toolkit.
 
 ---
 
-## Example 1: Complete Modern Component
+## Example 1: Full Feature Page (Employees Tab)
 
-Combines: React.FC, useSuspenseQuery, cache-first, useCallback, styling, error handling
+### Service (`lib/api/services/employees.ts`)
 
 ```typescript
-/**
- * User profile display component
- * Demonstrates modern patterns with Suspense and TanStack Query
- */
-import React, { useState, useCallback, useMemo } from 'react';
-import { Box, Paper, Typography, Button, Avatar } from '@mui/material';
-import type { SxProps, Theme } from '@mui/material';
-import { useSuspenseQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { userApi } from '../api/userApi';
-import { useMuiSnackbar } from '@/hooks/useMuiSnackbar';
-import type { User } from '~types/user';
+import { api } from "@/lib/api/core";
+import type { Employee, CreateEmployeePayload } from "@/types/employee";
 
-// Styles object
-const componentStyles: Record<string, SxProps<Theme>> = {
-    container: {
-        p: 3,
-        maxWidth: 600,
-        margin: '0 auto',
-    },
-    header: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: 2,
-        mb: 3,
-    },
-    content: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-    },
-    actions: {
-        display: 'flex',
-        gap: 1,
-        mt: 2,
-    },
-};
-
-interface UserProfileProps {
-    userId: string;
-    onUpdate?: () => void;
+export async function getEmployees(): Promise<Employee[]> {
+  const { data } = await api.get("/employees");
+  return data;
 }
 
-export const UserProfile: React.FC<UserProfileProps> = ({ userId, onUpdate }) => {
-    const queryClient = useQueryClient();
-    const { showSuccess, showError } = useMuiSnackbar();
-    const [isEditing, setIsEditing] = useState(false);
+export async function createEmployee(payload: CreateEmployeePayload): Promise<Employee> {
+  const { data } = await api.post("/employees", payload);
+  return data;
+}
 
-    // Suspense query - no isLoading needed!
-    const { data: user } = useSuspenseQuery({
-        queryKey: ['user', userId],
-        queryFn: () => userApi.getUser(userId),
-        staleTime: 5 * 60 * 1000,
-    });
+export async function deleteEmployee(id: string): Promise<void> {
+  await api.delete(`/employees/${id}`);
+}
+```
 
-    // Update mutation
-    const updateMutation = useMutation({
-        mutationFn: (updates: Partial<User>) =>
-            userApi.updateUser(userId, updates),
+### Query Keys (`lib/constants/queryKeys.ts`)
 
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['user', userId] });
-            showSuccess('Profile updated');
-            setIsEditing(false);
-            onUpdate?.();
-        },
+```typescript
+export const QUERY_KEYS = {
+  employees: {
+    all: ["employees"] as const,
+    detail: (id: string) => ["employees", id] as const,
+  },
+} as const;
+```
 
-        onError: () => {
-            showError('Failed to update profile');
-        },
-    });
+### Hook (`hooks/useEmployees.ts`)
 
-    // Memoized computed value
-    const fullName = useMemo(() => {
-        return `${user.firstName} ${user.lastName}`;
-    }, [user.firstName, user.lastName]);
+```typescript
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/constants/queryKeys";
+import { getEmployees, createEmployee, deleteEmployee } from "@/lib/api/services/employees";
+import type { CreateEmployeePayload } from "@/types/employee";
 
-    // Event handlers with useCallback
-    const handleEdit = useCallback(() => {
-        setIsEditing(true);
-    }, []);
+export function useEmployees() {
+  return useQuery({
+    queryKey: QUERY_KEYS.employees.all,
+    queryFn: getEmployees,
+  });
+}
 
-    const handleSave = useCallback(() => {
-        updateMutation.mutate({
-            firstName: user.firstName,
-            lastName: user.lastName,
-        });
-    }, [user, updateMutation]);
+export function useCreateEmployee() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CreateEmployeePayload) => createEmployee(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
+      toast.success("Employee created successfully");
+    },
+    onError: () => toast.error("Failed to create employee"),
+  });
+}
 
-    const handleCancel = useCallback(() => {
-        setIsEditing(false);
-    }, []);
+export function useDeleteEmployee() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
+      toast.success("Employee deleted");
+    },
+    onError: () => toast.error("Failed to delete employee"),
+  });
+}
+```
 
-    return (
-        <Paper sx={componentStyles.container}>
-            <Box sx={componentStyles.header}>
-                <Avatar sx={{ width: 64, height: 64 }}>
-                    {user.firstName[0]}{user.lastName[0]}
-                </Avatar>
-                <Box>
-                    <Typography variant='h5'>{fullName}</Typography>
-                    <Typography color='text.secondary'>{user.email}</Typography>
-                </Box>
-            </Box>
+### Component (`app/(features)/features/components/employees/EmployeesTab.tsx`)
 
-            <Box sx={componentStyles.content}>
-                <Typography>Username: {user.username}</Typography>
-                <Typography>Roles: {user.roles.join(', ')}</Typography>
-            </Box>
+```tsx
+"use client";
 
-            <Box sx={componentStyles.actions}>
-                {!isEditing ? (
-                    <Button variant='contained' onClick={handleEdit}>
-                        Edit Profile
-                    </Button>
-                ) : (
-                    <>
-                        <Button
-                            variant='contained'
-                            onClick={handleSave}
-                            disabled={updateMutation.isPending}
-                        >
-                            {updateMutation.isPending ? 'Saving...' : 'Save'}
-                        </Button>
-                        <Button onClick={handleCancel}>
-                            Cancel
-                        </Button>
-                    </>
-                )}
-            </Box>
-        </Paper>
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Plus, Search, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { useEmployees, useDeleteEmployee } from "@/hooks/useEmployees";
+import { AddEmployeeDialog } from "./AddEmployeeDialog";
+import type { Employee } from "@/types/employee";
+
+export default function EmployeesTab() {
+  const [search, setSearch] = useState("");
+  const [addOpen, setAddOpen] = useState(false);
+  const { data = [], isLoading } = useEmployees();
+  const { mutate: deleteEmp } = useDeleteEmployee();
+
+  const filtered = useMemo(() => {
+    if (!search) return data;
+    const q = search.toLowerCase();
+    return data.filter(
+      (e) => e.name.toLowerCase().includes(q) || e.department.toLowerCase().includes(q)
     );
-};
-
-export default UserProfile;
-```
-
-**Usage:**
-```typescript
-<SuspenseLoader>
-    <UserProfile userId='123' onUpdate={() => console.log('Updated')} />
-</SuspenseLoader>
-```
-
----
-
-## Example 2: Complete Feature Structure
-
-Real example based on `features/posts/`:
-
-```
-features/
-  users/
-    api/
-      userApi.ts                # API service layer
-    components/
-      UserProfile.tsx           # Main component (from Example 1)
-      UserList.tsx              # List component
-      UserBlog.tsx              # Blog component
-      modals/
-        DeleteUserModal.tsx     # Modal component
-    hooks/
-      useSuspenseUser.ts        # Suspense query hook
-      useUserMutations.ts       # Mutation hooks
-      useUserPermissions.ts     # Feature-specific hook
-    helpers/
-      userHelpers.ts            # Utility functions
-      validation.ts             # Validation logic
-    types/
-      index.ts                  # TypeScript interfaces
-    index.ts                    # Public API exports
-```
-
-### API Service (userApi.ts)
-
-```typescript
-import apiClient from '@/lib/apiClient';
-import type { User, CreateUserPayload, UpdateUserPayload } from '../types';
-
-export const userApi = {
-    getUser: async (userId: string): Promise<User> => {
-        const { data } = await apiClient.get(`/users/${userId}`);
-        return data;
-    },
-
-    getUsers: async (): Promise<User[]> => {
-        const { data } = await apiClient.get('/users');
-        return data;
-    },
-
-    createUser: async (payload: CreateUserPayload): Promise<User> => {
-        const { data } = await apiClient.post('/users', payload);
-        return data;
-    },
-
-    updateUser: async (userId: string, payload: UpdateUserPayload): Promise<User> => {
-        const { data } = await apiClient.put(`/users/${userId}`, payload);
-        return data;
-    },
-
-    deleteUser: async (userId: string): Promise<void> => {
-        await apiClient.delete(`/users/${userId}`);
-    },
-};
-```
-
-### Suspense Hook (useSuspenseUser.ts)
-
-```typescript
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { userApi } from '../api/userApi';
-import type { User } from '../types';
-
-export function useSuspenseUser(userId: string) {
-    return useSuspenseQuery<User, Error>({
-        queryKey: ['user', userId],
-        queryFn: () => userApi.getUser(userId),
-        staleTime: 5 * 60 * 1000,
-        gcTime: 10 * 60 * 1000,
-    });
-}
-
-export function useSuspenseUsers() {
-    return useSuspenseQuery<User[], Error>({
-        queryKey: ['users'],
-        queryFn: () => userApi.getUsers(),
-        staleTime: 1 * 60 * 1000,  // Shorter for list
-    });
-}
-```
-
-### Types (types/index.ts)
-
-```typescript
-export interface User {
-    id: string;
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    roles: string[];
-    createdAt: string;
-    updatedAt: string;
-}
-
-export interface CreateUserPayload {
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    password: string;
-}
-
-export type UpdateUserPayload = Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>;
-```
-
-### Public Exports (index.ts)
-
-```typescript
-// Export components
-export { UserProfile } from './components/UserProfile';
-export { UserList } from './components/UserList';
-
-// Export hooks
-export { useSuspenseUser, useSuspenseUsers } from './hooks/useSuspenseUser';
-export { useUserMutations } from './hooks/useUserMutations';
-
-// Export API
-export { userApi } from './api/userApi';
-
-// Export types
-export type { User, CreateUserPayload, UpdateUserPayload } from './types';
-```
-
----
-
-## Example 3: Complete Route with Lazy Loading
-
-```typescript
-/**
- * User profile route
- * Path: /users/:userId
- */
-
-import { createFileRoute } from '@tanstack/react-router';
-import { lazy } from 'react';
-import { SuspenseLoader } from '~components/SuspenseLoader';
-
-// Lazy load the UserProfile component
-const UserProfile = lazy(() =>
-    import('@/features/users/components/UserProfile').then(
-        (module) => ({ default: module.UserProfile })
-    )
-);
-
-export const Route = createFileRoute('/users/$userId')({
-    component: UserProfilePage,
-    loader: ({ params }) => ({
-        crumb: `User ${params.userId}`,
-    }),
-});
-
-function UserProfilePage() {
-    const { userId } = Route.useParams();
-
-    return (
-        <SuspenseLoader>
-            <UserProfile
-                userId={userId}
-                onUpdate={() => console.log('Profile updated')}
-            />
-        </SuspenseLoader>
-    );
-}
-
-export default UserProfilePage;
-```
-
----
-
-## Example 4: List with Search and Filtering
-
-```typescript
-import React, { useState, useMemo } from 'react';
-import { Box, TextField, List, ListItem } from '@mui/material';
-import { useDebounce } from 'use-debounce';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { userApi } from '../api/userApi';
-
-export const UserList: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearch] = useDebounce(searchTerm, 300);
-
-    const { data: users } = useSuspenseQuery({
-        queryKey: ['users'],
-        queryFn: () => userApi.getUsers(),
-    });
-
-    // Memoized filtering
-    const filteredUsers = useMemo(() => {
-        if (!debouncedSearch) return users;
-
-        return users.filter(user =>
-            user.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-            user.email.toLowerCase().includes(debouncedSearch.toLowerCase())
-        );
-    }, [users, debouncedSearch]);
-
-    return (
-        <Box>
-            <TextField
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder='Search users...'
-                fullWidth
-                sx={{ mb: 2 }}
-            />
-
-            <List>
-                {filteredUsers.map(user => (
-                    <ListItem key={user.id}>
-                        {user.name} - {user.email}
-                    </ListItem>
-                ))}
-            </List>
-        </Box>
-    );
-};
-```
-
----
-
-## Example 5: Blog with Validation
-
-```typescript
-import React from 'react';
-import { Box, TextField, Button, Paper } from '@mui/material';
-import { useBlog } from 'react-hook-blog';
-import { zodResolver } from '@hookblog/resolvers/zod';
-import { z } from 'zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { userApi } from '../api/userApi';
-import { useMuiSnackbar } from '@/hooks/useMuiSnackbar';
-
-const userSchema = z.object({
-    username: z.string().min(3).max(50),
-    email: z.string().email(),
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
-});
-
-type UserBlogData = z.infer<typeof userSchema>;
-
-interface CreateUserBlogProps {
-    onSuccess?: () => void;
-}
-
-export const CreateUserBlog: React.FC<CreateUserBlogProps> = ({ onSuccess }) => {
-    const queryClient = useQueryClient();
-    const { showSuccess, showError } = useMuiSnackbar();
-
-    const { register, handleSubmit, blogState: { errors }, reset } = useBlog<UserBlogData>({
-        resolver: zodResolver(userSchema),
-        defaultValues: {
-            username: '',
-            email: '',
-            firstName: '',
-            lastName: '',
-        },
-    });
-
-    const createMutation = useMutation({
-        mutationFn: (data: UserBlogData) => userApi.createUser(data),
-
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['users'] });
-            showSuccess('User created successfully');
-            reset();
-            onSuccess?.();
-        },
-
-        onError: () => {
-            showError('Failed to create user');
-        },
-    });
-
-    const onSubmit = (data: UserBlogData) => {
-        createMutation.mutate(data);
-    };
-
-    return (
-        <Paper sx={{ p: 3, maxWidth: 500 }}>
-            <blog onSubmit={handleSubmit(onSubmit)}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <TextField
-                        {...register('username')}
-                        label='Username'
-                        error={!!errors.username}
-                        helperText={errors.username?.message}
-                        fullWidth
-                    />
-
-                    <TextField
-                        {...register('email')}
-                        label='Email'
-                        type='email'
-                        error={!!errors.email}
-                        helperText={errors.email?.message}
-                        fullWidth
-                    />
-
-                    <TextField
-                        {...register('firstName')}
-                        label='First Name'
-                        error={!!errors.firstName}
-                        helperText={errors.firstName?.message}
-                        fullWidth
-                    />
-
-                    <TextField
-                        {...register('lastName')}
-                        label='Last Name'
-                        error={!!errors.lastName}
-                        helperText={errors.lastName?.message}
-                        fullWidth
-                    />
-
-                    <Button
-                        type='submit'
-                        variant='contained'
-                        disabled={createMutation.isPending}
-                    >
-                        {createMutation.isPending ? 'Creating...' : 'Create User'}
-                    </Button>
-                </Box>
-            </blog>
-        </Paper>
-    );
-};
-
-export default CreateUserBlog;
-```
-
----
-
-## Example 2: Parent Container with Lazy Loading
-
-```typescript
-import React from 'react';
-import { Box } from '@mui/material';
-import { SuspenseLoader } from '~components/SuspenseLoader';
-
-// Lazy load heavy components
-const UserList = React.lazy(() => import('./UserList'));
-const UserStats = React.lazy(() => import('./UserStats'));
-const ActivityFeed = React.lazy(() => import('./ActivityFeed'));
-
-export const UserDashboard: React.FC = () => {
-    return (
-        <Box sx={{ p: 2 }}>
-            <SuspenseLoader>
-                <UserStats />
-            </SuspenseLoader>
-
-            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Box sx={{ flex: 2 }}>
-                    <SuspenseLoader>
-                        <UserList />
-                    </SuspenseLoader>
-                </Box>
-
-                <Box sx={{ flex: 1 }}>
-                    <SuspenseLoader>
-                        <ActivityFeed />
-                    </SuspenseLoader>
-                </Box>
-            </Box>
-        </Box>
-    );
-};
-
-export default UserDashboard;
-```
-
-**Benefits:**
-- Each section loads independently
-- User sees partial content sooner
-- Better perceived perblogance
-
----
-
-## Example 3: Cache-First Strategy Implementation
-
-Complete example based on useSuspensePost.ts:
-
-```typescript
-import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
-import { postApi } from '../api/postApi';
-import type { Post } from '../types';
-
-/**
- * Smart post hook with cache-first strategy
- * Reuses data from grid cache when available
- */
-export function useSuspensePost(blogId: number, postId: number) {
-    const queryClient = useQueryClient();
-
-    return useSuspenseQuery<Post, Error>({
-        queryKey: ['post', blogId, postId],
-        queryFn: async () => {
-            // Strategy 1: Check grid cache first (avoids API call)
-            const gridCache = queryClient.getQueryData<{ rows: Post[] }>([
-                'posts-v2',
-                blogId,
-                'summary'
-            ]) || queryClient.getQueryData<{ rows: Post[] }>([
-                'posts-v2',
-                blogId,
-                'flat'
-            ]);
-
-            if (gridCache?.rows) {
-                const cached = gridCache.rows.find(
-                    (row) => row.S_ID === postId
-                );
-
-                if (cached) {
-                    return cached;  // Return from cache - no API call!
-                }
-            }
-
-            // Strategy 2: Not in cache, fetch from API
-            return postApi.getPost(blogId, postId);
-        },
-        staleTime: 5 * 60 * 1000,       // Fresh for 5 minutes
-        gcTime: 10 * 60 * 1000,          // Cache for 10 minutes
-        refetchOnWindowFocus: false,     // Don't refetch on focus
-    });
-}
-```
-
-**Why this pattern:**
-- Checks grid cache before API
-- Instant data if user came from grid
-- Falls back to API if not cached
-- Configurable cache times
-
----
-
-## Example 4: Complete Route File
-
-```typescript
-/**
- * Project catalog route
- * Path: /project-catalog
- */
-
-import { createFileRoute } from '@tanstack/react-router';
-import { lazy } from 'react';
-
-// Lazy load the PostTable component
-const PostTable = lazy(() =>
-    import('@/features/posts/components/PostTable').then(
-        (module) => ({ default: module.PostTable })
-    )
-);
-
-// Route constants
-const PROJECT_CATALOG_FORM_ID = 744;
-const PROJECT_CATALOG_PROJECT_ID = 225;
-
-export const Route = createFileRoute('/project-catalog/')({
-    component: ProjectCatalogPage,
-    loader: () => ({
-        crumb: 'Projects',  // Breadcrumb title
-    }),
-});
-
-function ProjectCatalogPage() {
-    return (
-        <PostTable
-            blogId={PROJECT_CATALOG_FORM_ID}
-            projectId={PROJECT_CATALOG_PROJECT_ID}
-            tableType='active_projects'
-            title='Blog Dashboard'
+  }, [data, search]);
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Employees</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{data.length} total</p>
+        </div>
+        <Button variant="brand" onClick={() => setAddOpen(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Employee
+        </Button>
+      </div>
+
+      {/* Search */}
+      <div className="relative max-w-sm">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          className="pl-9"
+          placeholder="Search by name or department..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
-    );
+      </div>
+
+      {/* List */}
+      {isLoading ? (
+        <div className="space-y-3">
+          {[...Array(5)].map((_, i) => (
+            <Card key={i} className="p-4">
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-10 w-10 rounded-full" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-4 w-36" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+                <Skeleton className="h-5 w-16 rounded-full" />
+              </div>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <AnimatePresence>
+          <div className="space-y-3">
+            {filtered.map((employee) => (
+              <motion.div
+                key={employee.id}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                <EmployeeRow
+                  employee={employee}
+                  onDelete={() => deleteEmp(employee.id)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </AnimatePresence>
+      )}
+
+      <AddEmployeeDialog open={addOpen} onClose={() => setAddOpen(false)} />
+    </div>
+  );
 }
 
-export default ProjectCatalogPage;
+function EmployeeRow({
+  employee,
+  onDelete,
+}: {
+  employee: Employee;
+  onDelete: () => void;
+}) {
+  const initials = employee.name.split(" ").map((n) => n[0]).join("").slice(0, 2);
+
+  return (
+    <Card className="hover:shadow-sm transition-shadow">
+      <CardContent className="flex items-center gap-3 p-4">
+        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+          {initials}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-gray-900 dark:text-white truncate">{employee.name}</p>
+          <p className="text-sm text-muted-foreground truncate">{employee.position}</p>
+        </div>
+        <Badge variant="secondary">{employee.department}</Badge>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-destructive h-8 w-8 flex-shrink-0"
+          onClick={onDelete}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
 ```
 
 ---
 
-## Example 5: Dialog with Blog
+## Example 2: Dialog with Form
 
-```typescript
-import React from 'react';
+```tsx
+// app/(features)/features/components/employees/AddEmployeeDialog.tsx
+"use client";
+
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    TextField,
-    Box,
-    IconButton,
-} from '@mui/material';
-import { Close, PersonAdd } from '@mui/icons-material';
-import { useBlog } from 'react-hook-blog';
-import { zodResolver } from '@hookblog/resolvers/zod';
-import { z } from 'zod';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { X, UserPlus } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useCreateEmployee } from "@/hooks/useEmployees";
 
-const blogSchema = z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
+const schema = z.object({
+  name: z.string().min(1, "Required"),
+  email: z.string().email("Invalid email"),
+  department: z.string().min(1, "Required"),
+  position: z.string().min(1, "Required"),
 });
+type FormData = z.infer<typeof schema>;
 
-type BlogData = z.infer<typeof blogSchema>;
-
-interface AddUserDialogProps {
-    open: boolean;
-    onClose: () => void;
-    onSubmit: (data: BlogData) => Promise<void>;
+interface Props {
+  open: boolean;
+  onClose: () => void;
 }
 
-export const AddUserDialog: React.FC<AddUserDialogProps> = ({
-    open,
-    onClose,
-    onSubmit,
-}) => {
-    const { register, handleSubmit, blogState: { errors }, reset } = useBlog<BlogData>({
-        resolver: zodResolver(blogSchema),
-    });
+export function AddEmployeeDialog({ open, onClose }: Props) {
+  const { mutate, isPending } = useCreateEmployee();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-    const handleClose = () => {
+  const onSubmit = (data: FormData) => {
+    mutate(data, {
+      onSuccess: () => {
         reset();
         onClose();
-    };
+      },
+    });
+  };
 
-    const handleBlogSubmit = async (data: BlogData) => {
-        await onSubmit(data);
-        handleClose();
-    };
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="p-0 overflow-hidden gap-0 max-w-md">
 
-    return (
-        <Dialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
-            <DialogTitle>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <PersonAdd color='primary' />
-                        Add User
-                    </Box>
-                    <IconButton onClick={handleClose} size='small'>
-                        <Close />
-                    </IconButton>
-                </Box>
-            </DialogTitle>
+        {/* Gradient header */}
+        <div className="bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] px-6 py-4 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <UserPlus className="h-5 w-5" />
+              <DialogTitle className="text-white font-semibold text-lg">
+                Add Employee
+              </DialogTitle>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/20 h-8 w-8"
+              onClick={onClose}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
 
-            <blog onSubmit={handleSubmit(handleBlogSubmit)}>
-                <DialogContent>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <TextField
-                            {...register('name')}
-                            label='Name'
-                            error={!!errors.name}
-                            helperText={errors.name?.message}
-                            fullWidth
-                            autoFocus
-                        />
+        {/* Scrollable body */}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="p-6 space-y-4 overflow-y-auto max-h-[60vh]">
+            <div className="space-y-1">
+              <Label htmlFor="name">Full Name</Label>
+              <Input id="name" {...register("name")} placeholder="John Doe" />
+              {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+            </div>
 
-                        <TextField
-                            {...register('email')}
-                            label='Email'
-                            type='email'
-                            error={!!errors.email}
-                            helperText={errors.email?.message}
-                            fullWidth
-                        />
-                    </Box>
-                </DialogContent>
+            <div className="space-y-1">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" {...register("email")} placeholder="john@company.com" />
+              {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+            </div>
 
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button type='submit' variant='contained'>
-                        Add User
+            <div className="space-y-1">
+              <Label>Department</Label>
+              <Select onValueChange={(v) => setValue("department", v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select department" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="engineering">Engineering</SelectItem>
+                  <SelectItem value="hr">HR</SelectItem>
+                  <SelectItem value="sales">Sales</SelectItem>
+                  <SelectItem value="finance">Finance</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.department && <p className="text-xs text-destructive">{errors.department.message}</p>}
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="position">Position</Label>
+              <Input id="position" {...register("position")} placeholder="Software Engineer" />
+              {errors.position && <p className="text-xs text-destructive">{errors.position.message}</p>}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="border-t px-6 py-4 flex justify-end gap-2 bg-gray-50 dark:bg-gray-900/50">
+            <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="brand" disabled={isPending}>
+              {isPending ? "Creating..." : "Create Employee"}
+            </Button>
+          </div>
+        </form>
+
+      </DialogContent>
+    </Dialog>
+  );
+}
+```
+
+---
+
+## Example 3: Stats Dashboard Card Grid
+
+```tsx
+"use client";
+
+import { Users, Clock, CheckSquare, AlertCircle } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { useDashboardStats } from "@/hooks/useDashboard";
+
+const STAT_CONFIGS = [
+  { key: "totalEmployees", label: "Total Employees", icon: Users, color: "text-[#8f58e4]" },
+  { key: "pendingRequests", label: "Pending Requests", icon: AlertCircle, color: "text-yellow-600" },
+  { key: "activeTasks", label: "Active Tasks", icon: CheckSquare, color: "text-blue-600" },
+  { key: "hoursToday", label: "Hours Today", icon: Clock, color: "text-green-600" },
+] as const;
+
+export default function DashboardTab() {
+  const { data, isLoading } = useDashboardStats();
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h2>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {STAT_CONFIGS.map(({ key, label, icon: Icon, color }) => (
+          <Card key={key} className="overflow-hidden">
+            <CardContent className="p-4">
+              {isLoading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-8 w-16" />
+                </div>
+              ) : (
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs text-muted-foreground">{label}</p>
+                    <p className="text-3xl font-bold mt-1 text-gray-900 dark:text-white">
+                      {data?.[key] ?? 0}
+                    </p>
+                  </div>
+                  <div className={cn("p-2 rounded-lg bg-gray-100 dark:bg-gray-800", color)}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## Example 4: Table with Actions
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Edit2, Trash2 } from "lucide-react";
+import { useEmployees, useDeleteEmployee } from "@/hooks/useEmployees";
+import { cn } from "@/lib/utils";
+
+export default function EmployeeTable() {
+  const { data = [], isLoading } = useEmployees();
+  const { mutate: deleteEmployee } = useDeleteEmployee();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = (id: string) => {
+    setDeletingId(id);
+    deleteEmployee(id, { onSettled: () => setDeletingId(null) });
+  };
+
+  return (
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Department</TableHead>
+            <TableHead>Position</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {isLoading ? (
+            Array.from({ length: 5 }).map((_, i) => (
+              <TableRow key={i}>
+                {[1, 2, 3, 4, 5].map((j) => (
+                  <TableCell key={j}>
+                    <Skeleton className="h-4 w-full" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            data.map((employee) => (
+              <TableRow key={employee.id} className={cn(deletingId === employee.id && "opacity-50")}>
+                <TableCell className="font-medium">{employee.name}</TableCell>
+                <TableCell>{employee.department}</TableCell>
+                <TableCell>{employee.position}</TableCell>
+                <TableCell>
+                  <Badge
+                    className={cn(
+                      employee.active
+                        ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                        : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+                      "border-0"
+                    )}
+                  >
+                    {employee.active ? "Active" : "Inactive"}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex items-center justify-end gap-1">
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Edit2 className="h-3.5 w-3.5" />
                     </Button>
-                </DialogActions>
-            </blog>
-        </Dialog>
-    );
-};
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                      disabled={deletingId === employee.id}
+                      onClick={() => handleDelete(employee.id)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
 ```
 
 ---
 
-## Example 6: Parallel Data Fetching
+## Key Takeaways
 
-```typescript
-import React from 'react';
-import { Box, Grid, Paper } from '@mui/material';
-import { useSuspenseQueries } from '@tanstack/react-query';
-import { userApi } from '../api/userApi';
-import { statsApi } from '../api/statsApi';
-import { activityApi } from '../api/activityApi';
-
-export const Dashboard: React.FC = () => {
-    // Fetch all data in parallel with Suspense
-    const [statsQuery, usersQuery, activityQuery] = useSuspenseQueries({
-        queries: [
-            {
-                queryKey: ['stats'],
-                queryFn: () => statsApi.getStats(),
-            },
-            {
-                queryKey: ['users', 'active'],
-                queryFn: () => userApi.getActiveUsers(),
-            },
-            {
-                queryKey: ['activity', 'recent'],
-                queryFn: () => activityApi.getRecent(),
-            },
-        ],
-    });
-
-    return (
-        <Box sx={{ p: 2 }}>
-            <Grid container spacing={2}>
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <Paper sx={{ p: 2 }}>
-                        <h3>Stats</h3>
-                        <p>Total: {statsQuery.data.total}</p>
-                    </Paper>
-                </Grid>
-
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <Paper sx={{ p: 2 }}>
-                        <h3>Active Users</h3>
-                        <p>Count: {usersQuery.data.length}</p>
-                    </Paper>
-                </Grid>
-
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <Paper sx={{ p: 2 }}>
-                        <h3>Recent Activity</h3>
-                        <p>Events: {activityQuery.data.length}</p>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Box>
-    );
-};
-
-// Usage with Suspense
-<SuspenseLoader>
-    <Dashboard />
-</SuspenseLoader>
-```
-
----
-
-## Example 7: Optimistic Update
-
-```typescript
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { User } from '../types';
-
-export const useToggleUserStatus = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: (userId: string) => userApi.toggleStatus(userId),
-
-        // Optimistic update
-        onMutate: async (userId) => {
-            // Cancel outgoing refetches
-            await queryClient.cancelQueries({ queryKey: ['users'] });
-
-            // Snapshot previous value
-            const previousUsers = queryClient.getQueryData<User[]>(['users']);
-
-            // Optimistically update UI
-            queryClient.setQueryData<User[]>(['users'], (old) => {
-                return old?.map(user =>
-                    user.id === userId
-                        ? { ...user, active: !user.active }
-                        : user
-                ) || [];
-            });
-
-            return { previousUsers };
-        },
-
-        // Rollback on error
-        onError: (err, userId, context) => {
-            queryClient.setQueryData(['users'], context?.previousUsers);
-        },
-
-        // Refetch after mutation
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['users'] });
-        },
-    });
-};
-```
-
----
-
-## Summary
-
-**Key Takeaways:**
-
-1. **Component Pattern**: React.FC + lazy + Suspense + useSuspenseQuery
-2. **Feature Structure**: Organized subdirectories (api/, components/, hooks/, etc.)
-3. **Routing**: Folder-based with lazy loading
-4. **Data Fetching**: useSuspenseQuery with cache-first strategy
-5. **Blogs**: React Hook Blog + Zod validation
-6. **Error Handling**: useMuiSnackbar + onError callbacks
-7. **Perblogance**: useMemo, useCallback, React.memo, debouncing
-8. **Styling**: Inline <100 lines, sx prop, MUI v7 syntax
-
-**See other resources for detailed explanations of each pattern.**
+1. **Stack**: Next.js 16 App Router · Tailwind v4 · shadcn/ui · React Query · sonner
+2. **Feature UI**: `app/(features)/features/components/[feature]/`
+3. **Services**: `lib/api/services/` → Axios singleton → API
+4. **Hooks**: `hooks/use[Name].ts` wrapping React Query
+5. **Query keys**: from `lib/constants/queryKeys.ts` — never inline
+6. **Feedback**: `toast.success/error` from `sonner`
+7. **Loading**: `<Skeleton>` preserving layout
+8. **Dialog**: gradient header `from-[#402093] via-[#5e34b7] to-[#8f58e4]`
+9. **Animation**: `motion/react` for transitions, GSAP for complex sequences
+10. **Dark mode**: always pair custom colors with `dark:` variant

@@ -1,331 +1,401 @@
 # Common Patterns
 
-Frequently used patterns for forms, authentication, DataGrid, dialogs, and other common UI elements.
+Frequently used patterns for auth, forms, dialogs, mutations, and state management.
 
 ---
 
-## Authentication with useAuth
+## Authentication
 
-### Getting Current User
+### Reading Auth State
 
-```typescript
-import { useAuth } from '@/hooks/useAuth';
+Auth token and user profile are in **Redux** (not local state, not React Query).
 
-export const MyComponent: React.FC = () => {
-    const { user } = useAuth();
+```tsx
+"use client";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/lib/store";  // adjust path as needed
 
-    // Available properties:
-    // - user.id: string
-    // - user.email: string
-    // - user.username: string
-    // - user.roles: string[]
-
-    return (
-        <div>
-            <p>Logged in as: {user.email}</p>
-            <p>Username: {user.username}</p>
-            <p>Roles: {user.roles.join(', ')}</p>
-        </div>
-    );
-};
+export function useCurrentUser() {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const token = useSelector((state: RootState) => state.auth.token);
+  return { user, token, isAuthenticated: !!token };
+}
 ```
 
-**NEVER make direct API calls for auth** - always use `useAuth` hook.
+**NEVER make API calls for auth state** — always read from the Redux store.
+
+Axios auto-injects the Bearer token from the Redux auth slice on every request.
+401 responses trigger automatic logout.
 
 ---
 
-## Forms with React Hook Form
+## Forms with React Hook Form + Zod + shadcn/ui
 
-### Basic Form
+### Basic Form Pattern
 
-```typescript
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { TextField, Button } from '@mui/material';
-import { useMuiSnackbar } from '@/hooks/useMuiSnackbar';
+```tsx
+"use client";
 
-// Zod schema for validation
-const formSchema = z.object({
-    username: z.string().min(3, 'Username must be at least 3 characters'),
-    email: z.string().email('Invalid email address'),
-    age: z.number().min(18, 'Must be 18 or older'),
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useCreateEmployee } from "@/hooks/useEmployees";
+
+const schema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  department: z.string().min(1, "Department is required"),
+  position: z.string().min(1, "Position is required"),
 });
 
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof schema>;
 
-export const MyForm: React.FC = () => {
-    const { showSuccess, showError } = useMuiSnackbar();
+interface EmployeeFormProps {
+  onSuccess?: () => void;
+}
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            username: '',
-            email: '',
-            age: 18,
-        },
+export function EmployeeForm({ onSuccess }: EmployeeFormProps) {
+  const { mutate, isPending } = useCreateEmployee();
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+      department: "",
+      position: "",
+    },
+  });
+
+  const onSubmit = (data: FormData) => {
+    mutate(data, {
+      onSuccess: () => {
+        form.reset();
+        onSuccess?.();
+      },
     });
+  };
 
-    const onSubmit = async (data: FormData) => {
-        try {
-            await api.submitForm(data);
-            showSuccess('Form submitted successfully');
-        } catch (error) {
-            showError('Failed to submit form');
-        }
-    };
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Full name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-    return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField
-                {...register('username')}
-                label='Username'
-                error={!!errors.username}
-                helperText={errors.username?.message}
-            />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="email@company.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <TextField
-                {...register('email')}
-                label='Email'
-                error={!!errors.email}
-                helperText={errors.email?.message}
-                type='email'
-            />
+        <FormField
+          control={form.control}
+          name="department"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Department</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="hr">HR</SelectItem>
+                  <SelectItem value="engineering">Engineering</SelectItem>
+                  <SelectItem value="sales">Sales</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <TextField
-                {...register('age', { valueAsNumber: true })}
-                label='Age'
-                error={!!errors.age}
-                helperText={errors.age?.message}
-                type='number'
-            />
-
-            <Button type='submit' variant='contained'>
-                Submit
-            </Button>
-        </form>
-    );
-};
+        <div className="flex justify-end gap-2 pt-2">
+          <Button type="button" variant="outline" onClick={() => form.reset()}>
+            Reset
+          </Button>
+          <Button type="submit" variant="brand" disabled={isPending}>
+            {isPending ? "Creating..." : "Create Employee"}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
 ```
 
 ---
 
-## Dialog Component Pattern
+## Dialog Pattern
 
 ### Standard Dialog Structure
 
-From BEST_PRACTICES.md - All dialogs should have:
-- Icon in title
-- Close button (X)
-- Action buttons at bottom
+```tsx
+"use client";
 
-```typescript
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton } from '@mui/material';
-import { Close, Info } from '@mui/icons-material';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { X, UserPlus } from "lucide-react";
+import { EmployeeForm } from "./EmployeeForm";
 
-interface MyDialogProps {
-    open: boolean;
-    onClose: () => void;
-    onConfirm: () => void;
+interface AddEmployeeDialogProps {
+  open: boolean;
+  onClose: () => void;
 }
 
-export const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, onConfirm }) => {
-    return (
-        <Dialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
-            <DialogTitle>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Info color='primary' />
-                        Dialog Title
-                    </Box>
-                    <IconButton onClick={onClose} size='small'>
-                        <Close />
-                    </IconButton>
-                </Box>
-            </DialogTitle>
+export function AddEmployeeDialog({ open, onClose }: AddEmployeeDialogProps) {
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      {/* Required: p-0 overflow-hidden gap-0 */}
+      <DialogContent className="p-0 overflow-hidden gap-0 max-w-lg">
 
-            <DialogContent>
-                {/* Content here */}
-            </DialogContent>
+        {/* Gradient header */}
+        <div className="bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] px-6 py-4 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <UserPlus className="h-5 w-5" />
+              <DialogTitle className="text-white font-semibold text-lg">
+                Add Employee
+              </DialogTitle>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/20 h-8 w-8"
+              onClick={onClose}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          <p className="text-white/70 text-sm mt-0.5">Fill in the details below</p>
+        </div>
 
-            <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button onClick={onConfirm} variant='contained'>
-                    Confirm
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
-};
+        {/* Scrollable body */}
+        <div className="overflow-y-auto max-h-[65vh] p-6">
+          <EmployeeForm onSuccess={onClose} />
+        </div>
+
+        {/* No separate footer needed if form has its own buttons */}
+        {/* If needed: */}
+        {/*
+        <div className="border-t px-6 py-4 flex justify-end gap-2 bg-gray-50 dark:bg-gray-900/50">
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button variant="brand">Confirm</Button>
+        </div>
+        */}
+
+      </DialogContent>
+    </Dialog>
+  );
+}
+```
+
+### Confirm Delete Dialog
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, X } from "lucide-react";
+import { useDeleteEmployee } from "@/hooks/useEmployees";
+
+interface DeleteEmployeeDialogProps {
+  open: boolean;
+  employeeId: string;
+  employeeName: string;
+  onClose: () => void;
+}
+
+export function DeleteEmployeeDialog({
+  open,
+  employeeId,
+  employeeName,
+  onClose,
+}: DeleteEmployeeDialogProps) {
+  const { mutate, isPending } = useDeleteEmployee();
+
+  const handleConfirm = () => {
+    mutate(employeeId, { onSuccess: onClose });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="p-0 overflow-hidden gap-0 max-w-sm">
+        <div className="bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] px-6 py-4 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" />
+              <DialogTitle className="text-white font-semibold">Confirm Delete</DialogTitle>
+            </div>
+            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 h-8 w-8" onClick={onClose}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="p-6">
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            Are you sure you want to delete <strong>{employeeName}</strong>? This action cannot be undone.
+          </p>
+        </div>
+
+        <div className="border-t px-6 py-4 flex justify-end gap-2 bg-gray-50 dark:bg-gray-900/50">
+          <Button variant="outline" onClick={onClose} disabled={isPending}>
+            Cancel
+          </Button>
+          <Button variant="destructive" onClick={handleConfirm} disabled={isPending}>
+            {isPending ? "Deleting..." : "Delete"}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
 ```
 
 ---
 
-## DataGrid Wrapper Pattern
+## Mutation Pattern with Dialog
 
-### Wrapper Component Contract
+```tsx
+"use client";
 
-From BEST_PRACTICES.md - DataGrid wrappers should accept:
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { AddEmployeeDialog } from "./AddEmployeeDialog";
 
-**Required Props:**
-- `rows`: Data array
-- `columns`: Column definitions
-- Loading/error states
+export function EmployeesHeader() {
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-**Optional Props:**
-- Toolbar components
-- Custom actions
-- Initial state
+  return (
+    <div className="flex items-center justify-between mb-6">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Employees</h1>
+      <Button variant="brand" onClick={() => setDialogOpen(true)}>
+        <Plus className="h-4 w-4 mr-2" />
+        Add Employee
+      </Button>
 
-```typescript
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import type { GridColDef } from '@mui/x-data-grid-pro';
-
-interface DataGridWrapperProps {
-    rows: any[];
-    columns: GridColDef[];
-    loading?: boolean;
-    toolbar?: React.ReactNode;
-    onRowClick?: (row: any) => void;
+      <AddEmployeeDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+      />
+    </div>
+  );
 }
-
-export const DataGridWrapper: React.FC<DataGridWrapperProps> = ({
-    rows,
-    columns,
-    loading = false,
-    toolbar,
-    onRowClick,
-}) => {
-    return (
-        <DataGridPro
-            rows={rows}
-            columns={columns}
-            loading={loading}
-            slots={{ toolbar: toolbar ? () => toolbar : undefined }}
-            onRowClick={(params) => onRowClick?.(params.row)}
-            // Standard configuration
-            pagination
-            pageSizeOptions={[25, 50, 100]}
-            initialState={{
-                pagination: { paginationModel: { pageSize: 25 } },
-            }}
-        />
-    );
-};
 ```
 
 ---
 
-## Mutation Patterns
+## State Management
 
-### Update with Cache Invalidation
+### Server State → React Query
 
 ```typescript
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useMuiSnackbar } from '@/hooks/useMuiSnackbar';
-
-export const useUpdateEntity = () => {
-    const queryClient = useQueryClient();
-    const { showSuccess, showError } = useMuiSnackbar();
-
-    return useMutation({
-        mutationFn: ({ id, data }: { id: number; data: any }) =>
-            api.updateEntity(id, data),
-
-        onSuccess: (result, variables) => {
-            // Invalidate affected queries
-            queryClient.invalidateQueries({ queryKey: ['entity', variables.id] });
-            queryClient.invalidateQueries({ queryKey: ['entities'] });
-
-            showSuccess('Entity updated');
-        },
-
-        onError: () => {
-            showError('Failed to update entity');
-        },
-    });
-};
-
-// Usage
-const updateEntity = useUpdateEntity();
-
-const handleSave = () => {
-    updateEntity.mutate({ id: 123, data: { name: 'New Name' } });
-};
+// ✅ Always use React Query for server data
+const { data: employees } = useEmployees();
+const { mutate: createEmployee } = useCreateEmployee();
 ```
+
+### UI State → useState
+
+```typescript
+// ✅ useState for local UI: dialogs, tabs, toggles
+const [open, setOpen] = useState(false);
+const [activeView, setActiveView] = useState<"grid" | "list">("grid");
+```
+
+### Client Global State → Redux
+
+```typescript
+// ✅ Redux only for: auth token, user profile
+const user = useSelector((state: RootState) => state.auth.user);
+const token = useSelector((state: RootState) => state.auth.token);
+```
+
+**Do NOT put feature data in Redux.** Use React Query for all server data.
 
 ---
 
-## State Management Patterns
+## Status Badge
 
-### TanStack Query for Server State (PRIMARY)
+```tsx
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
-Use TanStack Query for **all server data**:
-- Fetching: useSuspenseQuery
-- Mutations: useMutation
-- Caching: Automatic
-- Synchronization: Built-in
+type Status = "active" | "inactive" | "pending" | "approved" | "rejected";
 
-```typescript
-// ✅ CORRECT - TanStack Query for server data
-const { data: users } = useSuspenseQuery({
-    queryKey: ['users'],
-    queryFn: () => userApi.getUsers(),
-});
-```
+const statusConfig: Record<Status, { label: string; className: string }> = {
+  active:   { label: "Active",   className: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" },
+  inactive: { label: "Inactive", className: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400" },
+  pending:  { label: "Pending",  className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400" },
+  approved: { label: "Approved", className: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" },
+  rejected: { label: "Rejected", className: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400" },
+};
 
-### useState for UI State
-
-Use `useState` for **local UI state only**:
-- Form inputs (uncontrolled)
-- Modal open/closed
-- Selected tab
-- Temporary UI flags
-
-```typescript
-// ✅ CORRECT - useState for UI state
-const [modalOpen, setModalOpen] = useState(false);
-const [selectedTab, setSelectedTab] = useState(0);
-```
-
-### Zustand for Global Client State (Minimal)
-
-Use Zustand only for **global client state**:
-- Theme preference
-- Sidebar collapsed state
-- User preferences (not from server)
-
-```typescript
-import { create } from 'zustand';
-
-interface AppState {
-    sidebarOpen: boolean;
-    toggleSidebar: () => void;
+export function StatusBadge({ status }: { status: Status }) {
+  const config = statusConfig[status];
+  return (
+    <Badge className={cn("border-0", config.className)}>
+      {config.label}
+    </Badge>
+  );
 }
-
-export const useAppState = create<AppState>((set) => ({
-    sidebarOpen: true,
-    toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
-}));
 ```
-
-**Avoid prop drilling** - use context or Zustand instead.
 
 ---
 
 ## Summary
 
-**Common Patterns:**
-- ✅ useAuth hook for current user (id, email, roles, username)
-- ✅ React Hook Form + Zod for forms
-- ✅ Dialog with icon + close button
-- ✅ DataGrid wrapper contracts
-- ✅ Mutations with cache invalidation
-- ✅ TanStack Query for server state
-- ✅ useState for UI state
-- ✅ Zustand for global client state (minimal)
+- **Auth**: `useSelector` from Redux auth slice — never API calls for user info
+- **Forms**: React Hook Form + Zod + shadcn `<Form>` components
+- **Dialogs**: gradient header + scrollable body + `border-t` footer
+- **Server state**: React Query (`useQuery`/`useMutation`) — not Redux
+- **UI state**: `useState` — not Redux
+- **Global client state**: Redux — only auth token + user profile
+- **Feedback**: `toast` from `sonner` — never other toast libs
 
 **See Also:**
-- [data-fetching.md](data-fetching.md) - TanStack Query patterns
-- [component-patterns.md](component-patterns.md) - Component structure
-- [loading-and-error-states.md](loading-and-error-states.md) - Error handling
+- [data-fetching.md](data-fetching.md) — Mutation patterns
+- [styling-guide.md](styling-guide.md) — Dialog + button variants

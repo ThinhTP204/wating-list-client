@@ -59,6 +59,7 @@ export default function AvailableDialog({ open, onClose, onSave }: Props) {
       position: "Nhân viên",
       department: "Của tôi",
       isOnline: true,
+      karma: 90,
       availableDate: date,
       availableShifts: selectedShifts,
       branch,

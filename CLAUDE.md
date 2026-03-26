@@ -138,6 +138,51 @@ Only use raw HTML when no UI component covers the semantic need (e.g. `<section>
 - Dialog pattern: `p-0 overflow-hidden gap-0` content + gradient header + scrollable body + footer with `border-t`
 - Class merging: `cn()` from `@/lib/utils`
 
+### Typography & Sizing
+
+> **Rule:** Never use arbitrary font sizes below `text-xs` (12 px). Specifically: **never write `text-[9px]`, `text-[10px]`, or `text-[11px]`** — they are illegible and inconsistent.
+
+#### Font size scale
+
+| Element | Tailwind class | px | Notes |
+|---------|---------------|-----|-------|
+| Page / screen title | `text-2xl font-black` | 24 | Main `<h1>` per page |
+| Section / panel title | `text-lg font-bold` | 18 | Column headers, drawer titles |
+| Card title / person name | `text-base font-semibold` | 16 | Primary label in a card |
+| Body / primary content | `text-sm` | 14 | Descriptions, cell text |
+| Labels, meta, timestamps | `text-xs` | 12 | ← **hard floor** — do not go smaller |
+| Badge text | `text-xs` | 12 | Always `text-xs`, never smaller |
+| Uppercase field label | `text-xs font-bold uppercase tracking-wide` | 12 | Section sub-headers inside forms/cards |
+
+Semantic utility classes defined in `globals.css` can be used as shortcuts: `text-page-title`, `text-section-title`, `text-card-title`, `text-body`, `text-meta`, `text-label-upper`.
+
+#### Icon sizing
+
+| Context | Class |
+|---------|-------|
+| Button icons | `w-4 h-4` |
+| Inline text icons (next to body text) | `w-3.5 h-3.5` |
+| Chip / badge icons | `w-3 h-3` |
+| Section header / decorative | `w-5 h-5` |
+| Page header / hero | `w-6 h-6` or larger |
+
+#### Avatar sizing
+
+| Context | Class |
+|---------|-------|
+| Standard card avatar | `w-11 h-11` (44 px) |
+| Small inline / list row | `w-8 h-8` (32 px) |
+| Hero / profile ring | `w-20 h-20` (80 px) |
+
+#### Card shell (glassmorphism)
+
+All feature cards follow this base pattern — use the `card-glass` utility from `globals.css` or replicate inline:
+```tsx
+className="bg-white/90 dark:bg-neutral-900/80 backdrop-blur-sm rounded-2xl border border-slate-200/80 dark:border-neutral-700/80"
+```
+Hover: `hover:shadow-lg hover:shadow-[color]/10 hover:border-[color]/50`
+Own-item ring: `ring-2 ring-[color]/25 dark:ring-[color]/20`
+
 ### Animation libraries
 - **Motion v12** (`motion/react`): component-level transitions and micro-interactions — use `motion.div`, `AnimatePresence`, `whileHover`, `whileTap`
 - **GSAP v3** (`gsap`): complex multi-step sequences and scroll-triggered animations

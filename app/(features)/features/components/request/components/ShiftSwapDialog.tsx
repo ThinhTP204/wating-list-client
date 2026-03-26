@@ -53,6 +53,7 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
       authorPosition: "Nhân viên",
       authorDepartment: "Của tôi",
       isOnline: true,
+      karma: 90,
       myShift: { date, timeLabel: `${timeFrom} – ${timeTo}`, type: shiftType },
       wantShift,
       branch,

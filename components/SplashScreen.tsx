@@ -37,7 +37,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
               className={`${
                 isMobile ? "text-4xl" : "text-6xl md:text-8xl lg:text-9xl"
               } font-black leading-none tracking-tighter text-neutral-200 dark:text-neutral-800`}
-              fillClassName="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-black dark:text-white"
+              fillClassName="bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] bg-clip-text text-black dark:text-white"
               stagger={isMobile ? 0.07 : 0.1}
               duration={isMobile ? 0.9 : 1.2}
               delay={0.3}
@@ -70,7 +70,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
               delay: 0.3,
               ease: [0.25, 0.1, 0.25, 1],
             }}
-            className={`absolute bottom-0 left-0 ${isMobile ? "h-1.5" : "h-1"} w-full origin-left bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7]`}
+            className={`absolute bottom-0 left-0 ${isMobile ? "h-1.5" : "h-1"} w-full origin-left bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F]`}
           />
         </motion.div>
       )}

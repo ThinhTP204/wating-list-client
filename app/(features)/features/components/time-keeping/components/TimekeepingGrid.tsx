@@ -93,7 +93,7 @@ export default function TimekeepingGrid({
                 placeholder="Tìm kiếm..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 h-8 text-xs bg-white dark:bg-neutral-900 focus-visible:ring-[#8f58e4]/30 transition-shadow duration-200"
+                className="pl-8 h-8 text-xs bg-white dark:bg-neutral-900 focus-visible:ring-[#4C88C6]/30 transition-shadow duration-200"
               />
             </div>
           </div>
@@ -102,7 +102,7 @@ export default function TimekeepingGrid({
               key={day.date}
               className={`relative border-l border-neutral-200 dark:border-neutral-800 text-center py-2.5 transition-colors ${
                 day.isToday
-                  ? "bg-[#8f58e4]/10 dark:bg-[#8f58e4]/20"
+                  ? "bg-[#4C88C6]/10 dark:bg-[#4C88C6]/20"
                   : isWeekend(day)
                   ? "bg-neutral-100/80 dark:bg-neutral-700/30"
                   : ""
@@ -110,16 +110,16 @@ export default function TimekeepingGrid({
             >
               {/* Today top accent line */}
               {day.isToday && (
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#8f58e4]/60 via-[#8f58e4] to-[#8f58e4]/60 rounded-full" />
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#4C88C6]/60 via-[#4C88C6] to-[#4C88C6]/60 rounded-full" />
               )}
               <p className={`text-[9px] font-bold uppercase leading-none tracking-wider ${
-                day.isToday ? "text-[#8f58e4]" : "text-neutral-400"
+                day.isToday ? "text-[#4C88C6]" : "text-neutral-400"
               }`}>
                 {day.dayName}
               </p>
               <p className={`text-sm font-bold mt-1 leading-none ${
                 day.isToday
-                  ? "text-[#8f58e4]"
+                  ? "text-[#4C88C6]"
                   : isWeekend(day)
                   ? "text-neutral-500 dark:text-neutral-400"
                   : "text-neutral-800 dark:text-neutral-200"
@@ -127,7 +127,7 @@ export default function TimekeepingGrid({
                 {day.date}
               </p>
               {day.isToday && (
-                <div className="w-1.5 h-1.5 rounded-full bg-[#8f58e4] mx-auto mt-1 animate-pulse" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#4C88C6] mx-auto mt-1 animate-pulse" />
               )}
             </div>
           ))}
@@ -146,13 +146,13 @@ export default function TimekeepingGrid({
             <div
               key={day.date}
               className={`border-l border-neutral-200 dark:border-neutral-800 h-11 flex items-center justify-center ${
-                day.isToday ? "bg-[#8f58e4]/5" : isWeekend(day) ? "bg-neutral-100/60 dark:bg-neutral-700/20" : ""
+                day.isToday ? "bg-[#4C88C6]/5" : isWeekend(day) ? "bg-neutral-100/60 dark:bg-neutral-700/20" : ""
               }`}
             >
               <motion.button
                 whileHover={{ scale: 1.15 }}
                 whileTap={{ scale: 0.9 }}
-                className="w-6 h-6 rounded-full border border-dashed border-neutral-300 dark:border-neutral-600 hover:border-[#8f58e4] hover:bg-[#8f58e4]/10 flex items-center justify-center transition-colors opacity-40 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8f58e4]/50"
+                className="w-6 h-6 rounded-full border border-dashed border-neutral-300 dark:border-neutral-600 hover:border-[#4C88C6] hover:bg-[#4C88C6]/10 flex items-center justify-center transition-colors opacity-40 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C88C6]/50"
                 aria-label="Thêm ca"
               >
                 <Plus className="h-3 w-3 text-neutral-500" />
@@ -177,14 +177,14 @@ export default function TimekeepingGrid({
                 <div className="px-2.5 h-[60px] flex items-center justify-between gap-1.5 sticky left-0 z-10 bg-white dark:bg-neutral-900 group-hover/row:bg-neutral-50/80 dark:group-hover/row:bg-neutral-800/30 backdrop-blur-sm transition-colors border-r border-neutral-200 dark:border-neutral-800">
                   <motion.button
                     whileHover={{ x: 1 }}
-                    className="flex items-center gap-2.5 min-w-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8f58e4]/50 rounded-lg p-0.5"
+                    className="flex items-center gap-2.5 min-w-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C88C6]/50 rounded-lg p-0.5"
                     onClick={() => onEmployeeClick(employee)}
                     title="Xem tổng hợp lương"
                   >
                     <motion.div
                       whileHover={{ scale: 1.08 }}
                       transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                      className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8f58e4] to-[#402093] flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm ring-2 ring-transparent hover:ring-[#8f58e4]/30 transition-all"
+                      className="w-8 h-8 rounded-full bg-gradient-to-br from-[#4C88C6] to-[#102854] flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm ring-2 ring-transparent hover:ring-[#4C88C6]/30 transition-all"
                     >
                       {employee.name.charAt(0)}
                     </motion.div>
@@ -192,7 +192,7 @@ export default function TimekeepingGrid({
                       <p className="text-xs font-semibold text-neutral-900 dark:text-white truncate leading-snug">
                         {employee.name}
                       </p>
-                      <p className="text-[10px] text-[#8f58e4] leading-snug font-medium">{employee.role}</p>
+                      <p className="text-[10px] text-[#4C88C6] leading-snug font-medium">{employee.role}</p>
                     </div>
                   </motion.button>
                   <motion.button
@@ -218,7 +218,7 @@ export default function TimekeepingGrid({
                       key={day.date}
                       className={`border-l border-neutral-200 dark:border-neutral-800 h-[60px] flex items-center justify-center ${
                         day.isToday
-                          ? "bg-[#8f58e4]/5 dark:bg-[#8f58e4]/10"
+                          ? "bg-[#4C88C6]/5 dark:bg-[#4C88C6]/10"
                           : isWeekend(day)
                           ? "bg-neutral-100/40 dark:bg-neutral-700/10"
                           : ""
@@ -231,7 +231,7 @@ export default function TimekeepingGrid({
                           transition={{ type: "spring", stiffness: 400, damping: 20 }}
                           className={`w-[44px] h-[48px] rounded-xl flex flex-col items-center justify-center gap-1
                             ${colors.bg} shadow-sm hover:shadow-md transition-shadow duration-150 border border-black/5 dark:border-white/5
-                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8f58e4]/50`}
+                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C88C6]/50`}
                           onClick={() =>
                             setSelectedInfo({
                               employeeId: employee.id,
@@ -257,7 +257,7 @@ export default function TimekeepingGrid({
                           <motion.button
                             whileHover={{ scale: 1.15 }}
                             whileTap={{ scale: 0.9 }}
-                            className="w-6 h-6 rounded-full opacity-0 group-hover/cell:opacity-100 border border-dashed border-neutral-300 dark:border-neutral-600 hover:border-[#8f58e4] hover:bg-[#8f58e4]/10 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8f58e4]/50 focus-visible:opacity-100"
+                            className="w-6 h-6 rounded-full opacity-0 group-hover/cell:opacity-100 border border-dashed border-neutral-300 dark:border-neutral-600 hover:border-[#4C88C6] hover:bg-[#4C88C6]/10 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C88C6]/50 focus-visible:opacity-100"
                             onClick={() => onAddShift(employee.id, day.date)}
                             aria-label="Thêm ca"
                           >
@@ -316,7 +316,7 @@ export default function TimekeepingGrid({
               <Button
                 variant="outline"
                 size="sm"
-                className="border-dashed border-neutral-300 dark:border-neutral-700 text-neutral-500 hover:text-[#8f58e4] hover:border-[#8f58e4] hover:bg-[#8f58e4]/5 text-xs h-8 gap-1.5 transition-all focus-visible:ring-[#8f58e4]/50"
+                className="border-dashed border-neutral-300 dark:border-neutral-700 text-neutral-500 hover:text-[#4C88C6] hover:border-[#4C88C6] hover:bg-[#4C88C6]/5 text-xs h-8 gap-1.5 transition-all focus-visible:ring-[#4C88C6]/50"
                 onClick={onAddEmployee}
               >
                 <Plus className="h-3 w-3" />

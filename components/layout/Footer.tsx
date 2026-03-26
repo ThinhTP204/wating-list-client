@@ -55,7 +55,7 @@ export default function Footer() {
             <div className="mt-8">
               <Link
                 href="#trai-nghiem"
-                className="cursor-pointer inline-flex items-center rounded-xl bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#8f58e4]/30"
+                className="cursor-pointer inline-flex items-center rounded-xl bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#4C88C6]/30"
               >
                 Trải nghiệm ngay →
               </Link>

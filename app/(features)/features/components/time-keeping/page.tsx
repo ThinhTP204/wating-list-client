@@ -23,7 +23,7 @@ export const ATTENDANCE_COLORS: Record<AttendanceStatus, { bg: string; text: str
   "on-time":       { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500", label: "Chấm công đúng giờ" },
   "late-early":    { bg: "bg-amber-100 dark:bg-amber-900/30",     text: "text-amber-700 dark:text-amber-400",     dot: "bg-amber-500",   label: "Vào trễ, ra sớm" },
   "no-checkin":    { bg: "bg-red-100 dark:bg-red-900/30",         text: "text-red-700 dark:text-red-400",         dot: "bg-red-500",     label: "Chưa vào/ra ca" },
-  "paid-leave":    { bg: "bg-purple-100 dark:bg-purple-900/30",   text: "text-purple-700 dark:text-purple-400",   dot: "bg-purple-500",  label: "Nghỉ phép có lương" },
+  "paid-leave":    { bg: "bg-blue-100 dark:bg-blue-900/30",   text: "text-blue-700 dark:text-blue-400",   dot: "bg-blue-500",  label: "Nghỉ phép có lương" },
   "unpaid-leave":  { bg: "bg-orange-100 dark:bg-orange-900/30",   text: "text-orange-800 dark:text-orange-400",   dot: "bg-orange-800",  label: "Nghỉ phép không lương" },
   "business-trip": { bg: "bg-blue-100 dark:bg-blue-900/30",       text: "text-blue-700 dark:text-blue-400",       dot: "bg-blue-500",    label: "Công tác ra ngoài" },
   "day-off":       { bg: "bg-neutral-100 dark:bg-neutral-800/50", text: "text-neutral-500 dark:text-neutral-400", dot: "bg-neutral-400", label: "Ngày nghỉ" },
@@ -237,7 +237,7 @@ export default function Page() {
         transition={{ duration: 0.35, ease: "easeOut" }}
         className="mb-6"
       >
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] bg-clip-text text-transparent">
           Xếp ca &amp; Chấm công
         </h1>
         <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
@@ -266,7 +266,7 @@ export default function Page() {
       >
         <div className="flex items-center gap-0 divide-x divide-neutral-100 dark:divide-neutral-800 overflow-x-auto">
           {/* Label */}
-          <div className="px-3 py-2 shrink-0 bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4]">
+          <div className="px-3 py-2 shrink-0 bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]">
             <p className="text-[10px] font-bold text-white/90 uppercase tracking-widest whitespace-nowrap">Chú thích</p>
           </div>
           {/* Items */}

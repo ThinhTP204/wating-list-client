@@ -99,7 +99,7 @@ export default function AddEmployeeDialog({
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#402093] to-[#8f58e4] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#102854] to-[#4C88C6] flex items-center justify-center">
               <UserPlus className="w-3.5 h-3.5 text-white" />
             </div>
             Thêm nhân viên
@@ -113,11 +113,11 @@ export default function AddEmployeeDialog({
               Chi nhánh
             </Label>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#8f58e4]/10 flex items-center justify-center shrink-0">
-                <Building2 className="w-4 h-4 text-[#8f58e4]" />
+              <div className="w-8 h-8 rounded-lg bg-[#4C88C6]/10 flex items-center justify-center shrink-0">
+                <Building2 className="w-4 h-4 text-[#4C88C6]" />
               </div>
               <Select value={selectedBranch} onValueChange={setSelectedBranch}>
-                <SelectTrigger className="flex-1 focus:ring-[#8f58e4]/30">
+                <SelectTrigger className="flex-1 focus:ring-[#4C88C6]/30">
                   <SelectValue placeholder="Chọn chi nhánh" />
                 </SelectTrigger>
                 <SelectContent>
@@ -143,7 +143,7 @@ export default function AddEmployeeDialog({
                   className="flex items-center gap-2 p-3 bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-neutral-200 dark:border-neutral-700"
                 >
                   {/* Index badge */}
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#8f58e4] to-[#402093] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#4C88C6] to-[#102854] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                     {index + 1}
                   </div>
 
@@ -152,19 +152,19 @@ export default function AddEmployeeDialog({
                       placeholder="Tên nhân viên"
                       value={employee.name}
                       onChange={(e) => updateEmployee(index, "name", e.target.value)}
-                      className="h-8 text-sm focus-visible:ring-[#8f58e4]/30"
+                      className="h-8 text-sm focus-visible:ring-[#4C88C6]/30"
                     />
                     <Input
                       placeholder="Số điện thoại"
                       value={employee.phone}
                       onChange={(e) => updateEmployee(index, "phone", e.target.value)}
-                      className="h-8 text-sm focus-visible:ring-[#8f58e4]/30"
+                      className="h-8 text-sm focus-visible:ring-[#4C88C6]/30"
                     />
                     <Select
                       value={employee.role}
                       onValueChange={(value) => updateEmployee(index, "role", value)}
                     >
-                      <SelectTrigger className="h-8 text-sm focus:ring-[#8f58e4]/30">
+                      <SelectTrigger className="h-8 text-sm focus:ring-[#4C88C6]/30">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -195,7 +195,7 @@ export default function AddEmployeeDialog({
           {/* Add More Button */}
           <Button
             variant="outline"
-            className="w-full border-dashed border-neutral-300 dark:border-neutral-600 text-neutral-500 hover:text-[#8f58e4] hover:border-[#8f58e4] hover:bg-[#8f58e4]/5 transition-all"
+            className="w-full border-dashed border-neutral-300 dark:border-neutral-600 text-neutral-500 hover:text-[#4C88C6] hover:border-[#4C88C6] hover:bg-[#4C88C6]/5 transition-all"
             onClick={addNewEmployeeRow}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -208,7 +208,7 @@ export default function AddEmployeeDialog({
             Hủy
           </Button>
           <Button
-            className="bg-[#8f58e4] hover:bg-[#402093] hover:shadow-md text-white transition-all"
+            className="bg-[#4C88C6] hover:bg-[#102854] hover:shadow-md text-white transition-all"
             onClick={handleSubmit}
             disabled={!selectedBranch}
           >

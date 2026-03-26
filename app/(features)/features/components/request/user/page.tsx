@@ -120,11 +120,11 @@ export default function UserRequestPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.35 }}
-        className="relative bg-gradient-to-br from-[#140830] via-[#2d1666] to-[#5028a8] overflow-hidden"
+        className="relative bg-gradient-to-br from-[#060F1F] via-[#0B1E3D] to-[#1D4D8F] overflow-hidden"
       >
         {/* Decorative shapes */}
         <div className="absolute -top-14 -right-14 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute top-8 right-40 w-20 h-20 rounded-full bg-purple-400/10 pointer-events-none" />
+        <div className="absolute top-8 right-40 w-20 h-20 rounded-full bg-blue-400/10 pointer-events-none" />
         <div className="absolute -bottom-8 left-1/3 w-36 h-36 rounded-full bg-indigo-400/10 pointer-events-none" />
 
         <div className="relative px-6 pt-6 pb-5 space-y-4">
@@ -132,18 +132,18 @@ export default function UserRequestPage() {
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-300 via-fuchsia-400 to-indigo-500 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-purple-900/40">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#4C88C6] via-[#1D4D8F] to-[#102854] flex items-center justify-center text-white text-xl font-black shadow-lg shadow-blue-900/40">
                   {ME.initial}
                 </div>
-                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#140830]" />
+                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#060F1F]" />
               </div>
               <div>
                 <p className="text-white/50 text-xs mb-0.5">{getGreeting()},</p>
                 <p className="text-white font-bold text-lg leading-tight">{ME.name}</p>
                 <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                  <span className="text-purple-200/50 text-[11px]">{ME.department}</span>
+                  <span className="text-blue-200/50 text-[11px]">{ME.department}</span>
                   <span className="text-white/20 text-[11px]">·</span>
-                  <span className="text-purple-200/50 text-[11px] flex items-center gap-0.5">
+                  <span className="text-blue-200/50 text-[11px] flex items-center gap-0.5">
                     <MapPin className="w-2.5 h-2.5" />
                     {ME.branch}
                   </span>
@@ -180,7 +180,7 @@ export default function UserRequestPage() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   className="flex items-center gap-2.5 bg-white/10 border border-white/15 rounded-xl px-3 py-2"
                 >
-                  <ArrowLeftRight className="w-3.5 h-3.5 text-purple-200/60 shrink-0" />
+                  <ArrowLeftRight className="w-3.5 h-3.5 text-blue-200/60 shrink-0" />
                   <div>
                     <p className="text-[9px] text-white/45 uppercase tracking-widest font-semibold">
                       Đổi ca của tôi
@@ -294,7 +294,7 @@ export default function UserRequestPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Tìm đồng nghiệp, bộ phận..."
-            className="pl-9 text-sm focus-visible:ring-[#8f58e4]"
+            className="pl-9 text-sm focus-visible:ring-[#4C88C6]"
           />
         </motion.div>
 
@@ -313,7 +313,7 @@ export default function UserRequestPage() {
                 onClick={() => setActiveTab(id)}
                 className={cn(
                   "flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8f58e4]",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C88C6]",
                   isActive
                     ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm"
                     : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
@@ -325,7 +325,7 @@ export default function UserRequestPage() {
                   className={cn(
                     "text-[10px] font-bold px-1.5 py-0.5 rounded-full transition-colors",
                     isActive
-                      ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400"
+                      ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
                       : "bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400"
                   )}
                 >

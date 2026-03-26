@@ -39,7 +39,7 @@ export default function TimekeepingInfoCard() {
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <Fingerprint className="w-4 h-4 text-[#8f58e4]" />
+          <Fingerprint className="w-4 h-4 text-[#4C88C6]" />
           Thông tin chấm công hôm nay
         </CardTitle>
       </CardHeader>

@@ -217,7 +217,7 @@ export default function Calendar() {
                   </button>
                 ))}
               </div>
-              <Button variant="brand" className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all">
+              <Button variant="brand" className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] rounded-lg hover:shadow-lg hover:shadow-blue-500/25 transition-all">
                 + Thêm sự kiện
               </Button>
             </div>
@@ -277,9 +277,9 @@ function CalendarCell({ cellId, day, shifts, isWeekend, isToday, isSelected }: {
       className={`
         border-b border-r border-neutral-200 dark:border-neutral-800 p-2 transition-colors
         ${isWeekend ? "bg-neutral-50/50 dark:bg-neutral-900/30" : "bg-white dark:bg-neutral-950"}
-        ${isToday ? "bg-purple-50/30 dark:bg-purple-950/10" : ""}
+        ${isToday ? "bg-blue-50/30 dark:bg-blue-950/10" : ""}
         ${isSelected && !isToday ? "bg-blue-50/40 dark:bg-blue-950/10 ring-1 ring-inset ring-blue-300 dark:ring-blue-700" : ""}
-        ${isOver ? "bg-purple-100/50 dark:bg-purple-900/20" : ""}
+        ${isOver ? "bg-blue-100/50 dark:bg-blue-900/20" : ""}
       `}
     >
       {day && (
@@ -287,7 +287,7 @@ function CalendarCell({ cellId, day, shifts, isWeekend, isToday, isSelected }: {
           <div className={`
             w-7 h-7 flex items-center justify-center rounded-full text-sm mb-2
             ${isToday
-              ? "bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white font-bold shadow-md"
+              ? "bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white font-bold shadow-md"
               : isSelected
                 ? "ring-2 ring-blue-400 text-blue-600 dark:text-blue-400 font-bold"
                 : isWeekend
@@ -330,7 +330,7 @@ function DayView({ today, currentTime, getShiftsForDate }: { today: Date; curren
         <div className="w-16 flex-shrink-0" />
         <div className="flex-1 py-3 text-center border-l border-neutral-200 dark:border-neutral-800">
           <div className="text-xs font-medium text-neutral-500 dark:text-neutral-400">{WEEKDAYS_FULL[(today.getDay() + 6) % 7]}</div>
-          <div className="w-9 h-9 mx-auto mt-1 flex items-center justify-center rounded-full bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white text-lg font-bold">
+          <div className="w-9 h-9 mx-auto mt-1 flex items-center justify-center rounded-full bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white text-lg font-bold">
             {today.getDate()}
           </div>
         </div>
@@ -396,9 +396,9 @@ function WeekView({ weekDays, today, currentTime, getShiftsForDate }: { weekDays
       <div className="flex border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
         <div className="w-16 flex-shrink-0" />
         {weekDays.map((date, i) => (
-          <div key={i} className={`flex-1 py-3 text-center border-l border-neutral-200 dark:border-neutral-800 ${isTodayDate(date) ? "bg-purple-50/50 dark:bg-purple-950/20" : ""}`}>
+          <div key={i} className={`flex-1 py-3 text-center border-l border-neutral-200 dark:border-neutral-800 ${isTodayDate(date) ? "bg-blue-50/50 dark:bg-blue-950/20" : ""}`}>
             <div className={`text-xs font-medium ${i === 6 ? "text-red-500" : "text-neutral-500 dark:text-neutral-400"}`}>{WEEKDAYS_FULL[i]}</div>
-            <div className={`text-lg font-bold mt-1 ${isTodayDate(date) ? "w-9 h-9 mx-auto flex items-center justify-center rounded-full bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white" : "text-neutral-900 dark:text-white"}`}>
+            <div className={`text-lg font-bold mt-1 ${isTodayDate(date) ? "w-9 h-9 mx-auto flex items-center justify-center rounded-full bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white" : "text-neutral-900 dark:text-white"}`}>
               {date.getDate()}
             </div>
           </div>
@@ -418,7 +418,7 @@ function WeekView({ weekDays, today, currentTime, getShiftsForDate }: { weekDays
             const dayShifts = getShiftsForDate(date.getFullYear(), date.getMonth(), date.getDate());
             const isCurrentDay = isTodayDate(date);
             return (
-              <div key={dayIdx} className={`flex-1 relative border-l border-neutral-200 dark:border-neutral-800 ${isCurrentDay ? "bg-purple-50/20 dark:bg-purple-950/10" : "bg-white dark:bg-neutral-950"}`}>
+              <div key={dayIdx} className={`flex-1 relative border-l border-neutral-200 dark:border-neutral-800 ${isCurrentDay ? "bg-blue-50/20 dark:bg-blue-950/10" : "bg-white dark:bg-neutral-950"}`}>
                 {HOURS.filter(h => h >= 1 && h <= 23).map(hour => (
                   <div key={hour} className="absolute left-0 right-0 border-t border-neutral-100 dark:border-neutral-800" style={{ top: hour * hourHeight }} />
                 ))}

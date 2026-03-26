@@ -55,7 +55,7 @@ export default function ShiftDetailDialog({
         <DialogTitle className="sr-only">Chi tiết ca làm việc</DialogTitle>
 
         {/* ── Gradient header ── */}
-        <div className="bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] px-5 pt-5 pb-4 shrink-0">
+        <div className="bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6] px-5 pt-5 pb-4 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-white/20 border-2 border-white/30 flex items-center justify-center text-white text-base font-bold shrink-0 shadow-inner">
               {employeeName.charAt(0)}
@@ -168,7 +168,7 @@ function ShiftEditCard({
             value={shift.status}
             onValueChange={(val) => onUpdate({ status: val as AttendanceStatus })}
           >
-            <SelectTrigger className="h-8 text-xs bg-white/60 dark:bg-black/20 border-black/10 dark:border-white/10 focus:ring-[#8f58e4]/30">
+            <SelectTrigger className="h-8 text-xs bg-white/60 dark:bg-black/20 border-black/10 dark:border-white/10 focus:ring-[#4C88C6]/30">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -190,7 +190,7 @@ function ShiftEditCard({
             </p>
             <Input
               type="time"
-              className="h-8 text-xs bg-white/60 dark:bg-black/20 border-black/10 dark:border-white/10 focus-visible:ring-[#8f58e4]/30"
+              className="h-8 text-xs bg-white/60 dark:bg-black/20 border-black/10 dark:border-white/10 focus-visible:ring-[#4C88C6]/30"
               value={shift.checkIn ?? ""}
               onChange={(e) => onUpdate({ checkIn: e.target.value || undefined })}
             />
@@ -202,7 +202,7 @@ function ShiftEditCard({
             </p>
             <Input
               type="time"
-              className="h-8 text-xs bg-white/60 dark:bg-black/20 border-black/10 dark:border-white/10 focus-visible:ring-[#8f58e4]/30"
+              className="h-8 text-xs bg-white/60 dark:bg-black/20 border-black/10 dark:border-white/10 focus-visible:ring-[#4C88C6]/30"
               value={shift.checkOut ?? ""}
               onChange={(e) => onUpdate({ checkOut: e.target.value || undefined })}
             />

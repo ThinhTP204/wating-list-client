@@ -93,13 +93,13 @@ export default function Page() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
-        className="relative bg-gradient-to-br from-[#1e0d4a] via-[#402093] to-[#6940c4] overflow-hidden"
+        className="relative bg-gradient-to-br from-[#060F1F] via-[#102854] to-[#1D4D8F] overflow-hidden"
       >
         {/* Decorative circles */}
         <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute top-6 right-36 w-20 h-20 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute -bottom-8 right-20 w-36 h-36 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 w-24 h-24 rounded-full bg-purple-400/10 pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-24 h-24 rounded-full bg-blue-400/10 pointer-events-none" />
 
         <div className="relative px-6 pt-7 pb-6">
           <div className="flex items-end justify-between gap-4 flex-wrap">
@@ -118,7 +118,7 @@ export default function Page() {
               <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1.5">
                 Shift Exchange
               </h1>
-              <p className="text-sm text-purple-200/70">
+              <p className="text-sm text-blue-200/70">
                 Linh hoạt lịch làm việc — cùng đồng nghiệp hỗ trợ nhau
               </p>
 
@@ -126,7 +126,7 @@ export default function Page() {
               <div className="flex items-center gap-5 mt-4 flex-wrap">
                 <div className="flex items-center gap-1.5">
                   <div className="w-5 h-5 rounded-md bg-white/15 flex items-center justify-center">
-                    <ArrowLeftRight className="w-2.5 h-2.5 text-purple-200" />
+                    <ArrowLeftRight className="w-2.5 h-2.5 text-blue-200" />
                   </div>
                   <span className="text-white font-bold text-sm">{openSwapCount}</span>
                   <span className="text-white/45 text-xs">cần đổi</span>
@@ -164,7 +164,7 @@ export default function Page() {
                 <Button
                   size="sm"
                   onClick={() => setSwapOpen(true)}
-                  className="gap-1.5 text-xs bg-white text-[#402093] hover:bg-white/90 font-semibold shadow-none border-0"
+                  className="gap-1.5 text-xs bg-white text-[#102854] hover:bg-white/90 font-semibold shadow-none border-0"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Đăng đổi ca
@@ -190,11 +190,11 @@ export default function Page() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tìm theo tên, bộ phận..."
-              className="pl-9 text-sm focus-visible:ring-[#8f58e4]"
+              className="pl-9 text-sm focus-visible:ring-[#4C88C6]"
             />
           </div>
           <Select value={branchFilter} onValueChange={setBranch}>
-            <SelectTrigger className="sm:min-w-[200px] text-sm gap-2 focus:ring-[#8f58e4]">
+            <SelectTrigger className="sm:min-w-[200px] text-sm gap-2 focus:ring-[#4C88C6]">
               <SlidersHorizontal className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
               <SelectValue />
             </SelectTrigger>
@@ -255,9 +255,9 @@ export default function Page() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-1.5 h-5 rounded-full bg-gradient-to-b from-[#402093] to-[#8f58e4]" />
+                <div className="w-1.5 h-5 rounded-full bg-gradient-to-b from-[#102854] to-[#4C88C6]" />
                 <span className="text-sm font-semibold text-neutral-800 dark:text-white">Cần đổi ca</span>
-                <Badge className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-transparent">
+                <Badge className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-transparent">
                   {filteredSwap.length}
                 </Badge>
               </div>
@@ -265,7 +265,7 @@ export default function Page() {
                 <Button
                   size="sm"
                   onClick={() => setSwapOpen(true)}
-                  className="gap-1.5 text-xs bg-gradient-to-r from-[#402093] via-[#5e34b7] to-[#8f58e4] border-0 text-white hover:shadow-md hover:shadow-purple-500/20"
+                  className="gap-1.5 text-xs bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] border-0 text-white hover:shadow-md hover:shadow-blue-500/20"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Đăng đổi ca

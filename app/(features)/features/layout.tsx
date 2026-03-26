@@ -53,7 +53,7 @@ export default function FeaturesLayout({
                     onClick={() => handleTabClick(tab.tab)}
                     className={`shrink-0 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? "bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white shadow-sm"
+                        ? "bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white shadow-sm"
                         : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
                     }`}
                   >

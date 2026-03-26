@@ -37,7 +37,7 @@ export default function SalaryScalePage() {
       label: "Tổng chức danh",
       value: positions.length,
       icon: Users,
-      cls: "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400",
+      cls: "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400",
     },
     {
       label: "Tổng mức lương",
@@ -88,7 +88,7 @@ export default function SalaryScalePage() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => { setEditing(null); setDialogOpen(true); }}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#402093] via-[#5e34b7] to-[#8f58e4] rounded-lg hover:shadow-lg hover:shadow-purple-500/30 transition-shadow"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] rounded-lg hover:shadow-lg hover:shadow-blue-500/30 transition-shadow"
         >
           <Plus className="w-4 h-4" />
           Thêm mục
@@ -123,7 +123,7 @@ export default function SalaryScalePage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Tìm theo chức danh hoặc mã..."
-          className="w-full pl-9 pr-4 py-2 text-sm border border-neutral-200 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 transition-colors"
+          className="w-full pl-9 pr-4 py-2 text-sm border border-neutral-200 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-950 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors"
         />
       </div>
 

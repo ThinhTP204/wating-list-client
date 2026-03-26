@@ -26,7 +26,7 @@ export default function AttendanceChartCard() {
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <Clock className="w-4 h-4 text-[#8f58e4]" />
+          <Clock className="w-4 h-4 text-[#4C88C6]" />
           Thống kê chấm công hôm nay
         </CardTitle>
       </CardHeader>

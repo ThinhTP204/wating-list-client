@@ -45,7 +45,7 @@ export default function StaffWorkingCard() {
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <Users className="w-4 h-4 text-[#8f58e4]" />
+          <Users className="w-4 h-4 text-[#4C88C6]" />
           Ai đang làm việc
           <span className="ml-auto text-xs text-neutral-500 font-normal">Tổng: {total} người</span>
         </CardTitle>

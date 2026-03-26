@@ -43,14 +43,14 @@ const Conclusion: React.FC = () => {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-6 py-20 text-center md:px-10 md:py-28">
-        <span className="mb-4 inline-flex rounded-full border border-[#c4b5fd]/30 bg-[#8f58e4]/10 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-[#c4b5fd]">
+        <span className="mb-4 inline-flex rounded-full border border-[#BCE8F5]/30 bg-[#4C88C6]/10 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-[#BCE8F5]">
           Sẵn sàng thay đổi
         </span>
 
         <h2 className="text-3xl font-extrabold leading-tight text-white md:text-5xl lg:text-6xl">
           Quản lý ca làm
           <br />
-          <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] bg-clip-text text-transparent">
             thông minh hơn bao giờ hết.
           </span>
         </h2>

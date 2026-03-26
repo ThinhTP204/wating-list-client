@@ -73,7 +73,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
         <DialogTitle className="sr-only">Thống kê nhân viên</DialogTitle>
 
         {/* ── Gradient header ── */}
-        <div className="bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] px-6 pt-6 pb-6 shrink-0">
+        <div className="bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6] px-6 pt-6 pb-6 shrink-0">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-white/20 border-2 border-white/40 flex items-center justify-center text-white text-2xl font-bold shrink-0 shadow-inner">
@@ -158,20 +158,20 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="bg-[#8f58e4]/8 dark:bg-[#8f58e4]/15 rounded-2xl p-4 border border-[#8f58e4]/10 dark:border-[#8f58e4]/20"
+            className="bg-[#4C88C6]/8 dark:bg-[#4C88C6]/15 rounded-2xl p-4 border border-[#4C88C6]/10 dark:border-[#4C88C6]/20"
           >
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-7 h-7 rounded-lg bg-[#8f58e4]/10 dark:bg-[#8f58e4]/20 flex items-center justify-center">
-                <DollarSign className="w-4 h-4 text-[#8f58e4]" />
+              <div className="w-7 h-7 rounded-lg bg-[#4C88C6]/10 dark:bg-[#4C88C6]/20 flex items-center justify-center">
+                <DollarSign className="w-4 h-4 text-[#4C88C6]" />
               </div>
-              <span className="text-[10px] font-bold text-[#8f58e4]/80 uppercase tracking-wide">
+              <span className="text-[10px] font-bold text-[#4C88C6]/80 uppercase tracking-wide">
                 Thu nhập
               </span>
             </div>
-            <p className="text-3xl font-bold text-[#8f58e4] leading-none">
+            <p className="text-3xl font-bold text-[#4C88C6] leading-none">
               {(totalSalary / 1000).toFixed(0)}
             </p>
-            <p className="text-xs text-[#8f58e4]/50 mt-1">nghìn VND</p>
+            <p className="text-xs text-[#4C88C6]/50 mt-1">nghìn VND</p>
           </motion.div>
 
           <motion.div
@@ -198,7 +198,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
         {/* ── Status breakdown ── */}
         <div className="px-6 pb-4 flex-1 overflow-y-auto">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-1 h-4 bg-gradient-to-b from-[#402093] to-[#8f58e4] rounded-full" />
+            <div className="w-1 h-4 bg-gradient-to-b from-[#102854] to-[#4C88C6] rounded-full" />
             <h3 className="text-xs font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">
               Phân tích chấm công
             </h3>
@@ -269,7 +269,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
               <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wide mb-1">
                 Tổng lương Tháng {month}/{year}
               </p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-[#402093] to-[#8f58e4] bg-clip-text text-transparent leading-none">
+              <p className="text-3xl font-bold bg-gradient-to-r from-[#102854] to-[#4C88C6] bg-clip-text text-transparent leading-none">
                 {totalSalary.toLocaleString("vi-VN")}
                 <span className="text-base font-normal text-neutral-400 ml-1">đ</span>
               </p>
@@ -290,7 +290,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
               Export PDF
             </Button>
             <Button
-              className="flex-1 h-10 bg-[#8f58e4] hover:bg-[#7a47cc] hover:shadow-md text-white text-sm transition-all"
+              className="flex-1 h-10 bg-[#4C88C6] hover:bg-[#7a47cc] hover:shadow-md text-white text-sm transition-all"
               onClick={() => onOpenChange(false)}
             >
               Đóng

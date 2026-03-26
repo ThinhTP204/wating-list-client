@@ -7,12 +7,13 @@
   WOOKKI BRAND COLOR SYSTEM
   ==============================================================================
 
-  Primary Gradient: linear-gradient(90deg, #402093, #8f58e4, #5e34b7)
+  Primary Gradient: linear-gradient(90deg, #102854, #4C88C6, #1D4D8F)
 
   Color Palette:
-  - Primary (Deep Purple): #402093     → Main brand color, buttons, CTAs
-  - Secondary (Medium Purple): #5e34b7 → Secondary elements, accents
-  - Accent (Light Purple): #8f58e4    → Highlights, hover states
+  - Primary (Deep Navy): #102854     → Main brand color, buttons, CTAs
+  - Secondary (Medium Blue): #1D4D8F → Secondary elements, accents
+  - Accent (Light Blue): #4C88C6    → Highlights, hover states
+  - Pale Blue: #BCE8F5              → Backgrounds, tints
 
   ==============================================================================
 */
@@ -27,26 +28,26 @@ body {
 
 @custom-variant dark (&:is(.dark *));
 
-/* ===== BRAND COLOR SYSTEM - Based on #402093 → #8f58e4 → #5e34b7 ===== */
+/* ===== BRAND COLOR SYSTEM - Based on #102854 → #4C88C6 → #1D4D8F ===== */
 :root {
   /* Base */
 
   /* Primary Brand Colors - Light Mode */
-  --primary: #402093;
+  --primary: #102854;
   --primary-foreground: #ffffff;
-  --primary-light: #5e34b7;
-  --primary-lighter: #8f58e4;
+  --primary-light: #1D4D8F;
+  --primary-lighter: #4C88C6;
 
   /* Secondary - Light Mode */
-  --secondary: #f5f3ff;
-  --secondary-foreground: #402093;
+  --secondary: #EEF6FB;
+  --secondary-foreground: #102854;
 
   /* Accent - Light Mode */
-  --accent: #f3e8ff;
-  --accent-foreground: #402093;
+  --accent: #D9EEF8;
+  --accent-foreground: #102854;
 
   /* Muted */
-  --muted: #f5f3ff;
+  --muted: #EEF6FB;
   --muted-foreground: #6b7280;
 
   /* Destructive */
@@ -56,7 +57,7 @@ body {
   /* Border & Input */
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: #8f58e4;
+  --ring: #4C88C6;
 
   /* Border Radius */
   --radius: 0.625rem;
@@ -71,22 +72,22 @@ body {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
 
-  /* Chart Colors - Purple Theme */
-  --chart-1: #402093;
-  --chart-2: #5e34b7;
-  --chart-3: #8f58e4;
-  --chart-4: #a78bfa;
-  --chart-5: #c4b5fd;
+  /* Chart Colors - Blue Theme */
+  --chart-1: #102854;
+  --chart-2: #1D4D8F;
+  --chart-3: #4C88C6;
+  --chart-4: #6AAED9;
+  --chart-5: #BCE8F5;
 
   /* Sidebar - Light Mode */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #402093;
+  --sidebar-primary: #102854;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f3e8ff;
-  --sidebar-accent-foreground: #402093;
+  --sidebar-accent: #D9EEF8;
+  --sidebar-accent-foreground: #102854;
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: #8f58e4;
+  --sidebar-ring: #4C88C6;
 }
 
 @theme inline {
@@ -144,20 +145,20 @@ body {
   --color-chart-1: var(--chart-1);
 
   /* ============================================================
-     BRAND COLOR SCALE — Purple Gradient System
-     Gradient: linear-gradient(90deg, #402093, #8f58e4, #5e34b7)
+     BRAND COLOR SCALE — Blue Gradient System
+     Gradient: linear-gradient(90deg, #102854, #4C88C6, #1D4D8F)
      ============================================================ */
-  --color-brand-50:  #f5f0ff;
-  --color-brand-100: #ede5fd;
-  --color-brand-200: #d8bffa;
-  --color-brand-300: #c09af5;
-  --color-brand-400: #a87aec;
-  --color-brand-500: #8f58e4;
-  --color-brand-600: #7244cc;
-  --color-brand-700: #5e34b7;
-  --color-brand-800: #402093;
-  --color-brand-900: #2d1570;
-  --color-brand-950: #1a0a3d;
+  --color-brand-50:  #EEF6FB;
+  --color-brand-100: #D9EEF8;
+  --color-brand-200: #BCE8F5;
+  --color-brand-300: #8DC8E8;
+  --color-brand-400: #6AAED9;
+  --color-brand-500: #4C88C6;
+  --color-brand-600: #3570A8;
+  --color-brand-700: #1D4D8F;
+  --color-brand-800: #102854;
+  --color-brand-900: #0B1E3D;
+  --color-brand-950: #060F1F;
 }
 
 @layer base {
@@ -173,7 +174,7 @@ body {
   }
 }
 
-/* ===== DARK MODE - Purple Theme ===== */
+/* ===== DARK MODE - Blue Theme ===== */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -182,11 +183,11 @@ body {
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
 
-  /* Primary - Purple Brand in Dark Mode */
-  --primary: #8f58e4;
+  /* Primary - Blue Brand in Dark Mode */
+  --primary: #4C88C6;
   --primary-foreground: #ffffff;
-  --primary-light: #a87aec;
-  --primary-lighter: #c4b5fd;
+  --primary-light: #6AAED9;
+  --primary-lighter: #BCE8F5;
 
   /* Secondary - Dark Mode */
   --secondary: oklch(0.269 0 0);
@@ -203,24 +204,24 @@ body {
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: #a87aec;
+  --ring: #6AAED9;
 
   /* Chart Colors - Dark Mode */
-  --chart-1: #a87aec;
-  --chart-2: #8f58e4;
-  --chart-3: #5e34b7;
-  --chart-4: #402093;
-  --chart-5: #c4b5fd;
+  --chart-1: #6AAED9;
+  --chart-2: #4C88C6;
+  --chart-3: #1D4D8F;
+  --chart-4: #102854;
+  --chart-5: #BCE8F5;
 
   /* Sidebar - Dark Mode */
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: #8f58e4;
+  --sidebar-primary: #4C88C6;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: #a87aec;
+  --sidebar-ring: #6AAED9;
 }
 
 @keyframes fireFlicker {
@@ -233,24 +234,24 @@ body {
 
 /* ===== BRAND GRADIENT UTILITIES ===== */
 
-/* Main gradient: 90° — #402093 → #8f58e4 → #5e34b7 */
+/* Main gradient: 90° — #102854 → #4C88C6 → #1D4D8F */
 .bg-gradient-brand {
-  background: linear-gradient(90deg, #402093, #8f58e4, #5e34b7);
+  background: linear-gradient(90deg, #102854, #4C88C6, #1D4D8F);
 }
 
 /* Diagonal variant */
 .bg-gradient-brand-diagonal {
-  background: linear-gradient(135deg, #402093, #8f58e4, #5e34b7);
+  background: linear-gradient(135deg, #102854, #4C88C6, #1D4D8F);
 }
 
 /* Vertical variant */
 .bg-gradient-brand-vertical {
-  background: linear-gradient(180deg, #402093, #8f58e4, #5e34b7);
+  background: linear-gradient(180deg, #102854, #4C88C6, #1D4D8F);
 }
 
 /* Gradient text */
 .text-gradient-brand {
-  background: linear-gradient(90deg, #402093, #8f58e4, #5e34b7);
+  background: linear-gradient(90deg, #102854, #4C88C6, #1D4D8F);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -258,8 +259,8 @@ body {
 
 /* Subtle brand tint for section backgrounds */
 .bg-brand-tint {
-  background: linear-gradient(135deg, #f5f0ff 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #EEF6FB 0%, #ffffff 100%);
 }
 .dark .bg-brand-tint {
-  background: linear-gradient(135deg, #1a0a3d 0%, oklch(0.145 0 0) 100%);
+  background: linear-gradient(135deg, #0B1E3D 0%, oklch(0.145 0 0) 100%);
 }

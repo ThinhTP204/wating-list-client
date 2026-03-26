@@ -41,14 +41,14 @@ export default function RegisterDialog() {
       <DialogContent className="max-w-md p-0 overflow-hidden border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 sm:rounded-2xl">
         <DialogTitle className="sr-only">Đăng ký trải nghiệm Wokki</DialogTitle>
         {/* Header gradient bar */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7]" />
+        <div className="h-1.5 w-full bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F]" />
 
         <div className="px-6 pb-6 pt-2">
           {/* Title */}
           <div className="mb-5 text-center">
             <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
               Trải nghiệm{" "}
-              <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] bg-clip-text text-transparent">
                 Wokki
               </span>
             </h3>
@@ -59,7 +59,7 @@ export default function RegisterDialog() {
 
           {isSuccess ? (
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f5f0ff] dark:bg-[#1a0a3d] text-3xl">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#EEF6FB] dark:bg-[#0B1E3D] text-3xl">
                 🎉
               </div>
               <p className="text-xl font-bold text-neutral-900 dark:text-white">
@@ -71,7 +71,7 @@ export default function RegisterDialog() {
               </p>
               <Button
                 onClick={close}
-                className="mt-5 bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white font-semibold hover:opacity-90 hover:shadow-lg hover:shadow-[#8f58e4]/30"
+                className="mt-5 bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white font-semibold hover:opacity-90 hover:shadow-lg hover:shadow-[#4C88C6]/30"
               >
                 Đóng
               </Button>
@@ -108,7 +108,7 @@ export default function RegisterDialog() {
                   <button
                     type="button"
                     onClick={() => setContactType(contactType === "email" ? "phone" : "email")}
-                    className="cursor-pointer text-xs font-medium text-[#8f58e4] hover:text-[#5e34b7] transition-colors"
+                    className="cursor-pointer text-xs font-medium text-[#4C88C6] hover:text-[#1D4D8F] transition-colors"
                   >
                     Dùng {contactType === "email" ? "SĐT" : "Email"} thay
                   </button>
@@ -159,27 +159,27 @@ export default function RegisterDialog() {
                         onClick={() => setReferralCode(selected ? "" : name)}
                         className={`cursor-pointer group relative flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all duration-200 ${
                           selected
-                            ? "border-[#8f58e4] dark:border-[#a87aec] bg-[#f5f0ff] dark:bg-[#1a0a3d] shadow-sm ring-1 ring-[#c4b5fd] dark:ring-[#5e34b7]"
+                            ? "border-[#4C88C6] dark:border-[#6AAED9] bg-[#EEF6FB] dark:bg-[#0B1E3D] shadow-sm ring-1 ring-[#BCE8F5] dark:ring-[#1D4D8F]"
                             : "border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-800/50 hover:border-neutral-300 dark:hover:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-800"
                         }`}
                       >
                         <div
                           className={`relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-2 transition-all duration-200 ${
-                            selected ? "ring-[#8f58e4]" : "ring-neutral-200 group-hover:ring-neutral-300"
+                            selected ? "ring-[#4C88C6]" : "ring-neutral-200 group-hover:ring-neutral-300"
                           }`}
                         >
                           <img src={avatar} alt={name} className="h-full w-full object-cover" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className={`text-xs font-semibold truncate transition-colors duration-200 ${selected ? "text-[#402093] dark:text-[#c4b5fd]" : "text-neutral-800 dark:text-neutral-200"}`}>
+                          <p className={`text-xs font-semibold truncate transition-colors duration-200 ${selected ? "text-[#102854] dark:text-[#BCE8F5]" : "text-neutral-800 dark:text-neutral-200"}`}>
                             {name}
                           </p>
-                          <p className={`text-[10px] truncate transition-colors duration-200 ${selected ? "text-[#5e34b7] dark:text-[#a87aec]" : "text-neutral-400 dark:text-neutral-500"}`}>
+                          <p className={`text-[10px] truncate transition-colors duration-200 ${selected ? "text-[#1D4D8F] dark:text-[#6AAED9]" : "text-neutral-400 dark:text-neutral-500"}`}>
                             {role}
                           </p>
                         </div>
                         {selected && (
-                          <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-br from-[#402093] to-[#8f58e4] shadow-sm">
+                          <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-br from-[#102854] to-[#4C88C6] shadow-sm">
                             <svg className="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
@@ -195,7 +195,7 @@ export default function RegisterDialog() {
                 type="submit"
                 disabled={isPending || !referralCode}
                 size="lg"
-                className="w-full bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#8f58e4]/30 disabled:opacity-60 disabled:translate-y-0"
+                className="w-full bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#4C88C6]/30 disabled:opacity-60 disabled:translate-y-0"
               >
                 <RocketIcon size={18} className="mr-2" />
                 {isPending ? "Đang gửi..." : "Đăng ký ngay"}

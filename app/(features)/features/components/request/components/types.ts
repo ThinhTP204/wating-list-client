@@ -44,7 +44,7 @@ export const STATUS_META: Record<ShiftSwapStatus, { label: string; cls: string }
 export const SHIFT_TYPE_META: Record<ShiftType, { label: string; color: string }> = {
   morning:   { label: "Ca sáng",  color: "text-amber-600 dark:text-amber-400" },
   afternoon: { label: "Ca chiều", color: "text-blue-600 dark:text-blue-400" },
-  evening:   { label: "Ca tối",   color: "text-purple-600 dark:text-purple-400" },
+  evening:   { label: "Ca tối",   color: "text-blue-600 dark:text-blue-400" },
   night:     { label: "Ca đêm",   color: "text-indigo-600 dark:text-indigo-400" },
 };
 

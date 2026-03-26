@@ -133,7 +133,7 @@ export default function SalaryDetail({ board, onBack, onEdit }: Props) {
               className={cn(
                 "flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg transition-all",
                 payslipOn
-                  ? "bg-gradient-to-r from-[#402093] via-[#5e34b7] to-[#8f58e4] text-white shadow-md shadow-purple-500/20"
+                  ? "bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] text-white shadow-md shadow-blue-500/20"
                   : "border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
               )}
             >
@@ -165,7 +165,7 @@ export default function SalaryDetail({ board, onBack, onEdit }: Props) {
               className={cn(
                 "relative px-4 py-2.5 text-sm font-medium transition-colors",
                 tab === t.key
-                  ? "text-purple-700 dark:text-purple-300"
+                  ? "text-blue-700 dark:text-blue-300"
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
               )}
             >
@@ -173,7 +173,7 @@ export default function SalaryDetail({ board, onBack, onEdit }: Props) {
               {tab === t.key && (
                 <motion.span
                   layoutId="tab-underline"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#402093] to-[#8f58e4] rounded-full"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#102854] to-[#4C88C6] rounded-full"
                 />
               )}
             </button>

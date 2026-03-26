@@ -143,7 +143,7 @@ export default function AvailableCard({ employee, onContact, onInvite, onCancel 
                 variant="outline"
                 size="sm"
                 onClick={() => onContact(employee)}
-                className="flex-1 text-xs gap-1.5 hover:border-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-400 focus-visible:ring-[#8f58e4]"
+                className="flex-1 text-xs gap-1.5 hover:border-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-400 focus-visible:ring-[#4C88C6]"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
                 Nhắn tin
@@ -151,7 +151,7 @@ export default function AvailableCard({ employee, onContact, onInvite, onCancel 
               <Button
                 size="sm"
                 onClick={() => onInvite(employee)}
-                className="flex-1 text-xs gap-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 border-0 text-white hover:shadow-md hover:shadow-emerald-500/20 focus-visible:ring-[#8f58e4]"
+                className="flex-1 text-xs gap-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 border-0 text-white hover:shadow-md hover:shadow-emerald-500/20 focus-visible:ring-[#4C88C6]"
               >
                 <UserCheck className="w-3.5 h-3.5" />
                 Mời nhận ca

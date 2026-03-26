@@ -17,7 +17,7 @@ const SALARY_DATA = [
 const chartConfig: ChartConfig = {
   salary: {
     label: "Lương (triệu)",
-    color: "#8f58e4",
+    color: "#4C88C6",
   },
 };
 
@@ -31,7 +31,7 @@ export default function SalaryChartCard() {
     <Card className="flex h-100 flex-col">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <DollarSign className="w-4 h-4 text-[#8f58e4]" />
+          <DollarSign className="w-4 h-4 text-[#4C88C6]" />
           Biểu đồ lương
           <div className="ml-auto flex items-center gap-2">
             <span className="text-sm font-bold text-neutral-900 dark:text-white">
@@ -73,8 +73,8 @@ export default function SalaryChartCard() {
             />
             <defs>
               <linearGradient id="salaryGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#8f58e4" />
-                <stop offset="100%" stopColor="#402093" />
+                <stop offset="0%" stopColor="#4C88C6" />
+                <stop offset="100%" stopColor="#102854" />
               </linearGradient>
             </defs>
           </BarChart>

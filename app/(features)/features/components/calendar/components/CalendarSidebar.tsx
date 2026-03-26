@@ -88,8 +88,8 @@ export default function CalendarSidebar({ viewYear, viewMonth, selectedDate, onN
                 className={`
                   aspect-square text-xs rounded-lg flex items-center justify-center transition-all
                   ${!day ? "invisible" : ""}
-                  ${isSelected ? "bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white font-medium" : ""}
-                  ${isToday && !isSelected ? "ring-1 ring-[#8f58e4] text-[#8f58e4] font-medium" : "hover:bg-neutral-100 dark:hover:bg-neutral-800"}
+                  ${isSelected ? "bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white font-medium" : ""}
+                  ${isToday && !isSelected ? "ring-1 ring-[#4C88C6] text-[#4C88C6] font-medium" : "hover:bg-neutral-100 dark:hover:bg-neutral-800"}
                 `}
               >
                 {day}
@@ -116,7 +116,7 @@ export default function CalendarSidebar({ viewYear, viewMonth, selectedDate, onN
               >
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: meta.color }} />
                 <span className="flex-1 text-left text-neutral-700 dark:text-neutral-300">{meta.name}</span>
-                <span className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isActive ? "border-[#8f58e4] bg-[#8f58e4]" : "border-neutral-300 dark:border-neutral-600"}`}>
+                <span className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isActive ? "border-[#4C88C6] bg-[#4C88C6]" : "border-neutral-300 dark:border-neutral-600"}`}>
                   {isActive && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
                 </span>
               </button>

@@ -17,7 +17,7 @@ export default function LeaveCountCard() {
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <Palmtree className="w-4 h-4 text-[#8f58e4]" />
+          <Palmtree className="w-4 h-4 text-[#4C88C6]" />
           Số lượng nghỉ phép
         </CardTitle>
       </CardHeader>

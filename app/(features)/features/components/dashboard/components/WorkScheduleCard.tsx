@@ -28,7 +28,7 @@ export default function WorkScheduleCard() {
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <CalendarDays className="w-4 h-4 text-[#8f58e4]" />
+          <CalendarDays className="w-4 h-4 text-[#4C88C6]" />
           Lịch làm việc tuần này
         </CardTitle>
       </CardHeader>
@@ -39,13 +39,13 @@ export default function WorkScheduleCard() {
               key={item.day}
               className={`flex flex-col items-center gap-1.5 p-2 rounded-xl border transition-all ${
                 i === todayIndex
-                  ? "border-[#8f58e4] bg-[#f5f0ff] dark:bg-[#1a0a3d]/40 shadow-sm"
+                  ? "border-[#4C88C6] bg-[#EEF6FB] dark:bg-[#0B1E3D]/40 shadow-sm"
                   : "border-transparent bg-neutral-50 dark:bg-neutral-800/50"
               }`}
             >
               <span
                 className={`text-xs font-bold ${
-                  i === todayIndex ? "text-[#402093] dark:text-[#a87aec]" : "text-neutral-500 dark:text-neutral-400"
+                  i === todayIndex ? "text-[#102854] dark:text-[#6AAED9]" : "text-neutral-500 dark:text-neutral-400"
                 }`}
               >
                 {item.day}

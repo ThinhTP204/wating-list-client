@@ -58,7 +58,7 @@ export default function AboutQuestion() {
           </span>
           <h2 className={`mt-4 font-bold text-neutral-900 dark:text-white ${isMobile ? "text-2xl" : "text-3xl md:text-4xl lg:text-5xl"}`}>
             Câu hỏi{" "}
-            <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] bg-clip-text text-transparent">
               thường gặp
             </span>
           </h2>
@@ -95,7 +95,7 @@ export default function AboutQuestion() {
                   </span>
                   <motion.div
                     animate={{ rotate: isOpen ? 0 : 0 }}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7]"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F]"
                   >
                     <motion.svg
                       animate={{ rotate: isOpen ? 180 : 0 }}

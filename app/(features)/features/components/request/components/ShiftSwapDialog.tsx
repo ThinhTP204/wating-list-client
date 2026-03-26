@@ -74,7 +74,7 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
         <DialogTitle className="sr-only">Đăng đổi ca</DialogTitle>
 
         {/* Gradient header */}
-        <div className="bg-gradient-to-br from-[#2d1666] via-[#402093] to-[#6940c4] px-6 py-5">
+        <div className="bg-gradient-to-br from-[#0B1E3D] via-[#102854] to-[#1D4D8F] px-6 py-5">
           <DialogHeader>
             <div className="flex items-center gap-2 mb-1">
               <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center">
@@ -82,7 +82,7 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
               </div>
               <span className="text-white font-bold text-lg">Đăng đổi ca</span>
             </div>
-            <p className="text-purple-200/80 text-sm">Tìm người nhận ca của bạn trên Sàn</p>
+            <p className="text-blue-200/80 text-sm">Tìm người nhận ca của bạn trên Sàn</p>
           </DialogHeader>
         </div>
 
@@ -92,8 +92,8 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
           {/* Ca muốn nhường */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-md bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                <Calendar className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+              <div className="w-5 h-5 rounded-md bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <Calendar className="w-3 h-3 text-blue-600 dark:text-blue-400" />
               </div>
               <Label className="text-xs font-bold text-neutral-600 dark:text-neutral-400 uppercase tracking-wide">
                 Ca của bạn (muốn nhường)
@@ -103,7 +103,7 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="text-sm w-full focus-visible:ring-[#8f58e4]"
+              className="text-sm w-full focus-visible:ring-[#4C88C6]"
             />
             <div className="grid grid-cols-3 gap-2">
               <div className="relative">
@@ -112,7 +112,7 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
                   type="time"
                   value={timeFrom}
                   onChange={(e) => setTimeFrom(e.target.value)}
-                  className="text-sm pl-7 focus-visible:ring-[#8f58e4]"
+                  className="text-sm pl-7 focus-visible:ring-[#4C88C6]"
                 />
               </div>
               <div className="relative">
@@ -121,11 +121,11 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
                   type="time"
                   value={timeTo}
                   onChange={(e) => setTimeTo(e.target.value)}
-                  className="text-sm pl-7 focus-visible:ring-[#8f58e4]"
+                  className="text-sm pl-7 focus-visible:ring-[#4C88C6]"
                 />
               </div>
               <Select value={shiftType} onValueChange={(v) => setShiftType(v as ShiftType)}>
-                <SelectTrigger className="text-sm focus:ring-[#8f58e4]">
+                <SelectTrigger className="text-sm focus:ring-[#4C88C6]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -161,7 +161,7 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
               value={wantShift}
               onChange={(e) => setWantShift(e.target.value)}
               placeholder="VD: Ca chiều hoặc ca tối thứ 4, 5"
-              className="text-sm focus-visible:ring-[#8f58e4]"
+              className="text-sm focus-visible:ring-[#4C88C6]"
             />
           </div>
 
@@ -176,7 +176,7 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
               </Label>
             </div>
             <Select value={branch} onValueChange={setBranch}>
-              <SelectTrigger className="text-sm w-full focus:ring-[#8f58e4]">
+              <SelectTrigger className="text-sm w-full focus:ring-[#4C88C6]">
                 <SelectValue placeholder="Chọn chi nhánh..." />
               </SelectTrigger>
               <SelectContent>
@@ -201,7 +201,7 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="Lý do hoặc yêu cầu thêm..."
-              className="text-sm focus-visible:ring-[#8f58e4]"
+              className="text-sm focus-visible:ring-[#4C88C6]"
             />
           </div>
         </div>
@@ -213,7 +213,7 @@ export default function ShiftSwapDialog({ open, onClose, onSave }: Props) {
           <Button
             onClick={handleSubmit}
             disabled={!isValid}
-            className="text-sm bg-gradient-to-r from-[#402093] via-[#5e34b7] to-[#8f58e4] border-0 text-white hover:shadow-md hover:shadow-purple-500/20 disabled:opacity-50 disabled:pointer-events-none"
+            className="text-sm bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] border-0 text-white hover:shadow-md hover:shadow-blue-500/20 disabled:opacity-50 disabled:pointer-events-none"
           >
             Đăng lên Sàn
           </Button>

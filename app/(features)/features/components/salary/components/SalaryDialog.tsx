@@ -89,7 +89,7 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
   const field = (key: string) => ({
     className: cn(
       "w-full px-3 py-2.5 text-sm rounded-lg border bg-neutral-50 dark:bg-neutral-900 transition-colors outline-none",
-      "focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500",
+      "focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500",
       errors[key]
         ? "border-red-400 dark:border-red-500"
         : "border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white"
@@ -118,7 +118,7 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
             className="relative w-full max-w-lg bg-white dark:bg-neutral-950 rounded-2xl shadow-2xl overflow-hidden"
           >
             {/* Gradient header */}
-            <div className="bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] px-6 py-5 flex items-center justify-between">
+            <div className="bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6] px-6 py-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
                   <DollarSign className="w-5 h-5 text-white" />
@@ -234,7 +234,7 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
                   className={cn(
                     "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none",
                     form.hiddenFromEmployee
-                      ? "bg-gradient-to-r from-[#5e34b7] to-[#8f58e4]"
+                      ? "bg-gradient-to-r from-[#1D4D8F] to-[#4C88C6]"
                       : "bg-neutral-200 dark:bg-neutral-700"
                   )}
                 >
@@ -260,7 +260,7 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSubmit}
-                className="px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#402093] via-[#5e34b7] to-[#8f58e4] rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-shadow"
+                className="px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] rounded-lg hover:shadow-lg hover:shadow-blue-500/25 transition-shadow"
               >
                 {editing ? "Lưu thay đổi" : "Tạo mới"}
               </motion.button>

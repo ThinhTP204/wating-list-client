@@ -55,7 +55,7 @@ export default function SalaryScaleDialog({
     `w-full px-3 py-2 text-sm border rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 transition-colors ${
       err
         ? "border-red-400 focus:ring-red-400/30 focus:border-red-400"
-        : "border-neutral-200 dark:border-neutral-700 focus:ring-purple-500/30 focus:border-purple-500"
+        : "border-neutral-200 dark:border-neutral-700 focus:ring-blue-500/30 focus:border-blue-500"
     }`;
 
   return (
@@ -77,12 +77,12 @@ export default function SalaryScaleDialog({
             className="relative w-full max-w-md bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#402093] via-[#5e34b7] to-[#8f58e4] px-5 py-4 flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] px-5 py-4 flex items-center justify-between">
               <div>
                 <h2 className="font-semibold text-white text-base">
                   {editing ? "Chỉnh sửa mức lương" : "Thêm mức lương"}
                 </h2>
-                <p className="text-purple-200 text-xs mt-0.5">
+                <p className="text-blue-200 text-xs mt-0.5">
                   Cấu hình khung lương theo chức danh
                 </p>
               </div>
@@ -197,7 +197,7 @@ export default function SalaryScaleDialog({
               </button>
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#402093] via-[#5e34b7] to-[#8f58e4] rounded-lg hover:shadow-lg hover:shadow-purple-500/30 transition-shadow"
+                className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] rounded-lg hover:shadow-lg hover:shadow-blue-500/30 transition-shadow"
               >
                 {editing ? "Lưu thay đổi" : "Thêm mục"}
               </button>

@@ -14,7 +14,7 @@ interface Props {
 
 const TYPE_BADGE: Record<SalaryColumn["type"], { label: string; cls: string }> = {
   system:  { label: "Hệ thống", cls: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400" },
-  formula: { label: "Công thức", cls: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400" },
+  formula: { label: "Công thức", cls: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400" },
   manual:  { label: "Thủ công",  cls: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" },
 };
 
@@ -50,7 +50,7 @@ export default function SalaryDetailInfo({ board, columns }: Props) {
         {/* Section header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 dark:border-neutral-800">
           <div className="flex items-center gap-2">
-            <span className="w-1 h-4 rounded-full bg-gradient-to-b from-[#402093] to-[#8f58e4]" />
+            <span className="w-1 h-4 rounded-full bg-gradient-to-b from-[#102854] to-[#4C88C6]" />
             <h3 className="text-sm font-semibold text-neutral-800 dark:text-white">Thông tin bảng lương</h3>
           </div>
           <span className={cn("inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium", status.bg, status.text)}>
@@ -92,7 +92,7 @@ export default function SalaryDetailInfo({ board, columns }: Props) {
         className="bg-white dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden"
       >
         <div className="flex items-center gap-2 px-5 py-4 border-b border-neutral-100 dark:border-neutral-800">
-          <span className="w-1 h-4 rounded-full bg-gradient-to-b from-[#402093] to-[#8f58e4]" />
+          <span className="w-1 h-4 rounded-full bg-gradient-to-b from-[#102854] to-[#4C88C6]" />
           <h3 className="text-sm font-semibold text-neutral-800 dark:text-white">Cấu hình cột</h3>
           <span className="ml-auto text-xs text-neutral-400">{columns.length} cột</span>
         </div>
@@ -120,7 +120,7 @@ export default function SalaryDetailInfo({ board, columns }: Props) {
                 className="hover:bg-neutral-50 dark:hover:bg-neutral-900/40"
               >
                 <TableCell className="px-4 py-3">
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#402093] to-[#8f58e4] flex items-center justify-center text-white text-xs font-bold">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#102854] to-[#4C88C6] flex items-center justify-center text-white text-xs font-bold">
                     {col.key}
                   </div>
                 </TableCell>

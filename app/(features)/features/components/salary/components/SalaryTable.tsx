@@ -77,13 +77,13 @@ export default function SalaryTable({ boards, onSelect, onEdit, onDelete }: Sala
                   {/* Name */}
                   <TableCell className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6] flex items-center justify-center shrink-0">
                         <span className="text-white text-xs font-bold">₫</span>
                       </div>
                       <div>
                         <button
                           onClick={() => onSelect(board)}
-                          className="font-medium text-sm text-neutral-900 dark:text-white leading-tight hover:text-purple-700 dark:hover:text-purple-300 transition-colors text-left"
+                          className="font-medium text-sm text-neutral-900 dark:text-white leading-tight hover:text-blue-700 dark:hover:text-blue-300 transition-colors text-left"
                         >
                           {board.name}
                         </button>
@@ -105,7 +105,7 @@ export default function SalaryTable({ boards, onSelect, onEdit, onDelete }: Sala
                       {board.departments.slice(0, 2).map((dept) => (
                         <span
                           key={dept}
-                          className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300"
+                          className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
                         >
                           {dept}
                         </span>
@@ -157,7 +157,7 @@ export default function SalaryTable({ boards, onSelect, onEdit, onDelete }: Sala
                     >
                       <button
                         onClick={() => onEdit(board)}
-                        className="p-1.5 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-600 dark:text-purple-400 transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 transition-colors"
                         title="Chỉnh sửa"
                       >
                         <Edit2 className="w-4 h-4" />
@@ -198,7 +198,7 @@ export default function SalaryTable({ boards, onSelect, onEdit, onDelete }: Sala
               className={cn(
                 "w-8 h-8 rounded-lg text-sm font-medium transition-colors",
                 page === currentPage
-                  ? "bg-gradient-to-r from-[#402093] via-[#5e34b7] to-[#8f58e4] text-white"
+                  ? "bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] text-white"
                   : "hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
               )}
             >

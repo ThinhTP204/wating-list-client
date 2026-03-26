@@ -108,7 +108,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employee, isEdi
               type="text"
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              className={`w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors ${
+              className={`w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors ${
                 errors.name ? "border-red-500" : "border-neutral-200 dark:border-neutral-700"
               }`}
               placeholder="Nguyễn Văn A"
@@ -126,7 +126,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employee, isEdi
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleChange("email", e.target.value)}
-                className={`w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors ${
+                className={`w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors ${
                   errors.email ? "border-red-500" : "border-neutral-200 dark:border-neutral-700"
                 }`}
                 placeholder="email@company.com"
@@ -141,7 +141,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employee, isEdi
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
-                className={`w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors ${
+                className={`w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors ${
                   errors.phone ? "border-red-500" : "border-neutral-200 dark:border-neutral-700"
                 }`}
                 placeholder="0901234567"
@@ -159,7 +159,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employee, isEdi
               <select
                 value={formData.department}
                 onChange={(e) => handleChange("department", e.target.value)}
-                className="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors"
+                className="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
               >
                 {Object.entries(DEPARTMENT_META).map(([key, meta]) => (
                   <option key={key} value={key}>{meta.name}</option>
@@ -173,7 +173,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employee, isEdi
               <select
                 value={formData.role}
                 onChange={(e) => handleChange("role", e.target.value)}
-                className="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors"
+                className="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
               >
                 {Object.entries(ROLE_META).map(([key, meta]) => (
                   <option key={key} value={key}>{meta.name}</option>
@@ -191,7 +191,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employee, isEdi
               <select
                 value={formData.status}
                 onChange={(e) => handleChange("status", e.target.value)}
-                className="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors"
+                className="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
               >
                 {Object.entries(STATUS_META).map(([key, meta]) => (
                   <option key={key} value={key}>{meta.name}</option>
@@ -206,7 +206,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employee, isEdi
                 type="date"
                 value={formData.joinDate}
                 onChange={(e) => handleChange("joinDate", e.target.value)}
-                className="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors"
+                className="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors"
               />
             </div>
           </div>
@@ -220,7 +220,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employee, isEdi
               type="number"
               value={formData.salary}
               onChange={(e) => handleChange("salary", parseInt(e.target.value) || 0)}
-              className={`w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-colors ${
+              className={`w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors ${
                 errors.salary ? "border-red-500" : "border-neutral-200 dark:border-neutral-700"
               }`}
               placeholder="10000000"
@@ -241,7 +241,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employee, isEdi
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] hover:shadow-lg hover:shadow-purple-500/25 rounded-lg transition-all"
+              className="px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] hover:shadow-lg hover:shadow-blue-500/25 rounded-lg transition-all"
             >
               {isEdit ? "Lưu thay đổi" : "Thêm nhân viên"}
             </button>

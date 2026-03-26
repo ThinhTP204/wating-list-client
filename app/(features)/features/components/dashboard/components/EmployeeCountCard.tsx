@@ -17,7 +17,7 @@ export default function EmployeeCountCard() {
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <UserPlus className="w-4 h-4 text-[#8f58e4]" />
+          <UserPlus className="w-4 h-4 text-[#4C88C6]" />
           Số lượng nhân viên
         </CardTitle>
       </CardHeader>

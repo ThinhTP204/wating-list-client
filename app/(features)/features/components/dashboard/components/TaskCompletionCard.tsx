@@ -30,7 +30,7 @@ export default function TaskCompletionCard() {
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <CheckSquare className="w-4 h-4 text-[#8f58e4]" />
+          <CheckSquare className="w-4 h-4 text-[#4C88C6]" />
           % Công việc hoàn thành
         </CardTitle>
       </CardHeader>
@@ -43,7 +43,7 @@ export default function TaskCompletionCard() {
               onClick={() => setFilter(f.value)}
               className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-all ${
                 filter === f.value
-                  ? "bg-white dark:bg-neutral-700 text-[#402093] shadow-sm"
+                  ? "bg-white dark:bg-neutral-700 text-[#102854] shadow-sm"
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
               }`}
             >
@@ -82,7 +82,7 @@ export default function TaskCompletionCard() {
           </div>
           <div className="h-2 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[#402093] to-[#8f58e4] rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-[#102854] to-[#4C88C6] rounded-full transition-all duration-500"
               style={{ width: `${percent}%` }}
             />
           </div>

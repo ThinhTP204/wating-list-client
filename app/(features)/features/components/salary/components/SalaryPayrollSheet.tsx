@@ -67,7 +67,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                 type="checkbox"
                 checked={selected.size === employees.length && employees.length > 0}
                 onChange={toggleAll}
-                className="rounded border-neutral-300 accent-purple-600"
+                className="rounded border-neutral-300 accent-blue-600"
               />
             </TableHead>
             {COLS.map((col) => (
@@ -93,26 +93,26 @@ export default function SalaryPayrollSheet({ employees }: Props) {
 
         <TableBody>
           {/* Summary row */}
-          <TableRow className="bg-purple-50/60 dark:bg-purple-900/10 border-b border-purple-100 dark:border-purple-900/30 hover:bg-purple-50/80 dark:hover:bg-purple-900/20">
+          <TableRow className="bg-blue-50/60 dark:bg-blue-900/10 border-b border-blue-100 dark:border-blue-900/30 hover:bg-blue-50/80 dark:hover:bg-blue-900/20">
             <TableCell
               colSpan={5}
-              className="px-3 py-2.5 text-xs font-semibold text-purple-700 dark:text-purple-400 pl-14"
+              className="px-3 py-2.5 text-xs font-semibold text-blue-700 dark:text-blue-400 pl-14"
             >
               Tổng cộng ({employees.length} nhân viên)
             </TableCell>
-            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-purple-900 dark:text-purple-200">
+            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-blue-900 dark:text-blue-200">
               {fmtFull(totals.basicSalary)}
             </TableCell>
-            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-purple-900 dark:text-purple-200">
+            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-blue-900 dark:text-blue-200">
               {fmtFull(totals.accommodation)}
             </TableCell>
-            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-purple-900 dark:text-purple-200">
+            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-blue-900 dark:text-blue-200">
               {fmtFull(totals.responsibility)}
             </TableCell>
-            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-purple-900 dark:text-purple-200">
+            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-blue-900 dark:text-blue-200">
               {fmtFull(totals.totalBasic)}
             </TableCell>
-            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-purple-900 dark:text-purple-200">
+            <TableCell className="px-4 py-2.5 text-right text-xs font-bold text-blue-900 dark:text-blue-200">
               {fmtFull(totals.actualSalary)}
             </TableCell>
             <TableCell />
@@ -131,7 +131,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                 className={cn(
                   "border-b border-neutral-100 dark:border-neutral-800/60",
                   isSelected
-                    ? "bg-purple-50 dark:bg-purple-900/10 hover:bg-purple-50 dark:hover:bg-purple-900/10"
+                    ? "bg-blue-50 dark:bg-blue-900/10 hover:bg-blue-50 dark:hover:bg-blue-900/10"
                     : "hover:bg-neutral-50 dark:hover:bg-neutral-900/40"
                 )}
               >
@@ -140,7 +140,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                     type="checkbox"
                     checked={isSelected}
                     onChange={() => toggle(emp.id)}
-                    className="rounded border-neutral-300 accent-purple-600"
+                    className="rounded border-neutral-300 accent-blue-600"
                   />
                 </TableCell>
 
@@ -153,7 +153,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                 <TableCell className="px-4 py-3">
                   <div className="flex items-center gap-2.5">
                     <div className="relative shrink-0">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] flex items-center justify-center text-white text-xs font-semibold">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6] flex items-center justify-center text-white text-xs font-semibold">
                         {emp.name.split(" ").pop()?.charAt(0)}
                       </div>
                       <span
@@ -225,12 +225,12 @@ export default function SalaryPayrollSheet({ employees }: Props) {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between px-4 py-3 border-t border-purple-200 dark:border-purple-900/40 bg-purple-50 dark:bg-purple-900/10"
+          className="flex items-center justify-between px-4 py-3 border-t border-blue-200 dark:border-blue-900/40 bg-blue-50 dark:bg-blue-900/10"
         >
-          <span className="text-sm text-purple-700 dark:text-purple-300 font-medium">
+          <span className="text-sm text-blue-700 dark:text-blue-300 font-medium">
             Đã chọn {selected.size} nhân viên
           </span>
-          <button className="px-3 py-1.5 text-xs font-semibold text-white bg-gradient-to-r from-[#402093] to-[#8f58e4] rounded-lg hover:shadow-md hover:shadow-purple-500/20 transition-shadow">
+          <button className="px-3 py-1.5 text-xs font-semibold text-white bg-gradient-to-r from-[#102854] to-[#4C88C6] rounded-lg hover:shadow-md hover:shadow-blue-500/20 transition-shadow">
             Xuất phiếu lương
           </button>
         </motion.div>

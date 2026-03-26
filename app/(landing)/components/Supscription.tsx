@@ -117,7 +117,7 @@ export default function Subscription() {
           </span>
           <h2 className={`mt-4 font-bold text-neutral-900 dark:text-white ${isMobile ? "text-2xl" : "text-3xl md:text-4xl lg:text-5xl"}`}>
             Chọn gói phù hợp với{" "}
-            <span className="bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] bg-clip-text text-transparent">
               doanh nghiệp bạn
             </span>
           </h2>
@@ -132,7 +132,7 @@ export default function Subscription() {
               onClick={() => setBilling("monthly")}
               className={`cursor-pointer rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
                 billing === "monthly"
-                  ? "bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white shadow-sm"
+                  ? "bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white shadow-sm"
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
               }`}
             >
@@ -142,12 +142,12 @@ export default function Subscription() {
               onClick={() => setBilling("yearly")}
               className={`cursor-pointer rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 ${
                 billing === "yearly"
-                  ? "bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white shadow-sm"
+                  ? "bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white shadow-sm"
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
               }`}
             >
               Hàng năm
-              <span className="ml-1.5 inline-block rounded-full bg-[#ede5fd] px-2 py-0.5 text-[10px] font-bold text-[#5e34b7]">
+              <span className="ml-1.5 inline-block rounded-full bg-[#ede5fd] px-2 py-0.5 text-[10px] font-bold text-[#1D4D8F]">
                 -17%
               </span>
             </button>
@@ -166,14 +166,14 @@ export default function Subscription() {
                 key={plan.name}
                 className={`relative flex flex-col rounded-2xl border transition-all duration-300 ${isMobile ? "p-6" : "p-8"} ${
                   plan.featured
-                    ? "border-[#c4b5fd] bg-gradient-to-b from-[#f5f0ff]/60 to-white dark:from-[#1a0a3d]/40 dark:to-neutral-900 shadow-lg shadow-[#d8bffa]/50 dark:shadow-[#1a0a3d]/20 ring-1 ring-[#c4b5fd] dark:ring-[#5e34b7]"
+                    ? "border-[#BCE8F5] bg-gradient-to-b from-[#EEF6FB]/60 to-white dark:from-[#0B1E3D]/40 dark:to-neutral-900 shadow-lg shadow-[#BCE8F5]/50 dark:shadow-[#0B1E3D]/20 ring-1 ring-[#BCE8F5] dark:ring-[#1D4D8F]"
                     : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:border-neutral-300 dark:hover:border-neutral-600 hover:shadow-md"
                 }`}
               >
                 {/* Badge */}
                 {plan.badge && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] px-4 py-1.5 text-xs font-semibold text-white shadow-sm">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] px-4 py-1.5 text-xs font-semibold text-white shadow-sm">
                       <svg
                         className="h-3 w-3"
                         fill="currentColor"
@@ -222,7 +222,7 @@ export default function Subscription() {
                     </div>
                   )}
                   {billing === "yearly" && !isCustom && price !== 0 && (
-                    <p className="mt-1 text-xs text-[#5e34b7] dark:text-[#a87aec] font-medium">
+                    <p className="mt-1 text-xs text-[#1D4D8F] dark:text-[#6AAED9] font-medium">
                       Tiết kiệm {formatPrice(plan.priceMonthly! * 12 - plan.priceYearly!)}đ
                       so với thanh toán hàng tháng
                     </p>
@@ -234,7 +234,7 @@ export default function Subscription() {
                   href="#dang-ky"
                   className={`cursor-pointer block w-full rounded-xl py-3 text-center text-sm font-semibold transition-all duration-200 ${
                     plan.featured
-                      ? "bg-gradient-to-r from-[#402093] via-[#8f58e4] to-[#5e34b7] text-white shadow-md shadow-[#d8bffa]/50 hover:shadow-lg hover:shadow-[#d8bffa]/70"
+                      ? "bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white shadow-md shadow-[#BCE8F5]/50 hover:shadow-lg hover:shadow-[#BCE8F5]/70"
                       : "border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:border-neutral-400"
                   }`}
                 >
@@ -250,7 +250,7 @@ export default function Subscription() {
                     <li key={feature.text} className="flex items-start gap-3">
                       {feature.included ? (
                         <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#ede5fd]">
-                          <CheckIcon className="h-3 w-3 text-[#5e34b7]" />
+                          <CheckIcon className="h-3 w-3 text-[#1D4D8F]" />
                         </span>
                       ) : (
                         <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800">
@@ -279,22 +279,22 @@ export default function Subscription() {
           <div className={`grid gap-6 text-center ${isMobile ? "grid-cols-1" : "grid-cols-4"}`}>
             {[
               {
-                icon: <ShieldCheck size={24} className="mx-auto text-[#8f58e4]" />,
+                icon: <ShieldCheck size={24} className="mx-auto text-[#4C88C6]" />,
                 title: "Bảo mật SSL",
                 desc: "Dữ liệu được mã hoá 256-bit",
               },
               {
-                icon: <CreditCard size={24} className="mx-auto text-[#8f58e4]" />,
+                icon: <CreditCard size={24} className="mx-auto text-[#4C88C6]" />,
                 title: "Không thẻ tín dụng",
                 desc: "Dùng thử không cần thanh toán",
               },
               {
-                icon: <RefreshIcon size={24} className="mx-auto text-[#8f58e4]" />,
+                icon: <RefreshIcon size={24} className="mx-auto text-[#4C88C6]" />,
                 title: "Huỷ bất cứ lúc nào",
                 desc: "Không ràng buộc hợp đồng",
               },
               {
-                icon: <TelephoneIcon size={24} className="mx-auto text-[#8f58e4]" />,
+                icon: <TelephoneIcon size={24} className="mx-auto text-[#4C88C6]" />,
                 title: "Hỗ trợ nhanh chóng",
                 desc: "Đội ngũ luôn sẵn sàng 24/7",
               },

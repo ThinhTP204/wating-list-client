@@ -132,8 +132,8 @@ Only use raw HTML when no UI component covers the semantic need (e.g. `<section>
 
 ## Design System
 
-- Brand colors: `#402093` (deep) · `#5e34b7` (mid) · `#8f58e4` (accent/primary)
-- Gradient: `bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4]`
+- Brand colors: `#102854` (deep navy) · `#1D4D8F` (mid blue) · `#4C88C6` (accent/primary) · `#BCE8F5` (pale blue)
+- Gradient: `bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]`
 - Always add `dark:` variants — never force a color mode
 - Dialog pattern: `p-0 overflow-hidden gap-0` content + gradient header + scrollable body + footer with `border-t`
 - Class merging: `cn()` from `@/lib/utils`

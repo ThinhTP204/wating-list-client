@@ -54,7 +54,7 @@ export default function EmployeeFilters({
               placeholder="Tìm kiếm theo tên, email, số điện thoại..."
               value={searchQuery}
               onChange={handleSearchChange}
-              className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors"
             />
           </div>
         </div>
@@ -63,7 +63,7 @@ export default function EmployeeFilters({
         <select
           value={currentStatus}
           onChange={(e) => onStatusChange(e.target.value as EmployeeStatus | "all")}
-          className="px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-colors"
+          className="px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors"
         >
           <option value="all">Tất cả trạng thái</option>
           {Object.entries(STATUS_META).map(([key, meta]) => (
@@ -75,7 +75,7 @@ export default function EmployeeFilters({
         <select
           value={currentDepartment}
           onChange={(e) => onDepartmentChange(e.target.value as EmployeeDepartment | "all")}
-          className="px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-colors"
+          className="px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors"
         >
           <option value="all">Tất cả phòng ban</option>
           {Object.entries(DEPARTMENT_META).map(([key, meta]) => (
@@ -87,7 +87,7 @@ export default function EmployeeFilters({
         <select
           value={currentRole}
           onChange={(e) => onRoleChange(e.target.value as EmployeeRole | "all")}
-          className="px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-colors"
+          className="px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors"
         >
           <option value="all">Tất cả chức vụ</option>
           {Object.entries(ROLE_META).map(([key, meta]) => (

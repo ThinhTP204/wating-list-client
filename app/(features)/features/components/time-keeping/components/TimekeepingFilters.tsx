@@ -55,11 +55,11 @@ export default function TimekeepingFilters({
       <div className="flex flex-wrap items-center gap-3">
         {/* Month navigator */}
         <div className="flex items-center gap-1 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg px-2 py-1.5 shadow-sm hover:shadow-md transition-shadow duration-200">
-          <Calendar className="w-4 h-4 text-[#8f58e4] mr-1 shrink-0" />
+          <Calendar className="w-4 h-4 text-[#4C88C6] mr-1 shrink-0" />
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 hover:bg-[#8f58e4]/10 hover:text-[#8f58e4] transition-colors"
+            className="h-7 w-7 hover:bg-[#4C88C6]/10 hover:text-[#4C88C6] transition-colors"
             onClick={() => onMonthChange(currentMonth - 1)}
             aria-label="Tháng trước"
           >
@@ -71,7 +71,7 @@ export default function TimekeepingFilters({
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 hover:bg-[#8f58e4]/10 hover:text-[#8f58e4] transition-colors"
+            className="h-7 w-7 hover:bg-[#4C88C6]/10 hover:text-[#4C88C6] transition-colors"
             onClick={() => onMonthChange(currentMonth + 1)}
             aria-label="Tháng sau"
           >
@@ -84,7 +84,7 @@ export default function TimekeepingFilters({
           <button
             className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
               viewMode === "employee"
-                ? "bg-white dark:bg-neutral-700 text-[#8f58e4] shadow-sm ring-1 ring-[#8f58e4]/20"
+                ? "bg-white dark:bg-neutral-700 text-[#4C88C6] shadow-sm ring-1 ring-[#4C88C6]/20"
                 : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
             }`}
             onClick={() => onViewModeChange("employee")}
@@ -94,7 +94,7 @@ export default function TimekeepingFilters({
           <button
             className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
               viewMode === "shift"
-                ? "bg-white dark:bg-neutral-700 text-[#8f58e4] shadow-sm ring-1 ring-[#8f58e4]/20"
+                ? "bg-white dark:bg-neutral-700 text-[#4C88C6] shadow-sm ring-1 ring-[#4C88C6]/20"
                 : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
             }`}
             onClick={() => onViewModeChange("shift")}
@@ -124,7 +124,7 @@ export default function TimekeepingFilters({
         <Button
           variant="outline"
           size="sm"
-          className="h-8 text-xs gap-1.5 group hover:border-[#8f58e4]/50 hover:text-[#8f58e4] transition-colors"
+          className="h-8 text-xs gap-1.5 group hover:border-[#4C88C6]/50 hover:text-[#4C88C6] transition-colors"
           onClick={() => onMonthChange(0)}
           title="Về tháng hiện tại"
         >
@@ -142,7 +142,7 @@ export default function TimekeepingFilters({
         </Button>
         <Button
           size="sm"
-          className="h-8 text-xs gap-1.5 bg-[#8f58e4] hover:bg-[#7a47cc] hover:shadow-md text-white transition-all"
+          className="h-8 text-xs gap-1.5 bg-[#4C88C6] hover:bg-[#7a47cc] hover:shadow-md text-white transition-all"
           onClick={onImport}
         >
           <Upload className="w-3.5 h-3.5" />

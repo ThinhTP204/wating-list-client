@@ -21,7 +21,7 @@ export default function PendingRequestsCard() {
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <FileText className="w-4 h-4 text-[#8f58e4]" />
+          <FileText className="w-4 h-4 text-[#4C88C6]" />
           Yêu cầu chờ duyệt
           <span className="ml-auto bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-xs px-2 py-0.5 rounded-full font-medium">
             {PENDING_REQUESTS.length}
@@ -47,7 +47,7 @@ export default function PendingRequestsCard() {
                 {request.date} · {request.days} ngày
               </p>
             </div>
-            <ArrowRight className="w-4 h-4 text-neutral-300 group-hover:text-[#8f58e4] transition-colors" />
+            <ArrowRight className="w-4 h-4 text-neutral-300 group-hover:text-[#4C88C6] transition-colors" />
           </div>
         ))}
       </CardContent>

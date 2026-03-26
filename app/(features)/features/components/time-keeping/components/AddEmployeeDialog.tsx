@@ -143,7 +143,7 @@ export default function AddEmployeeDialog({
                   className="flex items-center gap-2 p-3 bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-neutral-200 dark:border-neutral-700"
                 >
                   {/* Index badge */}
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#4C88C6] to-[#102854] flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#4C88C6] to-[#102854] flex items-center justify-center text-white text-xs font-bold shrink-0">
                     {index + 1}
                   </div>
 

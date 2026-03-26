@@ -39,8 +39,8 @@ export default function ShiftCard({ shift, cellId, isDragOverlay = false }: Shif
         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${c.dot}`} />
         <span className="text-xs font-semibold truncate leading-tight">{shift.title}</span>
       </div>
-      <div className="text-[10px] opacity-70 mt-0.5 pl-3">{shift.startTime} – {shift.endTime}</div>
-      <div className="text-[10px] opacity-60 pl-3 truncate">{shift.employee}</div>
+      <div className="text-xs opacity-70 mt-0.5 pl-3">{shift.startTime} – {shift.endTime}</div>
+      <div className="text-xs opacity-60 pl-3 truncate">{shift.employee}</div>
     </div>
   );
 }

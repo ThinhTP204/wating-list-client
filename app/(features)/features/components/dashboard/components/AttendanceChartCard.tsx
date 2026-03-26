@@ -77,7 +77,7 @@ export default function AttendanceChartCard() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-neutral-900 dark:text-white">{item.value}</span>
-                  <span className="text-[10px] text-neutral-400">người</span>
+                  <span className="text-xs text-neutral-400">người</span>
                 </div>
               </div>
             ))}

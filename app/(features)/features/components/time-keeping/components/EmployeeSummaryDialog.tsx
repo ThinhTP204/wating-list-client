@@ -109,14 +109,14 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
             <div className="flex items-center gap-1.5 bg-white/10 rounded-xl px-3 py-2 flex-1">
               <Clock className="w-4 h-4 text-white/70 shrink-0" />
               <div>
-                <p className="text-[10px] text-white/50 leading-none">Tổng giờ</p>
+                <p className="text-xs text-white/50 leading-none">Tổng giờ</p>
                 <p className="text-base font-bold text-white leading-tight mt-0.5">{formatHM(totalHours)}</p>
               </div>
             </div>
             <div className="flex items-center gap-1.5 bg-white/10 rounded-xl px-3 py-2 flex-1">
               <DollarSign className="w-4 h-4 text-white/70 shrink-0" />
               <div>
-                <p className="text-[10px] text-white/50 leading-none">Thu nhập</p>
+                <p className="text-xs text-white/50 leading-none">Thu nhập</p>
                 <p className="text-base font-bold text-white leading-tight mt-0.5">
                   {(totalSalary / 1000).toFixed(0)}k đ
                 </p>
@@ -125,7 +125,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
             <div className="flex items-center gap-1.5 bg-white/10 rounded-xl px-3 py-2 flex-1">
               <TrendingUp className="w-4 h-4 text-white/70 shrink-0" />
               <div>
-                <p className="text-[10px] text-white/50 leading-none">Số ca</p>
+                <p className="text-xs text-white/50 leading-none">Số ca</p>
                 <p className="text-base font-bold text-white leading-tight mt-0.5">{totalShifts} ca</p>
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
               <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-800/40 flex items-center justify-center">
                 <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-500 uppercase tracking-wide">
+              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-500 uppercase tracking-wide">
                 Giờ làm
               </span>
             </div>
@@ -164,7 +164,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
               <div className="w-7 h-7 rounded-lg bg-[#4C88C6]/10 dark:bg-[#4C88C6]/20 flex items-center justify-center">
                 <DollarSign className="w-4 h-4 text-[#4C88C6]" />
               </div>
-              <span className="text-[10px] font-bold text-[#4C88C6]/80 uppercase tracking-wide">
+              <span className="text-xs font-bold text-[#4C88C6]/80 uppercase tracking-wide">
                 Thu nhập
               </span>
             </div>
@@ -184,7 +184,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
               <div className="w-7 h-7 rounded-lg bg-blue-100 dark:bg-blue-800/40 flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               </div>
-              <span className="text-[10px] font-bold text-blue-700 dark:text-blue-500 uppercase tracking-wide">
+              <span className="text-xs font-bold text-blue-700 dark:text-blue-500 uppercase tracking-wide">
                 Số ca
               </span>
             </div>
@@ -206,10 +206,10 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
 
           <div className="rounded-xl overflow-hidden border border-neutral-100 dark:border-neutral-800">
             <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800/50">
-              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wide">Trạng thái</span>
-              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wide text-center w-8">Ca</span>
-              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wide text-center w-14">Giờ</span>
-              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wide text-right w-16">Lương</span>
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide">Trạng thái</span>
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide text-center w-8">Ca</span>
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide text-center w-14">Giờ</span>
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide text-right w-16">Lương</span>
             </div>
 
             {STATUS_ORDER.filter((s) => statusMap.has(s)).map((status, i) => {
@@ -266,7 +266,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
         <div className="px-6 py-5 border-t border-neutral-100 dark:border-neutral-800 shrink-0 bg-neutral-50/50 dark:bg-neutral-900/30">
           <div className="flex justify-between items-end mb-4">
             <div>
-              <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-bold text-neutral-400 uppercase tracking-wide mb-1">
                 Tổng lương Tháng {month}/{year}
               </p>
               <p className="text-3xl font-bold bg-gradient-to-r from-[#102854] to-[#4C88C6] bg-clip-text text-transparent leading-none">
@@ -275,7 +275,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-bold text-neutral-400 uppercase tracking-wide mb-1">
                 Tổng thời gian
               </p>
               <p className="text-2xl font-bold text-neutral-900 dark:text-white">

@@ -50,10 +50,10 @@ export default function WorkScheduleCard() {
               >
                 {item.day}
               </span>
-              <div className={`w-full text-center px-1 py-0.5 rounded-md text-[10px] font-medium ${SHIFT_COLORS[item.shift]}`}>
+              <div className={`w-full text-center px-1 py-0.5 rounded-md text-xs font-medium ${SHIFT_COLORS[item.shift]}`}>
                 {item.shift}
               </div>
-              <span className="text-[10px] text-neutral-500 dark:text-neutral-400 text-center leading-tight">
+              <span className="text-xs text-neutral-500 dark:text-neutral-400 text-center leading-tight">
                 {item.time}
               </span>
             </div>

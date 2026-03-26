@@ -63,7 +63,7 @@ export default function AddShiftDialog({
                 </p>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">{shift.time}</p>
               </div>
-              <span className="text-[11px] font-medium text-neutral-300 group-hover:text-[#4C88C6] transition-colors shrink-0">
+              <span className="text-xs font-medium text-neutral-300 group-hover:text-[#4C88C6] transition-colors shrink-0">
                 →
               </span>
             </motion.button>

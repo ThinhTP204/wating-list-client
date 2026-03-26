@@ -56,7 +56,7 @@ function KarmaRing({ score }: { score: number }) {
           className="transition-all duration-700 ease-out"
         />
       </svg>
-      <span className="text-[10px] font-black text-slate-700 dark:text-white relative z-10">{score}</span>
+      <span className="text-xs font-black text-slate-700 dark:text-white relative z-10">{score}</span>
     </div>
   );
 }

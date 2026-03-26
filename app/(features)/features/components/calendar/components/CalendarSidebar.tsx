@@ -73,7 +73,7 @@ export default function CalendarSidebar({ viewYear, viewMonth, selectedDate, onN
         </div>
         <div className="grid grid-cols-7 gap-1 text-center mb-1">
           {WEEKDAYS.map(d => (
-            <div key={d} className="text-[10px] font-medium text-neutral-400 py-1">{d}</div>
+            <div key={d} className="text-xs font-medium text-neutral-400 py-1">{d}</div>
           ))}
         </div>
         <div className="grid grid-cols-7 gap-1">

@@ -174,7 +174,7 @@ export default function RegisterDialog() {
                           <p className={`text-xs font-semibold truncate transition-colors duration-200 ${selected ? "text-[#102854] dark:text-[#BCE8F5]" : "text-neutral-800 dark:text-neutral-200"}`}>
                             {name}
                           </p>
-                          <p className={`text-[10px] truncate transition-colors duration-200 ${selected ? "text-[#1D4D8F] dark:text-[#6AAED9]" : "text-neutral-400 dark:text-neutral-500"}`}>
+                          <p className={`text-xs truncate transition-colors duration-200 ${selected ? "text-[#1D4D8F] dark:text-[#6AAED9]" : "text-neutral-400 dark:text-neutral-500"}`}>
                             {role}
                           </p>
                         </div>

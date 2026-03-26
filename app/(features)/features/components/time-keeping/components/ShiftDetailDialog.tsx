@@ -142,8 +142,8 @@ function ShiftEditCard({
           <span className={`text-sm font-semibold ${colors.text}`}>{shift.name}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="inline-flex items-center gap-1 text-[10px] font-medium bg-black/5 dark:bg-white/10 text-neutral-600 dark:text-neutral-400 px-2 py-0.5 rounded-full">
-            <Clock className="w-2.5 h-2.5" />
+          <span className="inline-flex items-center gap-1 text-xs font-medium bg-black/5 dark:bg-white/10 text-neutral-600 dark:text-neutral-400 px-2 py-0.5 rounded-full">
+            <Clock className="w-3 h-3" />
             {shift.time}
           </span>
           <Button
@@ -161,7 +161,7 @@ function ShiftEditCard({
       <div className="px-3 pb-3 space-y-2.5">
         {/* Status selector */}
         <div className="space-y-1">
-          <p className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
+          <p className="text-xs font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
             Trạng thái
           </p>
           <Select
@@ -184,7 +184,7 @@ function ShiftEditCard({
         {/* Check-in / Check-out */}
         <div className="grid grid-cols-2 gap-2">
           <div className="space-y-1">
-            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-1">
+            <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-1">
               <LogIn className="w-3 h-3 text-emerald-500" />
               Giờ vào
             </p>
@@ -196,7 +196,7 @@ function ShiftEditCard({
             />
           </div>
           <div className="space-y-1">
-            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-1">
+            <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-1">
               <LogOut className="w-3 h-3 text-rose-400" />
               Giờ ra
             </p>

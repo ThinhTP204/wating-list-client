@@ -147,7 +147,7 @@ export default function Subscription() {
               }`}
             >
               Hàng năm
-              <span className="ml-1.5 inline-block rounded-full bg-[#ede5fd] px-2 py-0.5 text-[10px] font-bold text-[#1D4D8F]">
+              <span className="ml-1.5 inline-block rounded-full bg-[#ede5fd] px-2 py-0.5 text-xs font-bold text-[#1D4D8F]">
                 -17%
               </span>
             </button>

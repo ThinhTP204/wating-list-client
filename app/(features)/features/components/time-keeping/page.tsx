@@ -267,7 +267,7 @@ export default function Page() {
         <div className="flex items-center gap-0 divide-x divide-neutral-100 dark:divide-neutral-800 overflow-x-auto">
           {/* Label */}
           <div className="px-3 py-2 shrink-0 bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]">
-            <p className="text-[10px] font-bold text-white/90 uppercase tracking-widest whitespace-nowrap">Chú thích</p>
+            <p className="text-xs font-bold text-white/90 uppercase tracking-widest whitespace-nowrap">Chú thích</p>
           </div>
           {/* Items */}
           {(Object.keys(ATTENDANCE_COLORS) as AttendanceStatus[]).map((status) => {
@@ -278,7 +278,7 @@ export default function Page() {
                 className="flex items-center gap-1.5 px-3 py-2 shrink-0 group cursor-default hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors"
               >
                 <div className={`w-2 h-2 rounded-full ${c.dot} shrink-0 transition-transform duration-150 group-hover:scale-125`} />
-                <span className={`text-[11px] font-medium whitespace-nowrap ${c.text}`}>{c.label}</span>
+                <span className={`text-xs font-medium whitespace-nowrap ${c.text}`}>{c.label}</span>
               </div>
             );
           })}

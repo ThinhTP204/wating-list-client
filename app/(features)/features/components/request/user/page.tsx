@@ -105,7 +105,7 @@ function KarmaScoreRing({ score }: { score: number }) {
       </svg>
       <div className="relative z-10 text-center">
         <p className="text-xl font-black text-[#102854] dark:text-white leading-none">{score}</p>
-        <p className="text-[10px] font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-wide">karma</p>
+        <p className="text-xs font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-wide">karma</p>
       </div>
     </div>
   );
@@ -242,7 +242,7 @@ export default function UserRequestPage() {
                 <Bell className="w-4 h-4 text-slate-600 dark:text-neutral-300" />
                 <span className="text-sm font-medium text-slate-600 dark:text-neutral-300">Thông báo</span>
                 {unreadCount > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-[10px] font-bold text-white">
+                  <span className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-xs font-bold text-white">
                     {unreadCount}
                   </span>
                 )}
@@ -393,7 +393,7 @@ export default function UserRequestPage() {
                         <p className="text-xs text-slate-500 dark:text-neutral-400 mt-0.5 line-clamp-2">{n.message}</p>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
-                        <span className="text-[10px] text-slate-300 dark:text-neutral-600">{timeAgo(n.createdAt)}</span>
+                        <span className="text-xs text-slate-300 dark:text-neutral-600">{timeAgo(n.createdAt)}</span>
                         {!n.read && <div className={cn("w-1.5 h-1.5 rounded-full", meta.dot)} />}
                       </div>
                     </div>

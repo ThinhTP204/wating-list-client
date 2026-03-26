@@ -112,7 +112,7 @@ export default function TimekeepingGrid({
               {day.isToday && (
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#4C88C6]/60 via-[#4C88C6] to-[#4C88C6]/60 rounded-full" />
               )}
-              <p className={`text-[9px] font-bold uppercase leading-none tracking-wider ${
+              <p className={`text-xs font-bold uppercase leading-none tracking-wider ${
                 day.isToday ? "text-[#4C88C6]" : "text-neutral-400"
               }`}>
                 {day.dayName}
@@ -192,7 +192,7 @@ export default function TimekeepingGrid({
                       <p className="text-xs font-semibold text-neutral-900 dark:text-white truncate leading-snug">
                         {employee.name}
                       </p>
-                      <p className="text-[10px] text-[#4C88C6] leading-snug font-medium">{employee.role}</p>
+                      <p className="text-xs text-[#4C88C6] leading-snug font-medium">{employee.role}</p>
                     </div>
                   </motion.button>
                   <motion.button
@@ -243,11 +243,11 @@ export default function TimekeepingGrid({
                         >
                           <div className={`w-2.5 h-2.5 rounded-full ${colors.dot} shadow-sm`} />
                           {dayShifts.length > 1 ? (
-                            <span className={`text-[10px] font-bold ${colors.text} leading-none`}>
+                            <span className={`text-xs font-bold ${colors.text} leading-none`}>
                               +{dayShifts.length}
                             </span>
                           ) : (
-                            <span className={`text-[9px] font-semibold ${colors.text} leading-none opacity-70`}>
+                            <span className={`text-xs font-semibold ${colors.text} leading-none opacity-70`}>
                               1 ca
                             </span>
                           )}

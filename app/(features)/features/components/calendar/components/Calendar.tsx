@@ -352,7 +352,7 @@ function DayView({ today, currentTime, getShiftsForDate }: { today: Date; curren
             <div className="absolute left-0 right-0 flex items-center z-10" style={{ top: currentHour * hourHeight }}>
               <div className="w-2.5 h-2.5 rounded-full bg-red-500 -ml-1.5 flex-shrink-0" />
               <div className="flex-1 h-px bg-red-500" />
-              <span className="absolute -top-3 left-0 text-[10px] font-semibold text-red-500 bg-white dark:bg-neutral-950 px-0.5 leading-none">
+              <span className="absolute -top-3 left-0 text-xs font-semibold text-red-500 bg-white dark:bg-neutral-950 px-0.5 leading-none">
                 {currentTime.getHours().toString().padStart(2, "0")}:{currentTime.getMinutes().toString().padStart(2, "0")}
               </span>
             </div>
@@ -363,8 +363,8 @@ function DayView({ today, currentTime, getShiftsForDate }: { today: Date; curren
               return (
                 <div key={shift.id} className={`absolute left-1 right-1 rounded-lg px-2 py-1 ${c.bg} ${c.text} border ${c.border} overflow-hidden`} style={{ top, height }}>
                   <div className="flex items-center gap-1"><span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${c.dot}`} /><span className="text-xs font-semibold truncate">{shift.title}</span></div>
-                  <div className="text-[10px] opacity-70 pl-3">{shift.startTime} – {shift.endTime}</div>
-                  <div className="text-[10px] opacity-60 pl-3 truncate">{shift.employee}</div>
+                  <div className="text-xs opacity-70 pl-3">{shift.startTime} – {shift.endTime}</div>
+                  <div className="text-xs opacity-60 pl-3 truncate">{shift.employee}</div>
                 </div>
               );
             })}
@@ -428,8 +428,8 @@ function WeekView({ weekDays, today, currentTime, getShiftsForDate }: { weekDays
                   const c = SHIFT_COLORS[shift.type];
                   return (
                     <div key={shift.id} className={`absolute left-0.5 right-0.5 rounded-md px-1.5 py-1 ${c.bg} ${c.text} border ${c.border} overflow-hidden`} style={{ top, height }}>
-                      <div className="flex items-center gap-1"><span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${c.dot}`} /><span className="text-[10px] font-semibold truncate">{shift.title}</span></div>
-                      <div className="text-[9px] opacity-70 pl-3">{shift.startTime}-{shift.endTime}</div>
+                      <div className="flex items-center gap-1"><span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${c.dot}`} /><span className="text-xs font-semibold truncate">{shift.title}</span></div>
+                      <div className="text-xs opacity-70 pl-3">{shift.startTime}-{shift.endTime}</div>
                     </div>
                   );
                 })}
@@ -440,7 +440,7 @@ function WeekView({ weekDays, today, currentTime, getShiftsForDate }: { weekDays
           <div className="absolute flex items-center z-10 pointer-events-none" style={{ top: currentHour * hourHeight, left: 64, right: 0 }}>
             <div className="w-2.5 h-2.5 rounded-full bg-red-500 -ml-1.5 flex-shrink-0" />
             <div className="flex-1 h-px bg-red-500" />
-            <span className="absolute -top-3 left-0 text-[10px] font-semibold text-red-500 bg-white dark:bg-neutral-950 px-0.5 leading-none">
+            <span className="absolute -top-3 left-0 text-xs font-semibold text-red-500 bg-white dark:bg-neutral-950 px-0.5 leading-none">
               {currentTime.getHours().toString().padStart(2, "0")}:{currentTime.getMinutes().toString().padStart(2, "0")}
             </span>
           </div>

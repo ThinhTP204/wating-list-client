@@ -36,7 +36,7 @@ export default function PendingRequestsCard() {
           >
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${TYPE_COLORS[request.type]}`}>
+                <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${TYPE_COLORS[request.type]}`}>
                   {request.type}
                 </span>
               </div>

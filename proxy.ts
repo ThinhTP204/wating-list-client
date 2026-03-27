@@ -25,7 +25,7 @@ export function proxy(request: NextRequest) {
   const userRoles = getUserRoles(request);
   const primaryRole = getPrimaryRole(userRoles);
 
-  const publicRoutes: string[] = [];
+  const publicRoutes: string[] = ["/"];
   const authRoutes = ["/login"];
 
   const isPublicRoute = publicRoutes.some(

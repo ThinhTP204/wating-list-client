@@ -26,9 +26,10 @@ interface NavItemsProps {
   items: {
     name: string;
     link: string;
+    requireAuth?: boolean;
   }[];
   className?: string;
-  onItemClick?: () => void;
+  onItemClick?: (item: { name: string; link: string; requireAuth?: boolean }, e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 interface MobileNavProps {
@@ -127,10 +128,10 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       {items.map((item, idx) => (
         <a
           onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
+          onClick={onItemClick ? (e) => onItemClick(item, e) : undefined}
           className="cursor-pointer relative px-4 py-2 text-neutral-600 dark:text-neutral-300"
           key={`link-${idx}`}
-          href={item.link}
+          href={item.requireAuth ? undefined : item.link}
         >
           {hovered === idx && (
             <motion.div

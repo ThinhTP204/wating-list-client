@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/resizable-navbar";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getCookie } from "cookies-next";
 import { Button } from "../ui/button";
 import { InteractiveHoverButton } from "../ui/interactive-hover-button";
 import { useIsMobile } from "@/hooks/useMobile";
@@ -22,17 +24,28 @@ const navItems = [
   { name: "Vấn đề gặp phải", link: "#van-de" },
   { name: "Lợi ích", link: "#blog" },
   { name: "Dịch vụ", link: "#bang-gia" },
-  { name: "Mô hình", link: "/features" },
+  { name: "Mô hình", link: "/features", requireAuth: true },
 ];
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useIsMobile();
   const { open: openRegister } = useRegisterDialog();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isMobile) setIsMobileMenuOpen(false);
   }, [isMobile]);
+
+  const handleAuthNav = (e: React.MouseEvent, link: string) => {
+    e.preventDefault();
+    const token = getCookie("auth-token");
+    if (token) {
+      router.push(link);
+    } else {
+      router.push(`/login?callbackUrl=${encodeURIComponent(link)}`);
+    }
+  };
 
   return (
     <div className="relative w-full sticky top-0 z-50">
@@ -47,7 +60,14 @@ export default function Header() {
             <span className="text-xl font-extrabold tracking-tight">wokki</span>
           </Link>
 
-          <NavItems items={navItems} />
+          <NavItems
+            items={navItems}
+            onItemClick={(item, e) => {
+              if (item.requireAuth) {
+                handleAuthNav(e as React.MouseEvent<HTMLAnchorElement>, item.link);
+              }
+            }}
+          />
 
           <div className="relative z-20 flex items-center gap-4">
             <div className="relative">
@@ -97,8 +117,11 @@ export default function Header() {
             {navItems.map((item, idx) => (
               <a
                 key={`mobile-link-${idx}`}
-                href={item.link}
-                onClick={() => setIsMobileMenuOpen(false)}
+                href={item.requireAuth ? undefined : item.link}
+                onClick={(e) => {
+                  setIsMobileMenuOpen(false);
+                  if (item.requireAuth) handleAuthNav(e, item.link);
+                }}
                 className="cursor-pointer relative text-neutral-600 dark:text-neutral-300"
               >
                 <span className="block">{item.name}</span>

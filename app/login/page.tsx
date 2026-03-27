@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { setCookie } from "cookies-next";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -57,9 +57,11 @@ const itemVariants = {
 };
 
 // ── Component ──────────────────────────────────────────────────────────────────
-export default function LoginPage() {
+function LoginForm() {
   const router   = useRouter();
   const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const [email,        setEmail]        = useState("");
   const [password,     setPassword]     = useState("");
@@ -90,9 +92,9 @@ export default function LoginPage() {
     dispatch(setCredentials({ user: account.user, token: account.token }));
 
     if (account.user.role === "admin") {
-      router.push("/admin?tab=dashboard");
+      router.push(callbackUrl || "/admin?tab=dashboard");
     } else {
-      router.push("/employee?tab=calendar");
+      router.push(callbackUrl || "/employee?tab=calendar");
     }
   };
 
@@ -326,5 +328,13 @@ export default function LoginPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }

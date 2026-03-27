@@ -6,38 +6,30 @@ import { LogOut, ShieldCheck, User } from "lucide-react";
 import { deleteCookie } from "cookies-next";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { logout, selectUser } from "@/lib/redux/slices/authSlice";
+import { cn } from "@/lib/utils";
 
-// ── Tab definitions with role access ──────────────────────────────────────────
-type Role = "admin" | "user";
+export interface TabDef {
+  name: string;
+  tab: string;
+}
 
-const tabs: { name: string; tab: string; roles: Role[] }[] = [
-  { name: "Tổng quan",    tab: "dashboard",    roles: ["admin"] },
-  { name: "Lịch ca",      tab: "calendar",     roles: ["admin", "user"] },
-  { name: "Nhân viên",    tab: "employees",    roles: ["admin"] },
-  { name: "Chấm công",    tab: "time-keeping", roles: ["admin"] },
-  { name: "Yêu cầu",      tab: "request",      roles: ["admin"] },
-  { name: "Đổi ca",       tab: "request-user", roles: ["user"] },
-  { name: "Lương",        tab: "salary",       roles: ["admin"] },
-  { name: "Công việc",    tab: "task",         roles: ["admin", "user"] },
-];
-
-export default function FeaturesLayout({
-  children,
-}: {
+interface AppShellLayoutProps {
   children: React.ReactNode;
-}) {
+  tabs: TabDef[];
+  basePath: string; // e.g. "/admin" | "/employee"
+}
+
+export default function AppShellLayout({ children, tabs, basePath }: AppShellLayoutProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
 
-  const role = (user?.role ?? "user") as Role;
-  const visibleTabs = tabs.filter((t) => t.roles.includes(role));
-
-  const currentTab = searchParams.get("tab") || visibleTabs[0]?.tab;
+  const role = user?.role ?? "user";
+  const currentTab = searchParams.get("tab") || tabs[0]?.tab;
 
   const handleTabClick = (tab: string) => {
-    router.push(`/features?tab=${tab}`);
+    router.push(`${basePath}?tab=${tab}`);
   };
 
   const handleLogout = () => {
@@ -49,7 +41,6 @@ export default function FeaturesLayout({
 
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950">
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-neutral-950/90 backdrop-blur-md">
         <div className="px-6">
           <div className="flex items-center gap-6 h-14">
@@ -65,17 +56,18 @@ export default function FeaturesLayout({
 
             {/* Tabs */}
             <nav className="flex items-center gap-1 overflow-x-auto flex-1">
-              {visibleTabs.map((tab) => {
+              {tabs.map((tab) => {
                 const isActive = currentTab === tab.tab;
                 return (
                   <button
                     key={tab.tab}
                     onClick={() => handleTabClick(tab.tab)}
-                    className={`shrink-0 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    className={cn(
+                      "shrink-0 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-200",
                       isActive
                         ? "bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#1D4D8F] text-white shadow-sm"
                         : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                    }`}
+                    )}
                   >
                     {tab.name}
                   </button>
@@ -95,7 +87,7 @@ export default function FeaturesLayout({
                   <span className="hidden sm:inline font-medium text-neutral-700 dark:text-neutral-300">
                     {user.name}
                   </span>
-                  <span className="hidden sm:inline px-1.5 py-0.5 rounded text-[11px] bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 capitalize">
+                  <span className="hidden sm:inline px-1.5 py-0.5 rounded text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400">
                     {role === "admin" ? "Admin" : "Nhân viên"}
                   </span>
                 </div>

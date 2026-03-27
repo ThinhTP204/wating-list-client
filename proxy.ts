@@ -48,21 +48,25 @@ export function proxy(request: NextRequest) {
   // If visiting auth pages or root → redirect by role
   if (isAuthRoute || pathname === "/" || pathname === "") {
     if (primaryRole === "admin") {
-      return NextResponse.redirect(new URL("/features?tab=dashboard", request.url));
+      return NextResponse.redirect(new URL("/admin?tab=dashboard", request.url));
     }
-    return NextResponse.redirect(new URL("/features?tab=calendar", request.url));
+    return NextResponse.redirect(new URL("/employee?tab=calendar", request.url));
   }
 
-  const isAdminRoute = pathname.startsWith("/admin");
+  const isAdminRoute    = pathname.startsWith("/admin");
+  const isEmployeeRoute = pathname.startsWith("/employee");
 
-  // ADMIN — full access
+  // ADMIN — full access; block employee-only route
   if (primaryRole === "admin") {
+    if (isEmployeeRoute) {
+      return NextResponse.redirect(new URL("/admin?tab=dashboard", request.url));
+    }
     return NextResponse.next();
   }
 
-  // USER — block admin-only routes
+  // USER — block admin-only route
   if (isAdminRoute) {
-    return NextResponse.redirect(new URL("/features?tab=calendar", request.url));
+    return NextResponse.redirect(new URL("/employee?tab=calendar", request.url));
   }
 
   return NextResponse.next();

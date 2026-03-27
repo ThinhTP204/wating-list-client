@@ -3,8 +3,8 @@
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { ATTENDANCE_COLORS } from "../page";
-import type { Employee, AttendanceStatus, Shift, DayData } from "../page";
+import { ATTENDANCE_COLORS } from "../TimeKeepingPage";
+import type { Employee, AttendanceStatus, Shift, DayData } from "../TimeKeepingPage";
 import { Clock, DollarSign, Download, MoreVertical, TrendingUp } from "lucide-react";
 
 const HOURLY_RATE = 25_000;

@@ -15,8 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ATTENDANCE_COLORS } from "../page";
-import type { Shift, AttendanceStatus } from "../page";
+import { ATTENDANCE_COLORS } from "../TimeKeepingPage";
+import type { Shift, AttendanceStatus } from "../TimeKeepingPage";
 import { Clock, LogIn, LogOut, Trash2 } from "lucide-react";
 
 const EDITABLE_STATUSES: { value: AttendanceStatus; label: string }[] = [

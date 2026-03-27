@@ -89,8 +89,11 @@ export default function LoginPage() {
     setCookie("user-role",  account.user.role, { maxAge: 7 * 24 * 60 * 60, path: "/" });
     dispatch(setCredentials({ user: account.user, token: account.token }));
 
-    const defaultTab = account.user.role === "admin" ? "dashboard" : "calendar";
-    router.push(`/features?tab=${defaultTab}`);
+    if (account.user.role === "admin") {
+      router.push("/admin?tab=dashboard");
+    } else {
+      router.push("/employee?tab=calendar");
+    }
   };
 
   const fillAccount = (type: "admin" | "user") => {

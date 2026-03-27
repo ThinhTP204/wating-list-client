@@ -30,11 +30,11 @@ import {
   STATUS_META,
   SHIFT_TYPE_META,
   MIN_DAYS_AHEAD,
-} from "../components/types";
-import ShiftSwapCard from "../components/ShiftSwapCard";
-import AvailableCard from "../components/AvailableCard";
-import ShiftSwapDialog from "../components/ShiftSwapDialog";
-import AvailableDialog from "../components/AvailableDialog";
+} from "@/app/(admin)/admin/components/request/components/types";
+import ShiftSwapCard from "@/app/(admin)/admin/components/request/components/ShiftSwapCard";
+import AvailableCard from "@/app/(admin)/admin/components/request/components/AvailableCard";
+import ShiftSwapDialog from "@/app/(admin)/admin/components/request/components/ShiftSwapDialog";
+import AvailableDialog from "@/app/(admin)/admin/components/request/components/AvailableDialog";
 
 // ── Mock current user ─────────────────────────────────────────────────────────
 const ME = {

@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, Trash2, Users } from "lucide-react";
 import ShiftDetailDialog from "./ShiftDetailDialog";
-import { ATTENDANCE_COLORS } from "../page";
-import type { AttendanceStatus, Shift, Employee, DayData } from "../page";
+import { ATTENDANCE_COLORS } from "../TimeKeepingPage";
+import type { AttendanceStatus, Shift, Employee, DayData } from "../TimeKeepingPage";
 
 interface TimekeepingGridProps {
   days: DayData[];

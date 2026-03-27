@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AVAILABLE_SHIFTS } from "../page";
+import { AVAILABLE_SHIFTS } from "../TimeKeepingPage";
 import { Clock } from "lucide-react";
 
 interface AddShiftDialogProps {

@@ -27,13 +27,13 @@ import { cn } from "@/lib/utils";
 const MOCK_ACCOUNTS = [
   {
     email: "admin@wokki.com",
-    password: "admin123",
+    password: "12345@Abc",
     user: { id: "mock-admin-1", email: "admin@wokki.com", name: "Admin Wokki", role: "admin" },
     token: "mock-token-admin",
   },
   {
     email: "nv@wokki.com",
-    password: "nv123",
+    password: "12345@Abc",
     user: { id: "mock-user-1", email: "nv@wokki.com", name: "Nguyễn Văn A", role: "user" },
     token: "mock-token-user",
   },
@@ -42,9 +42,9 @@ const MOCK_ACCOUNTS = [
 // ── Left panel feature cards ───────────────────────────────────────────────────
 const FEATURES = [
   { icon: CalendarDays, label: "Lịch ca làm việc", desc: "Xem & quản lý ca trực real-time" },
-  { icon: Clock,        label: "Chấm công",         desc: "Theo dõi giờ vào — ra chính xác" },
-  { icon: Users,        label: "Nhân sự",            desc: "Hồ sơ nhân viên tập trung" },
-  { icon: TrendingUp,   label: "Báo cáo lương",      desc: "Tính lương tự động theo ca" },
+  { icon: Clock, label: "Chấm công", desc: "Theo dõi giờ vào — ra chính xác" },
+  { icon: Users, label: "Nhân sự", desc: "Hồ sơ nhân viên tập trung" },
+  { icon: TrendingUp, label: "Báo cáo lương", desc: "Tính lương tự động theo ca" },
 ];
 
 const containerVariants = {
@@ -53,22 +53,22 @@ const containerVariants = {
 };
 const itemVariants = {
   hidden: { opacity: 0, x: -16 },
-  show:  { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const } },
+  show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const } },
 };
 
 // ── Component ──────────────────────────────────────────────────────────────────
 function LoginForm() {
-  const router   = useRouter();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  const [email,        setEmail]        = useState("");
-  const [password,     setPassword]     = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error,        setError]        = useState("");
-  const [loading,      setLoading]      = useState(false);
-  const [filled,       setFilled]       = useState<"admin" | "user" | null>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [filled, setFilled] = useState<"admin" | "user" | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,9 +77,7 @@ function LoginForm() {
 
     await new Promise((r) => setTimeout(r, 600));
 
-    const account = MOCK_ACCOUNTS.find(
-      (a) => a.email === email && a.password === password
-    );
+    const account = MOCK_ACCOUNTS.find((a) => a.email === email && a.password === password);
 
     if (!account) {
       setError("Email hoặc mật khẩu không đúng.");
@@ -88,7 +86,7 @@ function LoginForm() {
     }
 
     setCookie("auth-token", account.token, { maxAge: 7 * 24 * 60 * 60, path: "/" });
-    setCookie("user-role",  account.user.role, { maxAge: 7 * 24 * 60 * 60, path: "/" });
+    setCookie("user-role", account.user.role, { maxAge: 7 * 24 * 60 * 60, path: "/" });
     dispatch(setCredentials({ user: account.user, token: account.token }));
 
     if (account.user.role === "admin") {
@@ -101,7 +99,7 @@ function LoginForm() {
   const fillAccount = (type: "admin" | "user") => {
     setFilled(type);
     setEmail(type === "admin" ? "admin@wokki.com" : "nv@wokki.com");
-    setPassword(type === "admin" ? "admin123" : "nv123");
+    setPassword("12345@Abc");
     setError("");
   };
 
@@ -140,7 +138,8 @@ function LoginForm() {
             transition={{ duration: 0.5, delay: 0.15 }}
           >
             <h1 className="text-4xl xl:text-5xl font-black text-white leading-tight tracking-tight">
-              Quản lý nhân sự<br />
+              Quản lý nhân sự
+              <br />
               <span className="text-[#BCE8F5]">thông minh hơn.</span>
             </h1>
             <p className="mt-4 text-base text-white/60 max-w-sm leading-relaxed">
@@ -183,8 +182,12 @@ function LoginForm() {
       >
         {/* Mobile logo */}
         <div className="lg:hidden mb-8 text-center">
-          <span className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">wokki</span>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Nền tảng quản lý nhân sự</p>
+          <span className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
+            wokki
+          </span>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+            Nền tảng quản lý nhân sự
+          </p>
         </div>
 
         <div className="w-full max-w-sm">
@@ -240,14 +243,19 @@ function LoginForm() {
           {/* Divider */}
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px bg-neutral-200 dark:bg-neutral-800" />
-            <span className="text-xs text-neutral-400 dark:text-neutral-600">hoặc nhập thủ công</span>
+            <span className="text-xs text-neutral-400 dark:text-neutral-600">
+              hoặc nhập thủ công
+            </span>
             <div className="flex-1 h-px bg-neutral-200 dark:bg-neutral-800" />
           </div>
 
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+              <Label
+                htmlFor="email"
+                className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+              >
                 Email
               </Label>
               <Input
@@ -255,7 +263,10 @@ function LoginForm() {
                 type="email"
                 placeholder="email@wokki.com"
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); setFilled(null); }}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setFilled(null);
+                }}
                 required
                 autoComplete="email"
                 className="h-10 focus-visible:ring-[#4C88C6]"
@@ -263,7 +274,10 @@ function LoginForm() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+              >
                 Mật khẩu
               </Label>
               <div className="relative">
@@ -272,7 +286,10 @@ function LoginForm() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => { setPassword(e.target.value); setFilled(null); }}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setFilled(null);
+                  }}
                   required
                   autoComplete="current-password"
                   className="h-10 pr-10 focus-visible:ring-[#4C88C6]"
@@ -302,12 +319,7 @@ function LoginForm() {
               )}
             </AnimatePresence>
 
-            <Button
-              type="submit"
-              variant="brand"
-              className="w-full h-10 mt-2"
-              disabled={loading}
-            >
+            <Button type="submit" variant="brand" className="w-full h-10 mt-2" disabled={loading}>
               {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />

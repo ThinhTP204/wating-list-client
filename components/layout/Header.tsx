@@ -41,7 +41,12 @@ export default function Header() {
     e.preventDefault();
     const token = getCookie("auth-token");
     if (token) {
-      router.push(link);
+      if (link === "/features") {
+        const role = getCookie("user-role");
+        router.push(role === "admin" ? "/admin?tab=dashboard" : "/employee?tab=calendar");
+      } else {
+        router.push(link);
+      }
     } else {
       router.push(`/login?callbackUrl=${encodeURIComponent(link)}`);
     }

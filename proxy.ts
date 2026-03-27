@@ -28,12 +28,8 @@ export function proxy(request: NextRequest) {
   const publicRoutes: string[] = ["/"];
   const authRoutes = ["/login"];
 
-  const isPublicRoute = publicRoutes.some(
-    (r) => pathname === r || pathname.startsWith(`${r}/`)
-  );
-  const isAuthRoute = authRoutes.some(
-    (r) => pathname === r || pathname.startsWith(`${r}/`)
-  );
+  const isPublicRoute = publicRoutes.some((r) => pathname === r || pathname.startsWith(`${r}/`));
+  const isAuthRoute = authRoutes.some((r) => pathname === r || pathname.startsWith(`${r}/`));
 
   // ── Not authenticated ──────────────────────────────────────────────────────
   if (!token || userRoles.length === 0) {
@@ -45,15 +41,16 @@ export function proxy(request: NextRequest) {
 
   // ── Authenticated ──────────────────────────────────────────────────────────
 
-  // If visiting auth pages or root → redirect by role
-  if (isAuthRoute || pathname === "/" || pathname === "") {
+  // If visiting auth pages, root, or legacy /features → redirect by role
+  const isLegacyFeaturesRoute = pathname === "/features" || pathname.startsWith("/features/");
+  if (isAuthRoute || pathname === "/" || pathname === "" || isLegacyFeaturesRoute) {
     if (primaryRole === "admin") {
       return NextResponse.redirect(new URL("/admin?tab=dashboard", request.url));
     }
     return NextResponse.redirect(new URL("/employee?tab=calendar", request.url));
   }
 
-  const isAdminRoute    = pathname.startsWith("/admin");
+  const isAdminRoute = pathname.startsWith("/admin");
   const isEmployeeRoute = pathname.startsWith("/employee");
 
   // ADMIN — full access; block employee-only route

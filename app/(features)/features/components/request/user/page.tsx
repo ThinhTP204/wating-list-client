@@ -77,10 +77,18 @@ const NOTIF_TYPE_META: Record<
   AppNotification["type"],
   { icon: React.ElementType; color: string; dot: string }
 > = {
-  match_found:    { icon: Zap,           color: "text-[#1D4D8F] dark:text-blue-300",    dot: "bg-[#4C88C6]" },
-  new_post:       { icon: ArrowLeftRight, color: "text-slate-500 dark:text-neutral-400", dot: "bg-slate-400" },
-  shift_accepted: { icon: CheckCircle2,   color: "text-emerald-600 dark:text-emerald-400", dot: "bg-emerald-500" },
-  shift_expired:  { icon: Bell,           color: "text-amber-600 dark:text-amber-400",   dot: "bg-amber-500" },
+  match_found: { icon: Zap, color: "text-[#1D4D8F] dark:text-blue-300", dot: "bg-[#4C88C6]" },
+  new_post: {
+    icon: ArrowLeftRight,
+    color: "text-slate-500 dark:text-neutral-400",
+    dot: "bg-slate-400",
+  },
+  shift_accepted: {
+    icon: CheckCircle2,
+    color: "text-emerald-600 dark:text-emerald-400",
+    dot: "bg-emerald-500",
+  },
+  shift_expired: { icon: Bell, color: "text-amber-600 dark:text-amber-400", dot: "bg-amber-500" },
 };
 
 // Karma ring component
@@ -92,10 +100,22 @@ function KarmaScoreRing({ score }: { score: number }) {
   return (
     <div className="relative w-20 h-20 flex items-center justify-center">
       <svg className="absolute inset-0 -rotate-90" width="80" height="80" viewBox="0 0 80 80">
-        <circle cx="40" cy="40" r={radius} fill="none" stroke="#e2e8f0" strokeWidth="5" className="dark:stroke-neutral-700" />
+        <circle
+          cx="40"
+          cy="40"
+          r={radius}
+          fill="none"
+          stroke="#e2e8f0"
+          strokeWidth="5"
+          className="dark:stroke-neutral-700"
+        />
         <motion.circle
-          cx="40" cy="40" r={radius} fill="none"
-          stroke="#4C88C6" strokeWidth="5"
+          cx="40"
+          cy="40"
+          r={radius}
+          fill="none"
+          stroke="#4C88C6"
+          strokeWidth="5"
           strokeLinecap="round"
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
@@ -105,26 +125,28 @@ function KarmaScoreRing({ score }: { score: number }) {
       </svg>
       <div className="relative z-10 text-center">
         <p className="text-xl font-black text-[#102854] dark:text-white leading-none">{score}</p>
-        <p className="text-xs font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-wide">karma</p>
+        <p className="text-xs font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-wide">
+          karma
+        </p>
       </div>
     </div>
   );
 }
 
 export default function UserRequestPage() {
-  const [posts, setPosts]         = useState<ShiftSwapPost[]>(MOCK_POSTS);
+  const [posts, setPosts] = useState<ShiftSwapPost[]>(MOCK_POSTS);
   const [available, setAvailable] = useState<AvailableEmployee[]>(MOCK_AVAILABLE);
   const [notifications, setNotifications] = useState<AppNotification[]>(MOCK_NOTIFICATIONS);
-  const [search, setSearch]       = useState("");
+  const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("swap");
-  const [swapOpen, setSwapOpen]   = useState(false);
+  const [swapOpen, setSwapOpen] = useState(false);
   const [availOpen, setAvailOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
 
-  const minDate     = getMinSwapDate();
-  const mySwapPost  = posts.find((p) => p.isOwn);
+  const minDate = getMinSwapDate();
+  const mySwapPost = posts.find((p) => p.isOwn);
   const myAvailPost = available.find((e) => e.isOwn);
-  const hasMatch    = mySwapPost?.status === "matched";
+  const hasMatch = mySwapPost?.status === "matched";
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const marketSwap = useMemo(
@@ -134,10 +156,7 @@ export default function UserRequestPage() {
         if (p.status === "open" && new Date(p.myShift.date) < minDate) return false;
         if (search) {
           const q = search.toLowerCase();
-          return (
-            p.authorName.toLowerCase().includes(q) ||
-            p.wantShift.toLowerCase().includes(q)
-          );
+          return p.authorName.toLowerCase().includes(q) || p.wantShift.toLowerCase().includes(q);
         }
         return true;
       }),
@@ -151,10 +170,7 @@ export default function UserRequestPage() {
         if (new Date(e.availableDate) < new Date(new Date().toDateString())) return false;
         if (search) {
           const q = search.toLowerCase();
-          return (
-            e.name.toLowerCase().includes(q) ||
-            e.department.toLowerCase().includes(q)
-          );
+          return e.name.toLowerCase().includes(q) || e.department.toLowerCase().includes(q);
         }
         return true;
       }),
@@ -163,16 +179,18 @@ export default function UserRequestPage() {
 
   const tabCount = { swap: marketSwap.length, avail: marketAvail.length };
 
-  const handleSaveSwap    = (p: ShiftSwapPost)     => setPosts((prev) => [p, ...prev]);
-  const handleAccept      = (p: ShiftSwapPost)     => setPosts((prev) => prev.map((x) => x.id === p.id ? { ...x, status: "matched" as const } : x));
-  const handleCancelSwap  = (p: ShiftSwapPost)     => setPosts((prev) => prev.filter((x) => x.id !== p.id));
-  const handleSaveAvail   = (e: AvailableEmployee) => setAvailable((prev) => [e, ...prev]);
-  const handleCancelAvail = (e: AvailableEmployee) => setAvailable((prev) => prev.filter((x) => x.id !== e.id));
-  const markAllRead       = () => setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  const handleSaveSwap = (p: ShiftSwapPost) => setPosts((prev) => [p, ...prev]);
+  const handleAccept = (p: ShiftSwapPost) =>
+    setPosts((prev) => prev.map((x) => (x.id === p.id ? { ...x, status: "matched" as const } : x)));
+  const handleCancelSwap = (p: ShiftSwapPost) =>
+    setPosts((prev) => prev.filter((x) => x.id !== p.id));
+  const handleSaveAvail = (e: AvailableEmployee) => setAvailable((prev) => [e, ...prev]);
+  const handleCancelAvail = (e: AvailableEmployee) =>
+    setAvailable((prev) => prev.filter((x) => x.id !== e.id));
+  const markAllRead = () => setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
 
   return (
     <div className="flex-1 flex flex-col h-[calc(100vh-3.5rem)] overflow-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden bg-gradient-to-br from-slate-50 via-blue-50/20 to-white dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950">
-
       {/* ── Personal Hero ─────────────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: -6 }}
@@ -181,14 +199,17 @@ export default function UserRequestPage() {
         className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-slate-200/80 dark:border-neutral-800"
       >
         <div className="px-6 pt-5 pb-4 space-y-4">
-
           {/* User identity + karma */}
           <div className="flex items-center gap-4">
             <KarmaScoreRing score={ME.karma} />
 
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-slate-400 dark:text-neutral-500 mb-0.5">{getGreeting()},</p>
-              <p className="text-xl font-black text-slate-800 dark:text-white leading-tight">{ME.name}</p>
+              <p className="text-sm text-slate-400 dark:text-neutral-500 mb-0.5">
+                {getGreeting()},
+              </p>
+              <p className="text-xl font-black text-slate-800 dark:text-white leading-tight">
+                {ME.name}
+              </p>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <div className="flex items-center gap-1 text-sm text-slate-500 dark:text-neutral-400">
                   <span>{ME.department}</span>
@@ -227,7 +248,9 @@ export default function UserRequestPage() {
                     className="flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-xl px-2.5 py-1.5"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span className="text-xs text-emerald-700 dark:text-emerald-300 font-semibold">Đã khớp!</span>
+                    <span className="text-xs text-emerald-700 dark:text-emerald-300 font-semibold">
+                      Đã khớp!
+                    </span>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -240,13 +263,20 @@ export default function UserRequestPage() {
                 className="relative flex items-center gap-1.5 bg-slate-100 dark:bg-neutral-800 hover:bg-slate-200 dark:hover:bg-neutral-700 rounded-xl px-3 py-1.5 transition-colors"
               >
                 <Bell className="w-4 h-4 text-slate-600 dark:text-neutral-300" />
-                <span className="text-sm font-medium text-slate-600 dark:text-neutral-300">Thông báo</span>
+                <span className="text-sm font-medium text-slate-600 dark:text-neutral-300">
+                  Thông báo
+                </span>
                 {unreadCount > 0 && (
                   <span className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-xs font-bold text-white">
                     {unreadCount}
                   </span>
                 )}
-                <ChevronDown className={cn("w-3.5 h-3.5 text-slate-400 transition-transform duration-200", notifOpen && "rotate-180")} />
+                <ChevronDown
+                  className={cn(
+                    "w-3.5 h-3.5 text-slate-400 transition-transform duration-200",
+                    notifOpen && "rotate-180"
+                  )}
+                />
               </motion.button>
             </div>
           </div>
@@ -274,7 +304,9 @@ export default function UserRequestPage() {
                       {mySwapPost.myShift.timeLabel}
                     </p>
                   </div>
-                  <Badge className={cn("border text-xs shrink-0", STATUS_META[mySwapPost.status].cls)}>
+                  <Badge
+                    className={cn("border text-xs shrink-0", STATUS_META[mySwapPost.status].cls)}
+                  >
                     {STATUS_META[mySwapPost.status].label}
                   </Badge>
                   <button
@@ -324,7 +356,8 @@ export default function UserRequestPage() {
                         month: "2-digit",
                       })}
                       <span className="text-slate-400 font-normal">
-                        {" "}· {myAvailPost.availableShifts.length} ca
+                        {" "}
+                        · {myAvailPost.availableShifts.length} ca
                       </span>
                     </p>
                   </div>
@@ -367,9 +400,14 @@ export default function UserRequestPage() {
             >
               <div className="px-6 py-3 space-y-2">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-bold text-slate-700 dark:text-white">Thông báo của bạn</span>
+                  <span className="text-sm font-bold text-slate-700 dark:text-white">
+                    Thông báo của bạn
+                  </span>
                   {unreadCount > 0 && (
-                    <button onClick={markAllRead} className="text-xs text-[#4C88C6] hover:underline">
+                    <button
+                      onClick={markAllRead}
+                      className="text-xs text-[#4C88C6] hover:underline"
+                    >
                       Đọc tất cả
                     </button>
                   )}
@@ -389,11 +427,17 @@ export default function UserRequestPage() {
                     >
                       <Icon className={cn("w-4 h-4 shrink-0 mt-0.5", meta.color)} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-slate-800 dark:text-white leading-tight">{n.title}</p>
-                        <p className="text-xs text-slate-500 dark:text-neutral-400 mt-0.5 line-clamp-2">{n.message}</p>
+                        <p className="text-sm font-semibold text-slate-800 dark:text-white leading-tight">
+                          {n.title}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-neutral-400 mt-0.5 line-clamp-2">
+                          {n.message}
+                        </p>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
-                        <span className="text-xs text-slate-300 dark:text-neutral-600">{timeAgo(n.createdAt)}</span>
+                        <span className="text-xs text-slate-300 dark:text-neutral-600">
+                          {timeAgo(n.createdAt)}
+                        </span>
                         {!n.read && <div className={cn("w-1.5 h-1.5 rounded-full", meta.dot)} />}
                       </div>
                     </div>
@@ -407,7 +451,6 @@ export default function UserRequestPage() {
 
       {/* ── Marketplace ──────────────────────────────────────────────────── */}
       <div className="flex-1 px-6 pt-5 pb-6 space-y-4">
-
         {/* Search */}
         <motion.div
           initial={{ opacity: 0, y: 6 }}
@@ -447,12 +490,14 @@ export default function UserRequestPage() {
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span>{label}</span>
-                <span className={cn(
-                  "text-xs font-bold px-1.5 py-0.5 rounded-full transition-colors",
-                  isActive
-                    ? "bg-[#BCE8F5]/60 dark:bg-blue-900/40 text-[#1D4D8F] dark:text-blue-400"
-                    : "bg-slate-200 dark:bg-neutral-700 text-slate-500 dark:text-neutral-400"
-                )}>
+                <span
+                  className={cn(
+                    "text-xs font-bold px-1.5 py-0.5 rounded-full transition-colors",
+                    isActive
+                      ? "bg-[#BCE8F5]/60 dark:bg-blue-900/40 text-[#1D4D8F] dark:text-blue-400"
+                      : "bg-slate-200 dark:bg-neutral-700 text-slate-500 dark:text-neutral-400"
+                  )}
+                >
                   {tabCount[id]}
                 </span>
               </button>
@@ -471,7 +516,8 @@ export default function UserRequestPage() {
             >
               <Zap className="w-4 h-4 text-[#4C88C6] shrink-0" />
               <p className="text-sm text-[#1D4D8F] dark:text-blue-300">
-                Có <strong>{marketSwap.filter((p) => (p.matchScore ?? 0) >= 80).length}</strong> yêu cầu phù hợp cao (&ge;80%) với nhu cầu của bạn
+                Có <strong>{marketSwap.filter((p) => (p.matchScore ?? 0) >= 80).length}</strong> yêu
+                cầu phù hợp cao (&ge;80%) với nhu cầu của bạn
               </p>
             </motion.div>
           )}
@@ -552,7 +598,11 @@ export default function UserRequestPage() {
       </div>
 
       <ShiftSwapDialog open={swapOpen} onClose={() => setSwapOpen(false)} onSave={handleSaveSwap} />
-      <AvailableDialog open={availOpen} onClose={() => setAvailOpen(false)} onSave={handleSaveAvail} />
+      <AvailableDialog
+        open={availOpen}
+        onClose={() => setAvailOpen(false)}
+        onSave={handleSaveAvail}
+      />
     </div>
   );
 }

@@ -53,14 +53,16 @@ Component
 ```
 app/
 ├── (landing)/               # Public landing page
+├── login/                   # Mock login page (2 demo accounts)
 ├── (features)/features/
-│   ├── layout.tsx           # Tab nav — dashboard, calendar, employees, time-keeping, request, salary, task
+│   ├── layout.tsx           # Tab nav filtered by role; logout button
 │   └── components/
 │       ├── calendar/
 │       ├── dashboard/
 │       ├── employees/
 │       ├── time-keeping/
-│       ├── request/
+│       ├── request/         # Admin: manage requests
+│       │   └── user/        # User (employee): shift swap requests
 │       ├── salary/
 │       └── task/
 └── user/                    # User account
@@ -188,6 +190,31 @@ Own-item ring: `ring-2 ring-[color]/25 dark:ring-[color]/20`
 - **GSAP v3** (`gsap`): complex multi-step sequences and scroll-triggered animations
 - **Icons**: Lucide React preferred; Tabler Icons (`@tabler/icons-react`) also available
 
-## Auth / Middleware
+## Auth & Route Protection
 
-`middleware.ts` protects routes. Token stored in Redux auth slice; Axios reads it on each request. 401 responses trigger automatic logout.
+### proxy.ts (Next.js 16 convention)
+Next.js 16 uses `proxy.ts` instead of `middleware.ts` for route interception. The file exports a `proxy` function and a `config` matcher. **Do not create `middleware.ts`** — it is the old convention and will conflict.
+
+Route logic in `proxy.ts`:
+- No token → redirect `/login`
+- Authenticated + visiting `/` or `/login` → redirect to role default tab
+- `role=admin` → `/features?tab=dashboard`
+- `role=user` → `/features?tab=calendar`
+
+### Mock auth (demo only)
+Login page at `app/login/page.tsx` with two hardcoded accounts:
+
+| Role | Email | Password |
+|------|-------|----------|
+| admin | `admin@wokki.com` | `admin123` |
+| user | `nv@wokki.com` | `nv123` |
+
+On login, two cookies are set: `auth-token` (token value) and `user-role` (role string). The proxy reads `user-role` directly because mock tokens are not real JWTs. When switching to real JWTs, replace the `user-role` cookie read in `proxy.ts` with `jwtDecode`.
+
+### Role-based tab visibility
+Tabs in `app/(features)/features/layout.tsx` are filtered by `user.role` from Redux:
+- **admin**: Tổng quan, Lịch ca, Nhân viên, Chấm công, Yêu cầu, Lương, Công việc
+- **user**: Lịch ca, Đổi ca, Công việc
+
+### Circular dependency — core.ts
+`lib/api/core.ts` must NOT import `store` or `logout` at the top level — this creates a circular dependency (`core → authSlice → core`). Both are imported via `require()` lazily inside the interceptor callbacks.

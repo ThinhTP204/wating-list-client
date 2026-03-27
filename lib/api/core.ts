@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { deleteCookie } from "cookies-next";
-import { store } from "@/lib/redux/store";
-import { logout } from "@/lib/redux/slices/authSlice";
 
 export interface ApiError {
   code?: number;
@@ -31,6 +29,8 @@ class ApiService {
     // Request Interceptor
     this.client.interceptors.request.use(
       (config) => {
+        // Lazy import to avoid circular dependency (core ↔ authSlice)
+        const { store } = require("@/lib/redux/store");
         const token = store.getState().auth.token;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
@@ -50,6 +50,9 @@ class ApiService {
       async (error) => {
         if (error.response?.status === 401) {
           deleteCookie("auth-token", { path: "/" });
+          // Lazy import to avoid circular dependency (core ↔ authSlice)
+          const { store } = require("@/lib/redux/store");
+          const { logout } = require("@/lib/redux/slices/authSlice");
           store.dispatch(logout());
 
           if (typeof window !== "undefined") {

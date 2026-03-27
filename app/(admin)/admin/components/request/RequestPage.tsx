@@ -38,6 +38,7 @@ import AvailableCard from "./components/AvailableCard";
 import ShiftSwapDialog from "./components/ShiftSwapDialog";
 import AvailableDialog from "./components/AvailableDialog";
 import { cn } from "@/lib/utils";
+import ShiftHistoryPanel from "./components/ShiftHistoryPanel";
 
 const BRANCHES = [
   "all",
@@ -305,7 +306,10 @@ export default function Page() {
         )}
       </AnimatePresence>
 
-      <div className="px-6 pt-5 pb-6 space-y-5">
+      <div className="flex gap-6 px-6 pt-5 pb-6">
+
+        {/* ── Main content ── */}
+        <div className="flex-1 min-w-0 space-y-5">
 
         {/* ── Top Smart Matches ── */}
         {topMatches.length > 0 && (
@@ -479,6 +483,16 @@ export default function Page() {
             </AnimatePresence>
           </div>
         </div>
+
+        </div>
+
+        {/* ── History panel sidebar ── */}
+        <div className="w-72 shrink-0 hidden xl:block">
+          <div className="sticky top-4 max-h-[calc(100vh-6rem)] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden rounded-2xl border border-slate-200/80 dark:border-neutral-700/80 bg-white/90 dark:bg-neutral-900/80 backdrop-blur-sm p-4">
+            <ShiftHistoryPanel />
+          </div>
+        </div>
+
       </div>
 
       <ShiftSwapDialog open={swapOpen} onClose={() => setSwapOpen(false)} onSave={handleSaveSwap} />

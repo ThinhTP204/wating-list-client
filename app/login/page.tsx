@@ -2,6 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { setCookie } from "cookies-next";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -15,6 +16,7 @@ import {
   Users,
   TrendingUp,
   CheckCircle2,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { setCredentials } from "@/lib/redux/slices/authSlice";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 // ── Mock accounts ──────────────────────────────────────────────────────────────
 const MOCK_ACCOUNTS = [
@@ -106,18 +109,11 @@ function LoginForm() {
   return (
     <div className="min-h-screen flex">
       {/* ── Left panel — visual / image ──────────────────────────────────────── */}
-      <div className="hidden lg:flex lg:w-[55%] xl:w-[60%] relative flex-col overflow-hidden bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]">
-        {/* Dot grid overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-          }}
-        />
-        {/* Glow orbs */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#4C88C6]/30 blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-[#102854]/60 blur-3xl" />
+      <div className="hidden lg:flex lg:w-[50%] xl:w-[55%] relative flex-col overflow-hidden">
+        {/* Background image */}
+        <Image src="/loginbg.png" alt="Login background" fill className="object-cover" priority />
+        {/* Dark overlay for text legibility */}
+        <div className="absolute inset-0 bg-[#102854]/60" />
 
         {/* Content */}
         <div className="relative z-10 flex flex-col h-full px-12 py-10">
@@ -127,7 +123,9 @@ function LoginForm() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <span className="text-2xl font-black text-white tracking-tight">wokki</span>
+            <Link href="/" className="shrink-0 text-2xl font-extrabold tracking-tight text-white">
+              wokki
+            </Link>
           </motion.div>
 
           {/* Tagline */}
@@ -158,14 +156,14 @@ function LoginForm() {
               <motion.div
                 key={label}
                 variants={itemVariants}
-                className="flex items-start gap-3 rounded-2xl bg-white/8 backdrop-blur-sm border border-white/10 px-4 py-3.5 hover:bg-white/12 transition-colors duration-200"
+                className="flex items-start gap-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/15 px-4 py-3.5 hover:bg-white/15 transition-colors duration-200"
               >
-                <div className="mt-0.5 shrink-0 w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center">
+                <div className="mt-0.5 shrink-0 w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
                   <Icon className="w-4 h-4 text-white" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{label}</p>
-                  <p className="text-xs text-white/50 mt-0.5 leading-snug">{desc}</p>
+                  <p className="text-xs text-white/60 mt-0.5 leading-snug">{desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -175,166 +173,179 @@ function LoginForm() {
 
       {/* ── Right panel — form ────────────────────────────────────────────────── */}
       <motion.div
-        className="flex-1 flex flex-col items-center justify-center px-6 py-10 bg-white dark:bg-neutral-950"
+        className="flex-1 flex flex-col items-center justify-center px-8 py-10 bg-slate-50 dark:bg-neutral-950"
         initial={{ opacity: 0, x: 24 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
       >
-        {/* Mobile logo */}
-        <div className="lg:hidden mb-8 text-center">
-          <span className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-            wokki
-          </span>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-            Nền tảng quản lý nhân sự
-          </p>
-        </div>
+        <div className="w-full max-w-xl">
+          {/* Card */}
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-xl shadow-neutral-200/60 dark:shadow-neutral-950/60 border border-neutral-100 dark:border-neutral-800 overflow-hidden">
+            {/* Gradient accent bar */}
+            <div className="h-1 w-full bg-gradient-to-r from-[#102854] via-[#4C88C6] to-[#BCE8F5]" />
 
-        <div className="w-full max-w-sm">
-          {/* Heading */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
-              Đăng nhập
-            </h2>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-              Chào mừng trở lại — nhập thông tin để tiếp tục.
-            </p>
-          </div>
-
-          {/* Demo accounts */}
-          <div className="mb-6">
-            <p className="text-xs font-bold uppercase tracking-wide text-neutral-400 dark:text-neutral-500 mb-2">
-              Tài khoản demo
-            </p>
-            <div className="flex gap-2">
-              {(["admin", "user"] as const).map((type) => {
-                const isActive = filled === type;
-                return (
-                  <motion.button
-                    key={type}
-                    type="button"
-                    onClick={() => fillAccount(type)}
-                    whileTap={{ scale: 0.97 }}
-                    className={cn(
-                      "flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl border text-xs font-medium transition-all duration-200",
-                      type === "admin"
-                        ? isActive
-                          ? "border-[#1D4D8F] bg-[#BCE8F5]/30 text-[#102854] dark:bg-[#1D4D8F]/20 dark:text-[#BCE8F5] dark:border-[#4C88C6]/50"
-                          : "border-[#1D4D8F]/20 bg-[#BCE8F5]/10 text-[#1D4D8F] dark:text-[#BCE8F5]/70 hover:bg-[#BCE8F5]/25 dark:hover:bg-[#1D4D8F]/15"
-                        : isActive
-                          ? "border-neutral-400 bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200 dark:border-neutral-600"
-                          : "border-neutral-200 bg-neutral-50 text-neutral-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                    )}
-                  >
-                    {isActive ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                    ) : type === "admin" ? (
-                      <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-                    ) : (
-                      <User className="w-3.5 h-3.5 shrink-0" />
-                    )}
-                    {type === "admin" ? "Admin" : "Nhân viên"}
-                  </motion.button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-neutral-200 dark:bg-neutral-800" />
-            <span className="text-xs text-neutral-400 dark:text-neutral-600">
-              hoặc nhập thủ công
-            </span>
-            <div className="flex-1 h-px bg-neutral-200 dark:bg-neutral-800" />
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-1.5">
-              <Label
-                htmlFor="email"
-                className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
-              >
-                Email
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="email@wokki.com"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setFilled(null);
-                }}
-                required
-                autoComplete="email"
-                className="h-10 focus-visible:ring-[#4C88C6]"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label
-                htmlFor="password"
-                className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
-              >
-                Mật khẩu
-              </Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setFilled(null);
-                  }}
-                  required
-                  autoComplete="current-password"
-                  className="h-10 pr-10 focus-visible:ring-[#4C88C6]"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            <AnimatePresence mode="wait">
-              {error && (
-                <motion.p
-                  key="error"
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-xs text-red-500 font-medium"
-                >
-                  {error}
-                </motion.p>
-              )}
-            </AnimatePresence>
-
-            <Button type="submit" variant="brand" className="w-full h-10 mt-2" disabled={loading}>
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                  Đang đăng nhập…
-                </span>
-              ) : (
-                <span className="flex items-center gap-2">
-                  <LogIn className="w-4 h-4" />
+            <div className="px-10 pt-8 pb-10 space-y-7">
+              {/* Heading */}
+              <div>
+                <h2 className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
                   Đăng nhập
-                </span>
-              )}
-            </Button>
-          </form>
+                </h2>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                  Chào mừng trở lại — nhập thông tin để tiếp tục.
+                </p>
+              </div>
 
-          <p className="text-center text-xs text-neutral-400 dark:text-neutral-600 mt-8">
+              {/* Demo accounts */}
+              <div className="space-y-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                  Tài khoản demo
+                </p>
+                <div className="flex gap-2">
+                  {(["admin", "user"] as const).map((type) => {
+                    const isActive = filled === type;
+                    return (
+                      <motion.button
+                        key={type}
+                        type="button"
+                        onClick={() => fillAccount(type)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.97 }}
+                        className={cn(
+                          "flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl border text-xs font-semibold transition-all duration-200",
+                          isActive
+                            ? "border-[#4C88C6]/60 bg-[#BCE8F5]/30 text-[#102854] dark:bg-[#BCE8F5]/15 dark:text-[#BCE8F5] dark:border-[#4C88C6]/50 shadow-sm"
+                            : type === "admin"
+                              ? "border-[#1D4D8F]/20 bg-[#BCE8F5]/10 text-[#1D4D8F] dark:text-[#BCE8F5]/70 hover:bg-[#BCE8F5]/20 dark:hover:bg-[#1D4D8F]/15 hover:border-[#1D4D8F]/40"
+                              : "border-neutral-200 bg-neutral-50 text-neutral-600 dark:border-neutral-700 dark:bg-neutral-800/50 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-300"
+                        )}
+                      >
+                        {isActive ? (
+                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                        ) : type === "admin" ? (
+                          <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+                        ) : (
+                          <User className="w-3.5 h-3.5 shrink-0" />
+                        )}
+                        {type === "admin" ? "Admin" : "Nhân viên"}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-neutral-200 dark:bg-neutral-700" />
+                <span className="text-xs text-neutral-400 dark:text-neutral-500 font-medium">
+                  hoặc nhập thủ công
+                </span>
+                <div className="flex-1 h-px bg-neutral-200 dark:bg-neutral-700" />
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleLogin} className="space-y-4">
+                {/* Email */}
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="email"
+                    className="text-sm font-semibold text-neutral-700 dark:text-neutral-300"
+                  >
+                    Email
+                  </Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="email@wokki.com"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setFilled(null);
+                      }}
+                      required
+                      autoComplete="email"
+                      className="h-11 pl-9 focus-visible:ring-[#4C88C6] bg-neutral-50 dark:bg-neutral-800/60 border-neutral-200 dark:border-neutral-700"
+                    />
+                  </div>
+                </div>
+
+                {/* Password */}
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="password"
+                    className="text-sm font-semibold text-neutral-700 dark:text-neutral-300"
+                  >
+                    Mật khẩu
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setFilled(null);
+                      }}
+                      required
+                      autoComplete="current-password"
+                      className="h-11 pr-10 focus-visible:ring-[#4C88C6] bg-neutral-50 dark:bg-neutral-800/60 border-neutral-200 dark:border-neutral-700"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowPassword((v) => !v)}
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Error */}
+                <AnimatePresence mode="wait">
+                  {error && (
+                    <motion.div
+                      key="error"
+                      initial={{ opacity: 0, y: -6, height: 0 }}
+                      animate={{ opacity: 1, y: 0, height: "auto" }}
+                      exit={{ opacity: 0, y: -6, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-center gap-2 text-xs text-red-500 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg px-3 py-2"
+                    >
+                      <X className="w-3.5 h-3.5 shrink-0" />
+                      {error}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Submit */}
+                <Button
+                  type="submit"
+                  variant="brand"
+                  className="w-full h-11 mt-1 font-bold text-sm"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                      Đang đăng nhập…
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <LogIn className="w-4 h-4" />
+                      Đăng nhập
+                    </span>
+                  )}
+                </Button>
+              </form>
+            </div>
+          </div>
+
+          {/* Footer note */}
+          <p className="text-center text-xs text-neutral-400 dark:text-neutral-600 mt-5">
             Môi trường demo — dữ liệu không có thật.
           </p>
         </div>

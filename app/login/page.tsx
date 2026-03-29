@@ -132,7 +132,7 @@ function LoginForm() {
                 className="h-9 w-auto object-contain"
                 priority
               />
-              <span className="text-2xl font-extrabold tracking-tight text-white">wokki</span>
+              <span className="text-2xl font-extrabold tracking-tight text-white">Wokki</span>
             </Link>
           </motion.div>
 

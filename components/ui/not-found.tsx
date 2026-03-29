@@ -143,7 +143,7 @@ export default function NotFound({
           transition={{ duration: 0.5, delay: 0.8 }}
           className="mt-6 text-xs text-neutral-400"
         >
-          wokki · Nền tảng quản lí ca làm #1 Việt Nam
+          Wokki · Nền tảng quản lí ca làm #1 Việt Nam
         </motion.p>
       </div>
     </div>

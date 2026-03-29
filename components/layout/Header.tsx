@@ -68,7 +68,7 @@ export default function Header() {
               className="h-8 w-auto object-contain"
               priority
             />
-            <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">wokki</span>
+            <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">Wokki</span>
           </Link>
 
           <NavItems
@@ -107,7 +107,7 @@ export default function Header() {
                 height={32}
                 className="h-8 w-auto object-contain"
               />
-              <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">wokki</span>
+              <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">Wokki</span>
             </Link>
             <div className="flex items-center gap-2">
               <InteractiveHoverButton

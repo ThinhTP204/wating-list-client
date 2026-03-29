@@ -55,7 +55,7 @@ export default function AppShellLayout({ children, tabs, basePath }: AppShellLay
                 className="h-8 w-auto object-contain"
                 priority
               />
-              <span className="text-sm font-extrabold tracking-tight text-neutral-900 dark:text-white">wokki</span>
+              <span className="text-sm font-extrabold tracking-tight text-neutral-900 dark:text-white">Wokki</span>
             </Link>
 
             <div className="h-5 w-px bg-neutral-200 dark:bg-neutral-700 shrink-0" />

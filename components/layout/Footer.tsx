@@ -33,7 +33,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block">
               <span className="text-2xl font-extrabold tracking-tight text-black dark:text-white">
-                wokki
+                Wokki
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">

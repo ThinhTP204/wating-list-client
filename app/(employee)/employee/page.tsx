@@ -1,11 +1,9 @@
-import CalendarPage  from "@/app/(features)/features/components/calendar/CalendarPage";
+import CalendarPage from "@/app/(features)/features/components/calendar/CalendarPage";
 import ShiftSwapPage from "@/app/(employee)/employee/components/shift-swap/ShiftSwapPage";
-import TaskPage      from "@/app/(features)/features/components/task/TaskPage";
 
 const TAB_COMPONENTS: Record<string, React.ComponentType> = {
-  calendar:     CalendarPage,
+  calendar: CalendarPage,
   "shift-swap": ShiftSwapPage,
-  task:         TaskPage,
 };
 
 export default async function EmployeePage({

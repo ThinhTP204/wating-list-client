@@ -17,7 +17,7 @@ Cải thiện giao diện của một component hiện có — nâng cao visual 
 3. **Áp dụng cải thiện** theo thứ tự ưu tiên:
 
 ### Visual polish
-- Brand gradient: `bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4]` cho header/accent
+- Brand gradient: `bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]` cho header/accent
 - Button variants có sẵn — dùng đúng variant thay vì custom class:
   - `variant="brand"` — gradient primary action
   - `variant="brand-outline"` — outlined secondary
@@ -28,7 +28,7 @@ Cải thiện giao diện của một component hiện có — nâng cao visual 
 
 ### Interaction states
 - `hover:` và `active:` cho mọi interactive element
-- `focus-visible:ring-2 focus-visible:ring-[#8f58e4]` cho keyboard navigation
+- `focus-visible:ring-2 focus-visible:ring-[#4C88C6]` cho keyboard navigation
 - `disabled:opacity-50 disabled:pointer-events-none` khi cần
 - `transition-colors duration-200` hoặc `transition-all duration-200` cho smooth feel
 
@@ -80,7 +80,7 @@ GSAP (`gsap`) — chỉ dùng cho sequences phức tạp nhiều bước hoặc 
   <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden gap-0">
     <DialogTitle className="sr-only">[Title for screen readers]</DialogTitle>
     {/* Gradient header */}
-    <div className="bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] px-5 pt-5 pb-4 text-white">
+    <div className="bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6] px-5 pt-5 pb-4 text-white">
       ...
     </div>
     {/* Scrollable body */}

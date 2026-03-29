@@ -191,7 +191,7 @@ export default function UserRequestPage() {
   const markAllRead = () => setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
 
   return (
-    <div className="flex-1 flex flex-row h-[calc(100vh-3.5rem)] overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/20 to-white dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950">
+    <div className="flex-1 flex flex-row h-[calc(100dvh-57px)] overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/20 to-white dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950">
       {/* ── LEFT COLUMN: hero + marketplace ── */}
       <div className="flex-1 flex flex-col overflow-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {/* ── Personal Hero ─────────────────────────────────────────────────── */}

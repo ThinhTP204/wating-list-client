@@ -57,7 +57,7 @@ const handleSubmit = (e: React.FormEvent) => {
   <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden gap-0">
     <DialogTitle className="sr-only">[Title]</DialogTitle>
     {/* Gradient header */}
-    <div className="bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4] px-5 pt-5 pb-4">
+    <div className="bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6] px-5 pt-5 pb-4">
       ...
     </div>
     {/* Scrollable body */}
@@ -82,7 +82,7 @@ const handleSubmit = (e: React.FormEvent) => {
 - Toast: `import { toast } from 'sonner'` — message tiếng Việt
 - Icons: `lucide-react` preferred; `@tabler/icons-react` khi cần icon đặc biệt hơn
 - Dark mode: luôn thêm `dark:` variant — không hardcode light-only color
-- Gradient: `bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4]`
+- Gradient: `bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]`
 - Animations: `motion/react` cho transitions/micro-interactions; GSAP cho sequences phức tạp
 - `cn()` từ `@/lib/utils` cho conditional classes
 

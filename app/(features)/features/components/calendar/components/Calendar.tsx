@@ -183,7 +183,7 @@ export default function Calendar() {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex h-[calc(100vh-3.5rem)]">
+      <div className="flex h-[calc(100dvh-57px)]">
         <CalendarSidebar
           viewYear={viewYear}
           viewMonth={viewMonth}

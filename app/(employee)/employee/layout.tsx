@@ -6,6 +6,7 @@ import type { TabDef } from "@/components/layout/AppShellLayout";
 const EMPLOYEE_TABS: TabDef[] = [
   { name: "Lịch ca", tab: "calendar" },
   { name: "Đổi ca", tab: "shift-swap" },
+  { name: "Thu nhập", tab: "earnings" },
 ];
 
 export default function EmployeeLayout({ children }: { children: React.ReactNode }) {

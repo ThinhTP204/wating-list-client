@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LogOut, ShieldCheck, User } from "lucide-react";
 import { deleteCookie } from "cookies-next";
@@ -45,11 +46,16 @@ export default function AppShellLayout({ children, tabs, basePath }: AppShellLay
         <div className="px-6">
           <div className="flex items-center gap-6 h-14">
             {/* Logo */}
-            <Link
-              href="/"
-              className="shrink-0 text-lg font-extrabold tracking-tight text-neutral-900 dark:text-white"
-            >
-              wokki
+            <Link href="/" className="shrink-0 flex items-center gap-1.5">
+              <Image
+                src="/WOKKI-LOGO.png"
+                alt="Wokki"
+                width={90}
+                height={32}
+                className="h-8 w-auto object-contain"
+                priority
+              />
+              <span className="text-sm font-extrabold tracking-tight text-neutral-900 dark:text-white">wokki</span>
             </Link>
 
             <div className="h-5 w-px bg-neutral-200 dark:bg-neutral-700 shrink-0" />

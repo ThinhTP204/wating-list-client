@@ -123,8 +123,16 @@ function LoginForm() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <Link href="/" className="shrink-0 text-2xl font-extrabold tracking-tight text-white">
-              wokki
+            <Link href="/" className="shrink-0 flex items-center gap-2">
+              <Image
+                src="/WOKKI-LOGO.png"
+                alt="Wokki"
+                width={110}
+                height={36}
+                className="h-9 w-auto object-contain"
+                priority
+              />
+              <span className="text-2xl font-extrabold tracking-tight text-white">wokki</span>
             </Link>
           </motion.div>
 

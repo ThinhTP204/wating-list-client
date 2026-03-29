@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/resizable-navbar";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { Button } from "../ui/button";
@@ -58,11 +59,16 @@ export default function Header() {
         {/* Desktop Navigation */}
         <NavBody>
           {/* Logo */}
-          <Link
-            href="/"
-            className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-bold text-black dark:text-white"
-          >
-            <span className="text-xl font-extrabold tracking-tight">wokki</span>
+          <Link href="/" className="relative z-20 mr-4 flex items-center gap-1.5 px-2 py-1">
+            <Image
+              src="/WOKKI-LOGO.png"
+              alt="Wokki"
+              width={90}
+              height={32}
+              className="h-8 w-auto object-contain"
+              priority
+            />
+            <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">wokki</span>
           </Link>
 
           <NavItems
@@ -76,7 +82,11 @@ export default function Header() {
 
           <div className="relative z-20 flex items-center gap-4">
             <div className="relative">
-              <InteractiveHoverButton variant="dark" className="font-bold text-sm" onClick={openRegister}>
+              <InteractiveHoverButton
+                variant="dark"
+                className="font-bold text-sm"
+                onClick={openRegister}
+              >
                 Trải nghiệm ngay
               </InteractiveHoverButton>
               <div className="absolute left-1/2 -translate-x-1/2 top-full z-40 flex flex-col items-center pointer-events-auto">
@@ -89,11 +99,15 @@ export default function Header() {
         {/* Mobile Navigation */}
         <MobileNav>
           <MobileNavHeader>
-            <Link
-              href="/"
-              className="relative z-20 flex items-center px-2 py-1 text-xl font-extrabold tracking-tight text-black dark:text-white"
-            >
-              wokki
+            <Link href="/" className="relative z-20 flex items-center gap-1.5 px-2 py-1">
+              <Image
+                src="/WOKKI-LOGO.png"
+                alt="Wokki"
+                width={90}
+                height={32}
+                className="h-8 w-auto object-contain"
+              />
+              <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">wokki</span>
             </Link>
             <div className="flex items-center gap-2">
               <InteractiveHoverButton
@@ -115,10 +129,7 @@ export default function Header() {
             </div>
           </MobileNavHeader>
 
-          <MobileNavMenu
-            isOpen={isMobileMenuOpen}
-            onClose={() => setIsMobileMenuOpen(false)}
-          >
+          <MobileNavMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
             {navItems.map((item, idx) => (
               <a
                 key={`mobile-link-${idx}`}
@@ -132,12 +143,10 @@ export default function Header() {
                 <span className="block">{item.name}</span>
               </a>
             ))}
-            <div className="flex w-full flex-col gap-4 pt-2">
-            </div>
+            <div className="flex w-full flex-col gap-4 pt-2"></div>
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
-
     </div>
   );
 }

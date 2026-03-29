@@ -11,8 +11,14 @@ const ubuntu = Ubuntu({
 });
 
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_APP_NAME || "Wooki",
-  description: "Modern Next.js application",
+  title: process.env.NEXT_PUBLIC_APP_NAME || "Wokki",
+  description:
+    "Nền tảng quản lý nhân sự thông minh — lịch ca, chấm công, tính lương trong một hệ thống duy nhất.",
+  icons: {
+    icon: "/WOKKI-LOGO.png",
+    shortcut: "/WOKKI-LOGO.png",
+    apple: "/WOKKI-LOGO.png",
+  },
 };
 
 export default function RootLayout({

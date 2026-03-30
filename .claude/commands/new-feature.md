@@ -1,29 +1,109 @@
 # /new-feature
 
-Scaffold a new feature following project conventions.
+Scaffold a new feature following the FSD architecture.
 
 **Usage**: `/new-feature [feature-name]`
 
 ## Task
 
 1. **Identify** — understand the feature's purpose, required API calls, and UI needs
-2. **Create components** in `app/(features)/features/components/[feature-name]/`:
+2. **Create feature directory** `features/[feature-name]/`:
    ```
-   [FeatureName]Page.tsx      # Main container ("use client")
-   [FeatureName]List.tsx      # Table/list view
-   [FeatureName]Detail.tsx    # Detail/modal view
-   [FeatureName]Form.tsx      # Create/edit form (useState + manual validation)
+   features/[feature-name]/
+   ├── hooks/
+   │   └── use[FeatureName].ts    # React Query hooks
+   ├── services/
+   │   └── [featureName]Api.ts    # API service functions
+   └── types/                     # (optional) feature-specific types
    ```
-3. **API service** — create `lib/api/services/fetch[FeatureName].ts`:
-   - Import axios singleton: `import apiService from '@/lib/api/core'`
+3. **Service** — create `features/[feature-name]/services/[featureName]Api.ts`:
+   - Import: `import apiService from '@/shared/lib/api/client'`
    - Export typed async functions + Request/Response interfaces
-   - Pattern: `apiService.get<T>('/api/v1/...')` → return `response.data`
-4. **Query hook** — create `hooks/use[FeatureName].ts`:
-   - `useQuery<T, ApiError>` với `enabled` guard
-   - `useMutation<Res, ApiError, Req>` với `mutationKey`, `onSuccess` invalidate, `onError` toast
-5. **Constants** — thêm key vào `QUERY_KEYS` object trong `lib/constants/index.ts`
-6. **Types** — thêm interfaces vào `types/models.ts` hoặc `types/api.ts`
-7. **Register tab** — thêm entry trong `app/(features)/features/layout.tsx` với `?tab=[feature-name]`
+   - Pattern: `apiService.request<T>({ method, url, ... })` → return `response.data`
+4. **Query hook** — create `features/[feature-name]/hooks/use[FeatureName].ts`:
+   - `useQuery<T, ApiError>` with `enabled` guard
+   - `useMutation<Res, ApiError, Req>` with `onSuccess` invalidate + `toast.success` + `onError` toast
+5. **Constants** — add key to `QUERY_KEYS` in `lib/constants/index.ts`
+6. **Types** — if shared across features → `shared/types/[domain].ts`; feature-only → `features/[name]/types/`
+7. **UI** — feature components live in `app/(admin)/admin/components/[feature]/` or `app/(employee)/employee/components/[feature]/`
+
+## Service template
+
+```typescript
+// features/[feature-name]/services/[featureName]Api.ts
+import apiService from "@/shared/lib/api/client";
+import type { ApiError } from "@/shared/lib/api/client";
+import type { FeatureItem } from "@/shared/types/[domain]";
+
+export interface FetchFeatureParams {
+  apiKey: string;
+  page?: number;
+  limit?: number;
+}
+
+export async function fetchFeatureItems({
+  apiKey,
+  page = 1,
+  limit = 10,
+}: FetchFeatureParams): Promise<FeatureItem[]> {
+  const response = await apiService.request<{ data: FeatureItem[] }>({
+    method: "GET",
+    url: "/api/v1/[resource]",
+    params: { page, limit },
+    headers: { "x-api-key": apiKey },
+  });
+  return response.data.data;
+}
+
+export async function deleteFeatureItem({
+  id,
+  apiKey,
+}: { id: string; apiKey: string }): Promise<void> {
+  await apiService.request({
+    method: "DELETE",
+    url: `/api/v1/[resource]/${id}`,
+    headers: { "x-api-key": apiKey },
+  });
+}
+```
+
+## Hook template
+
+```typescript
+// features/[feature-name]/hooks/use[FeatureName].ts
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/constants";
+import type { ApiError } from "@/shared/lib/api/client";
+import {
+  fetchFeatureItems,
+  deleteFeatureItem,
+  type FetchFeatureParams,
+} from "@/features/[feature-name]/services/[featureName]Api";
+import type { FeatureItem } from "@/shared/types/[domain]";
+
+export function useFeatureItems({ apiKey, page, limit, enabled = true }: FetchFeatureParams & { enabled?: boolean }) {
+  return useQuery<FeatureItem[], ApiError>({
+    queryKey: [QUERY_KEYS.FEATURE, page, limit, apiKey],
+    queryFn: () => fetchFeatureItems({ apiKey, page, limit }),
+    enabled: enabled && !!apiKey,
+  });
+}
+
+export function useDeleteFeatureItem(apiKey: string) {
+  const queryClient = useQueryClient();
+  return useMutation<void, ApiError, string>({
+    mutationFn: (id) => deleteFeatureItem({ id, apiKey }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.FEATURE] });
+      toast.success("Xóa thành công");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Thao tác thất bại, vui lòng thử lại.");
+    },
+  });
+}
+```
 
 ## Form pattern (no react-hook-form)
 
@@ -75,18 +155,15 @@ const handleSubmit = (e: React.FormEvent) => {
 
 ## Conventions
 
-- Feature components: `"use client"` (đây là app client-side nặng về hooks/events)
-- Hooks: `use[Name].ts` — không đặt tên `fetch` trong hooks, chỉ trong services
-- Import: `import type { Foo }` cho type-only; alias `@/` cho tất cả internal
-- Import order: external → `@/lib` → `@/hooks` → `@/components/ui` → `@/types`
-- Toast: `import { toast } from 'sonner'` — message tiếng Việt
-- Icons: `lucide-react` preferred; `@tabler/icons-react` khi cần icon đặc biệt hơn
-- Dark mode: luôn thêm `dark:` variant — không hardcode light-only color
+- Components: `"use client"` only when using hooks or event handlers
+- Import order: external → `@/lib` → `@/shared` → `@/features` → `@/components`
+- Toast: Vietnamese messages — `toast.success("Thành công")` / `toast.error("Thất bại...")`
+- Icons: `lucide-react` preferred; `@tabler/icons-react` for specialty icons
+- Dark mode: always `dark:` variants
 - Gradient: `bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]`
-- Animations: `motion/react` cho transitions/micro-interactions; GSAP cho sequences phức tạp
-- `cn()` từ `@/lib/utils` cho conditional classes
+- `cn()` from `@/lib/utils` for conditional classes
 
-## UI component map — không dùng raw HTML khi đã có component
+## UI component map
 
 | Raw HTML | Component (`@/components/ui/*`) |
 |----------|----------------------------------|
@@ -102,5 +179,3 @@ const handleSubmit = (e: React.FormEvent) => {
 | card wrapper | `<Card>` + `<CardHeader>` + `<CardContent>` + `<CardFooter>` |
 | modal | `<Dialog>` + `<DialogContent>` + `<DialogTitle className="sr-only">` |
 | chart | `@/components/ui/chart` (wraps Recharts) |
-
-Raw HTML chỉ dùng cho layout semantics (`<section>`, `<article>`, `<main>`, flex/grid wrapper `<div>`).

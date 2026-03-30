@@ -1,263 +1,194 @@
 # File Organization
 
-Proper file and directory structure for this Next.js project.
+FSD (Feature-Sliced Design) structure for this Next.js project.
 
 ---
 
 ## Project Structure
 
 ```
-app/
-├── (landing)/               # Public landing page (unauthenticated)
-├── (features)/
-│   └── features/
-│       ├── layout.tsx       # Tab nav — dashboard, calendar, employees,
-│       │                    # time-keeping, request, salary, task
-│       └── components/
-│           ├── calendar/
-│           ├── dashboard/
-│           ├── employees/
-│           ├── time-keeping/
-│           ├── request/
-│           ├── salary/
-│           └── task/
-└── user/                    # User account page
+app/                          ← Routing ONLY (pages, layouts)
+├── (landing)/page.tsx        → URL: /        (public)
+├── login/page.tsx            → URL: /login   (auth)
+├── (admin)/admin/            → URL: /admin   (admin role)
+│   ├── layout.tsx            # Tab nav + logout
+│   ├── page.tsx
+│   └── components/           # Admin UI components
+│       ├── dashboard/
+│       ├── employees/
+│       ├── request/
+│       ├── salary/
+│       └── time-keeping/
+├── (employee)/employee/      → URL: /employee (user role)
+│   ├── layout.tsx            # Tab nav + logout
+│   ├── page.tsx
+│   └── components/           # Employee UI components
+│       ├── earnings/
+│       └── shift-swap/
+├── (features)/features/      → shared feature components (no page.tsx)
+│   └── components/
+│       └── calendar/         # Used by both admin and employee
+└── user/page.tsx             → URL: /user    (authenticated)
+
+features/                     ← Domain modules (self-contained)
+├── waitlist/
+│   ├── hooks/use[Name].ts
+│   └── services/[name]Api.ts
+└── employees/
+    ├── hooks/useEmployees.ts
+    └── services/employeeApi.ts
+
+shared/                       ← Cross-cutting code
+├── lib/
+│   └── api/
+│       └── client.ts         # Axios singleton — THE one import for all API calls
+└── types/
+    ├── user.ts
+    ├── product.ts
+    └── order.ts
 
 components/
-├── ui/                      # shadcn/ui — DO NOT edit these files directly
-└── layout/                  # Shared layout components (navbar, sidebar, etc.)
-
-hooks/                       # React Query hooks — named use[Name].ts
+├── ui/                       # shadcn/ui — DO NOT edit directly
+└── layout/                   # Shared layout (Header, Navbar, etc.)
 
 lib/
-├── api/
-│   ├── core.ts              # Axios singleton (Bearer token, 401 logout)
-│   └── services/            # API service functions, one file per feature
-└── constants/               # queryKey arrays for React Query
-
-types/                       # TypeScript type definitions for API responses
+├── redux/
+│   ├── store.ts
+│   └── slices/authSlice.ts
+├── constants/
+│   └── index.ts              # QUERY_KEYS
+└── utils.ts                  # cn() and other utilities
 ```
 
 ---
 
-## Feature Components
-
-All feature-specific UI lives under `app/(features)/features/components/[feature]/`.
-
-### Directory Structure for a Feature
+## Where to Put a New File
 
 ```
-app/(features)/features/components/
-  employees/
-    EmployeeList.tsx          # Main list/table component
-    EmployeeCard.tsx          # Card display
-    EmployeeForm.tsx          # Create/edit form
-    EmployeeDetailDialog.tsx  # Detail modal
-    index.ts                  # Re-exports (optional)
-```
+Is it a page or route layout?
+  YES → app/
 
-**Rules:**
-- Flat structure if ≤5 components
-- Group into subdirs (`dialogs/`, `forms/`, `tables/`) if >5 components
-- Feature-specific logic stays in this folder
+Is it used by only one feature?
+  YES → features/[name]/[hooks|services|types|components]/
+
+Is it used by multiple features OR is it the API client?
+  YES → shared/[lib|types]/
+
+Is it a UI primitive (shadcn or shared layout)?
+  YES → components/[ui|layout]/
+
+Is it Redux store, query constants, or utility?
+  YES → lib/[redux|constants]/
+```
 
 ---
 
-## API Services (`lib/api/services/`)
-
-One file per feature domain. Functions call the Axios singleton from `lib/api/core.ts`.
+## Feature Module Structure
 
 ```
-lib/api/services/
-  employees.ts
-  calendar.ts
-  timekeeping.ts
-  requests.ts
-  salary.ts
-  tasks.ts
-  dashboard.ts
+features/
+└── [feature-name]/
+    ├── hooks/
+    │   └── use[FeatureName].ts    # useQuery + useMutation
+    ├── services/
+    │   └── [featureName]Api.ts    # fetch, create, update, delete functions
+    └── types/                     # (optional) feature-only types
+        └── index.ts
 ```
 
 ### Service File Pattern
 
 ```typescript
-// lib/api/services/employees.ts
-import { api } from "@/lib/api/core";
-import type { Employee, CreateEmployeePayload } from "@/types/employee";
+// features/employees/services/employeeApi.ts
+import apiService from "@/shared/lib/api/client";
+import type { UserItem, UserListResponse } from "@/shared/types/user";
 
-export async function getEmployees(): Promise<Employee[]> {
-  const { data } = await api.get("/employees");
-  return data;
+export interface FetchUsersParams {
+  page?: number;
+  limit?: number;
+  apiKey: string;
 }
 
-export async function getEmployee(id: string): Promise<Employee> {
-  const { data } = await api.get(`/employees/${id}`);
-  return data;
+export async function fetchUsers({
+  page = 1,
+  limit = 10,
+  apiKey,
+}: FetchUsersParams): Promise<UserListResponse> {
+  const response = await apiService.request<UserListResponse>({
+    method: "GET",
+    url: "/api/v1/users",
+    params: { page, limit },
+    headers: { "x-api-key": apiKey },
+  });
+  return response.data;
 }
-
-export async function createEmployee(payload: CreateEmployeePayload): Promise<Employee> {
-  const { data } = await api.post("/employees", payload);
-  return data;
-}
-
-export async function updateEmployee(id: string, payload: Partial<Employee>): Promise<Employee> {
-  const { data } = await api.put(`/employees/${id}`, payload);
-  return data;
-}
-
-export async function deleteEmployee(id: string): Promise<void> {
-  await api.delete(`/employees/${id}`);
-}
-```
-
-**Key Rules:**
-- Use named exports (not default)
-- Type all parameters and return values
-- Destructure `{ data }` from axios response
-- Keep functions focused — one operation per function
-
----
-
-## React Query Hooks (`hooks/`)
-
-One hook file per feature. Named `use[Resource].ts`.
-
-```
-hooks/
-  useEmployees.ts
-  useCalendar.ts
-  useTimekeeping.ts
-  useRequests.ts
-  useSalary.ts
-  useTasks.ts
 ```
 
 ### Hook File Pattern
 
 ```typescript
-// hooks/useEmployees.ts
+// features/employees/hooks/useEmployees.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { QUERY_KEYS } from "@/lib/constants/queryKeys";
-import {
-  getEmployees,
-  getEmployee,
-  createEmployee,
-  updateEmployee,
-  deleteEmployee,
-} from "@/lib/api/services/employees";
-import type { Employee, CreateEmployeePayload } from "@/types/employee";
+import { QUERY_KEYS } from "@/lib/constants";
+import type { ApiError } from "@/shared/lib/api/client";
+import { fetchUsers, deleteUser } from "@/features/employees/services/employeeApi";
+import type { UserListResponse } from "@/shared/types/user";
 
-export function useEmployees() {
-  return useQuery({
-    queryKey: QUERY_KEYS.employees.all,
-    queryFn: getEmployees,
-  });
-}
-
-export function useEmployee(id: string) {
-  return useQuery({
-    queryKey: QUERY_KEYS.employees.detail(id),
-    queryFn: () => getEmployee(id),
-    enabled: !!id,
-  });
-}
-
-export function useCreateEmployee() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: CreateEmployeePayload) => createEmployee(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
-      toast.success("Employee created successfully");
-    },
-    onError: () => toast.error("Failed to create employee"),
+export function useUsers({ page = 1, limit = 10, apiKey, enabled = true }) {
+  return useQuery<UserListResponse, ApiError>({
+    queryKey: [QUERY_KEYS.USERS, page, limit, apiKey],
+    queryFn: () => fetchUsers({ page, limit, apiKey }),
+    enabled: enabled && !!apiKey,
   });
 }
 ```
 
 ---
 
-## Query Keys (`lib/constants/`)
-
-Centralized query key definitions. **Never inline query key strings.**
+## Query Keys (`lib/constants/index.ts`)
 
 ```typescript
-// lib/constants/queryKeys.ts
 export const QUERY_KEYS = {
-  employees: {
-    all: ["employees"] as const,
-    detail: (id: string) => ["employees", id] as const,
-    byDepartment: (dept: string) => ["employees", "department", dept] as const,
-  },
-  calendar: {
-    all: ["calendar"] as const,
-    byMonth: (year: number, month: number) => ["calendar", year, month] as const,
-  },
-  timekeeping: {
-    all: ["timekeeping"] as const,
-    byEmployee: (employeeId: string) => ["timekeeping", employeeId] as const,
-  },
+  USERS: "users",
+  REFERRAL_STATS: "referral-stats",
+  SHIFTS: "shifts",
+  SALARY: "salary",
 } as const;
 ```
 
----
-
-## TypeScript Types (`types/`)
-
-One file per domain. All API response shapes defined here.
-
-```
-types/
-  employee.ts
-  calendar.ts
-  timekeeping.ts
-  request.ts
-  salary.ts
-  task.ts
-  common.ts        # Shared types (pagination, status enums, etc.)
-  auth.ts          # Auth/user types
-```
-
-```typescript
-// types/employee.ts
-export interface Employee {
-  id: string;
-  name: string;
-  email: string;
-  department: string;
-  position: string;
-  createdAt: string;
-}
-
-export interface CreateEmployeePayload {
-  name: string;
-  email: string;
-  department: string;
-  position: string;
-}
-```
+- Always `as const`
+- SCREAMING_SNAKE_CASE
+- Never inline query key strings in hooks
 
 ---
 
-## Shared Components (`components/`)
+## Shared Types (`shared/types/`)
 
-### `components/ui/`
-shadcn/ui primitives. **Never edit these directly.**
-Add new shadcn components via CLI: `npx shadcn@latest add [component]`
-
-### `components/layout/`
-Reusable layout components used across multiple features.
+One file per domain. Use for types shared by 2+ features.
 
 ```
-components/layout/
-  PageHeader.tsx       # Page title + action button slot
-  TabNav.tsx           # Tab navigation wrapper
-  EmptyState.tsx       # Empty data placeholder
-  ErrorState.tsx       # Error display
+shared/types/
+├── user.ts       # UserItem, UserListResponse, etc.
+├── product.ts    # Product
+└── order.ts      # Order, OrderItem
 ```
 
-**Rule**: Add to `components/layout/` only if used in 3+ features. Otherwise keep in the feature folder.
+Feature-specific request/response shapes stay in `features/[name]/services/[name]Api.ts`.
+
+---
+
+## DEPRECATED Paths
+
+These paths are from the old structure. **Do not use for new code.**
+
+| Old (deprecated) | New (correct) |
+|-----------------|---------------|
+| `hooks/use*.ts` | `features/[name]/hooks/use*.ts` |
+| `lib/api/services/fetch*.ts` | `features/[name]/services/*Api.ts` |
+| `lib/api/core.ts` | `shared/lib/api/client.ts` |
+| `types/models.ts` | `shared/types/[domain].ts` |
+| `app/(features)/features/components/` | `app/(admin)/admin/components/` or `app/(employee)/employee/components/` |
 
 ---
 
@@ -265,24 +196,8 @@ components/layout/
 
 | Type | Convention | Example |
 |------|-----------|---------|
-| Component files | PascalCase `.tsx` | `EmployeeCard.tsx` |
-| Hook files | camelCase `use` prefix `.ts` | `useEmployees.ts` |
-| Service files | camelCase `.ts` | `employees.ts` |
-| Type files | camelCase `.ts` | `employee.ts` |
-| Constant files | camelCase `.ts` | `queryKeys.ts` |
-
----
-
-## Summary
-
-1. **Feature UI** → `app/(features)/features/components/[feature]/`
-2. **Shared UI** → `components/layout/` (or `components/ui/` for shadcn)
-3. **API calls** → `lib/api/services/[feature].ts` via Axios singleton
-4. **Hooks** → `hooks/use[Name].ts` wrapping React Query
-5. **Query keys** → `lib/constants/queryKeys.ts` — never inline
-6. **Types** → `types/[domain].ts` for all API shapes
-7. **Single alias** → `@/` only
-
-**See Also:**
-- [data-fetching.md](data-fetching.md) — Hook and service patterns
-- [component-patterns.md](component-patterns.md) — Component structure
+| Feature hook | `use[Resource].ts` | `useEmployees.ts` |
+| Feature service | `[resource]Api.ts` | `employeeApi.ts` |
+| Shared type | `[domain].ts` | `user.ts` |
+| Component | `[Name].tsx` PascalCase | `EmployeeCard.tsx` |
+| Query key | `SCREAMING_SNAKE_CASE` | `QUERY_KEYS.USERS` |

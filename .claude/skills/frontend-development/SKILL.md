@@ -37,11 +37,12 @@ Comprehensive guide for development in this project: **Next.js 16 App Router · 
 
 ### New Feature Checklist
 
-- [ ] Feature components → `app/(features)/features/components/[feature]/`
-- [ ] API service → `lib/api/services/[feature].ts`
-- [ ] React Query hook → `hooks/use[Name].ts`
-- [ ] Query keys → `lib/constants/` (never inline strings)
-- [ ] TypeScript types → `types/`
+- [ ] Feature module → `features/[name]/hooks/` + `features/[name]/services/`
+- [ ] API service → `features/[name]/services/[name]Api.ts` (import `@/shared/lib/api/client`)
+- [ ] React Query hook → `features/[name]/hooks/use[Name].ts`
+- [ ] Query keys → `lib/constants/index.ts` (never inline strings)
+- [ ] Shared types → `shared/types/[domain].ts` · Feature-only types → `features/[name]/types/`
+- [ ] UI components → `app/(admin)/admin/components/` or `app/(employee)/employee/components/`
 
 ---
 
@@ -49,7 +50,7 @@ Comprehensive guide for development in this project: **Next.js 16 App Router · 
 
 | Alias | Resolves To | Example |
 |-------|-------------|---------|
-| `@/` | project root | `import { api } from '@/lib/api/core'` |
+| `@/` | project root | `import apiService from '@/shared/lib/api/client'` |
 
 Only `@/` is available — no `~types`, `~components`, or `~features` aliases.
 
@@ -60,19 +61,20 @@ Only `@/` is available — no `~types`, `~components`, or `~features` aliases.
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'motion/react';
 
-// 2. @/lib
-import { api } from '@/lib/api/core';
-import { QUERY_KEYS } from '@/lib/constants/queryKeys';
+// 2. @/lib (store, constants, utils)
+import { QUERY_KEYS } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
-// 3. @/hooks
-import { useEmployees } from '@/hooks/useEmployees';
+// 3. @/shared
+import apiService from '@/shared/lib/api/client';
+import type { UserItem } from '@/shared/types/user';
 
-// 4. @/components
+// 4. @/features
+import { useEmployees } from '@/features/employees/hooks/useEmployees';
+
+// 5. @/components
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-
-// 5. @/types
-import type { Employee } from '@/types/employee';
 ```
 
 ---
@@ -96,8 +98,8 @@ import type { Employee } from '@/types/employee';
 
 **Pattern: React Query + Axios singleton**
 - `useQuery` / `useMutation` from `@tanstack/react-query`
-- API service functions in `lib/api/services/[feature].ts`
-- Axios singleton at `lib/api/core.ts` — never create new instances
+- API service functions in `features/[name]/services/[name]Api.ts`
+- Axios singleton at `shared/lib/api/client.ts` — never create new instances
 - Query keys from `lib/constants/` — never inline strings
 - `sonner` toast on mutation success/error
 
@@ -143,8 +145,8 @@ types/                       # TypeScript type definitions
 ### 🎨 Styling
 
 **Tailwind CSS v4 + shadcn/ui + design system:**
-- Brand colors: `#402093` · `#5e34b7` · `#8f58e4`
-- Gradient: `bg-gradient-to-br from-[#402093] via-[#5e34b7] to-[#8f58e4]`
+- Brand colors: `#102854` (deep navy) · `#1D4D8F` (mid blue) · `#4C88C6` (accent) · `#BCE8F5` (pale blue)
+- Gradient: `bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]`
 - Always add `dark:` variants
 - `cn()` from `@/lib/utils` for conditional classes
 - Dialog pattern: gradient header + scrollable body + `border-t` footer
@@ -157,8 +159,8 @@ types/                       # TypeScript type definitions
 
 **Next.js App Router + `?tab=` pattern:**
 - Feature tabs use `?tab=` query param (not separate routes)
-- Protected routes via `middleware.ts`
-- Page components in `app/(features)/features/` directory
+- Protected routes via `proxy.ts` (NOT `middleware.ts` — Next.js 16 convention)
+- Admin pages: `app/(admin)/admin/` · Employee pages: `app/(employee)/employee/`
 
 **[📖 Complete Guide: resources/routing-guide.md](resources/routing-guide.md)**
 

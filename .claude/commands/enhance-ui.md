@@ -18,6 +18,7 @@ Cải thiện giao diện của một component hiện có — nâng cao visual 
 
 ### Visual polish
 - Brand gradient: `bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]` cho header/accent
+- Brand colors: `#102854` (deep navy) · `#1D4D8F` (mid blue) · `#4C88C6` (accent) · `#BCE8F5` (pale blue)
 - Button variants có sẵn — dùng đúng variant thay vì custom class:
   - `variant="brand"` — gradient primary action
   - `variant="brand-outline"` — outlined secondary
@@ -25,6 +26,17 @@ Cải thiện giao diện của một component hiện có — nâng cao visual 
 - Luôn thêm `dark:` cho mọi màu custom; không dùng Tailwind color mà không có dark variant
 - Border radius, shadow, spacing theo Tailwind scale — tránh arbitrary khi có sẵn
 - Typography: heading size → weight → tracking rõ ràng theo hierarchy
+
+### Typography scale (hard rules)
+| Element | Class | Min size |
+|---------|-------|----------|
+| Page title | `text-2xl font-black` | — |
+| Section title | `text-lg font-bold` | — |
+| Card title | `text-base font-semibold` | — |
+| Body | `text-sm` | — |
+| Labels/meta | `text-xs` | ← hard floor — NEVER go smaller |
+
+**Never use**: `text-[9px]`, `text-[10px]`, `text-[11px]` — illegible.
 
 ### Interaction states
 - `hover:` và `active:` cho mọi interactive element
@@ -67,14 +79,21 @@ const itemVariants = {
 <motion.div key={item.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
 ```
 
-GSAP (`gsap`) — chỉ dùng cho sequences phức tạp nhiều bước hoặc scroll-triggered; không dùng thay thế Motion cho UI thông thường.
+GSAP (`gsap`) — chỉ dùng cho sequences phức tạp nhiều bước hoặc scroll-triggered.
 
 ### Empty & loading states
-- **Skeleton**: dùng `<div className="animate-pulse bg-muted rounded-md h-4 w-full">` khi biết layout
+- **Skeleton**: `<div className="animate-pulse bg-muted rounded-md h-4 w-full">` khi biết layout
 - **Empty state**: icon (lucide-react) + message + CTA button nếu applicable
 - **Error state**: message + retry button gọi lại query
 
-### Dialog/Sheet pattern
+### Card shell (glassmorphism)
+```tsx
+className="bg-white/90 dark:bg-neutral-900/80 backdrop-blur-sm rounded-2xl border border-slate-200/80 dark:border-neutral-700/80"
+// Hover:
+hover:shadow-lg hover:shadow-[#4C88C6]/10 hover:border-[#4C88C6]/50
+```
+
+### Dialog pattern
 ```tsx
 <Dialog open={open} onOpenChange={onOpenChange}>
   <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden gap-0">
@@ -111,8 +130,6 @@ GSAP (`gsap`) — chỉ dùng cho sequences phức tạp nhiều bước hoặc 
 | card wrapper | `<Card>` + `<CardHeader>` + `<CardContent>` + `<CardFooter>` |
 | modal | `<Dialog>` + `<DialogContent>` + `<DialogTitle className="sr-only">` |
 | chart | `@/components/ui/chart` (wraps Recharts) |
-
-Raw HTML chỉ giữ lại cho layout semantics (`<section>`, `<article>`, flex/grid wrapper `<div>`).
 
 ## Rules
 

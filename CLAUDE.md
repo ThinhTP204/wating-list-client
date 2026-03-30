@@ -40,44 +40,53 @@ This is a **frontend-only** app — no API routes. All backend calls go to an ex
 ### Data flow
 ```
 Component
-  → React Query hook (hooks/)
-    → API service fn (lib/api/services/)
-      → Axios singleton (lib/api/core.ts)
+  → React Query hook (features/[name]/hooks/)
+    → API service fn (features/[name]/services/)
+      → Axios singleton (shared/lib/api/client.ts)
         → NEXT_PUBLIC_API_URL backend
 ```
-- **Axios** (`lib/api/core.ts`): singleton with 10-min timeout, auto-injects `Bearer` token from Redux auth slice, handles 401 logout, exposes `get/post/put/patch/delete/upload`.
+- **Axios** (`shared/lib/api/client.ts`): singleton with 10-min timeout, auto-injects `Bearer` token from Redux auth slice, handles 401 logout, exposes `get/post/put/patch/delete/upload`.
 - **React Query**: all server state; `queryKey` arrays defined in `lib/constants/`.
 - **Redux Toolkit + redux-persist**: client state only (auth token, user profile).
 
 ### Project structure
+
+> Architecture: Feature-Sliced Design (FSD). See `.claude/rules/001-fsd-architecture.md`.
+
 ```
-app/
-├── (landing)/               # Public landing page
-├── login/                   # Mock login page (2 demo accounts)
-├── (features)/features/
-│   ├── layout.tsx           # Tab nav filtered by role; logout button
-│   └── components/
-│       ├── calendar/
-│       ├── dashboard/
-│       ├── employees/
-│       ├── time-keeping/
-│       ├── request/         # Admin: manage requests
-│       │   └── user/        # User (employee): shift swap requests
-│       ├── salary/
-│       └── task/
-└── user/                    # User account
+app/                          ← Routing ONLY
+├── (landing)/page.tsx        → URL: /        (public)
+├── login/page.tsx            → URL: /login   (auth)
+├── (admin)/admin/            → URL: /admin   (admin role)
+│   ├── layout.tsx            # Tab nav + logout
+│   └── components/           # dashboard, employees, request, salary, time-keeping
+├── (employee)/employee/      → URL: /employee (user role)
+│   ├── layout.tsx            # Tab nav + logout
+│   └── components/           # earnings, shift-swap
+├── (features)/features/      → shared components (no page.tsx)
+│   └── components/calendar/  # calendar used by both admin & employee
+└── user/page.tsx             → URL: /user    (authenticated)
+
+features/                     ← Domain modules (self-contained)
+├── waitlist/
+│   ├── hooks/                # useRegister, useRegisterDialog
+│   └── services/             # fetchRegister
+└── employees/
+    ├── hooks/                # useEmployees
+    └── services/             # employeeApi
+
+shared/                       ← Cross-cutting code
+├── lib/api/client.ts         # Axios singleton — import from here, NOT lib/api/core
+└── types/                    # user.ts, product.ts, order.ts
 
 components/
-├── ui/                      # shadcn components — do not edit directly
-└── layout/                  # Shared layout components
+├── ui/                       # shadcn components — do not edit directly
+└── layout/                   # Shared layout components (Header, Navbar)
 
-hooks/                       # React Query hooks, named use[Name].ts
 lib/
-├── api/
-│   ├── core.ts              # Axios singleton
-│   └── services/            # API service functions per feature
-└── constants/               # queryKey arrays for React Query
-types/                       # TypeScript type definitions
+├── redux/slices/authSlice.ts # Auth state
+├── constants/index.ts        # QUERY_KEYS
+└── utils.ts                  # cn() helper
 ```
 
 Tab navigation uses the `?tab=` query param pattern in the features layout.
@@ -130,7 +139,8 @@ Only use raw HTML when no UI component covers the semantic need (e.g. `<section>
 
 ### Imports
 - Always use `@/` alias for internal paths
-- Order: external packages → `@/lib` → `@/hooks` → `@/components` → `@/types`
+- Order: external packages → `@/lib` → `@/shared` → `@/features` → `@/components`
+- `import type { Foo }` for type-only imports
 
 ## Design System
 
@@ -197,9 +207,9 @@ Next.js 16 uses `proxy.ts` instead of `middleware.ts` for route interception. Th
 
 Route logic in `proxy.ts`:
 - No token → redirect `/login`
-- Authenticated + visiting `/` or `/login` → redirect to role default tab
-- `role=admin` → `/features?tab=dashboard`
-- `role=user` → `/features?tab=calendar`
+- Authenticated + visiting `/`, `/login`, or `/features` → redirect to role default
+- `role=admin` → `/admin?tab=dashboard`
+- `role=user` → `/employee?tab=calendar`
 
 ### Mock auth (demo only)
 Login page at `app/login/page.tsx` with two hardcoded accounts:
@@ -212,9 +222,8 @@ Login page at `app/login/page.tsx` with two hardcoded accounts:
 On login, two cookies are set: `auth-token` (token value) and `user-role` (role string). The proxy reads `user-role` directly because mock tokens are not real JWTs. When switching to real JWTs, replace the `user-role` cookie read in `proxy.ts` with `jwtDecode`.
 
 ### Role-based tab visibility
-Tabs in `app/(features)/features/layout.tsx` are filtered by `user.role` from Redux:
-- **admin**: Tổng quan, Lịch ca, Nhân viên, Chấm công, Yêu cầu, Lương, Công việc
-- **user**: Lịch ca, Đổi ca, Công việc
+- **admin** (`app/(admin)/admin/layout.tsx`): Tổng quan, Lịch ca, Nhân viên, Chấm công, Yêu cầu, Lương, Công việc
+- **user** (`app/(employee)/employee/layout.tsx`): Lịch ca, Đổi ca, Công việc
 
-### Circular dependency — core.ts
-`lib/api/core.ts` must NOT import `store` or `logout` at the top level — this creates a circular dependency (`core → authSlice → core`). Both are imported via `require()` lazily inside the interceptor callbacks.
+### Circular dependency — client.ts
+`shared/lib/api/client.ts` must NOT import `store` or `logout` at the top level — this creates a circular dependency (`client → authSlice → client`). Both are imported via `require()` lazily inside the interceptor callbacks.

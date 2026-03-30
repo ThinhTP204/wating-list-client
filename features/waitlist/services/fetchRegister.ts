@@ -1,4 +1,4 @@
-import apiService from "@/lib/api/core";
+import apiService from "@/shared/lib/api/client";
 
 export interface RegisterRequest {
   email: string;

@@ -29,7 +29,7 @@ class ApiService {
     // Request Interceptor
     this.client.interceptors.request.use(
       (config) => {
-        // Lazy import to avoid circular dependency (core ↔ authSlice)
+        // Lazy import to avoid circular dependency (client ↔ authSlice)
         const { store } = require("@/lib/redux/store");
         const token = store.getState().auth.token;
         if (token) {
@@ -50,7 +50,7 @@ class ApiService {
       async (error) => {
         if (error.response?.status === 401) {
           deleteCookie("auth-token", { path: "/" });
-          // Lazy import to avoid circular dependency (core ↔ authSlice)
+          // Lazy import to avoid circular dependency (client ↔ authSlice)
           const { store } = require("@/lib/redux/store");
           const { logout } = require("@/lib/redux/slices/authSlice");
           store.dispatch(logout());

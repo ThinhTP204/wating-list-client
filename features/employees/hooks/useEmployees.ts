@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteUser, fetchReferralStats, fetchUsers } from "@/lib/api/services/fetchUser";
-import { DeleteUserResponse, ReferralStatsResponse, UserListResponse } from "@/types/models";
-import { ApiError } from "@/lib/api/core";
+import { deleteUser, fetchReferralStats, fetchUsers } from "@/features/employees/services/employeeApi";
+import { DeleteUserResponse, ReferralStatsResponse, UserListResponse } from "@/shared/types/user";
+import { ApiError } from "@/shared/lib/api/client";
 import { QUERY_KEYS } from "@/lib/constants";
 
 interface UseUsersOptions {

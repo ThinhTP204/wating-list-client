@@ -1,5 +1,5 @@
-import apiService from "@/lib/api/core";
-import { DeleteUserResponse, ReferralStatsResponse, UserListResponse } from "@/types/models";
+import apiService from "@/shared/lib/api/client";
+import { DeleteUserResponse, ReferralStatsResponse, UserListResponse } from "@/shared/types/user";
 
 export interface FetchUsersParams {
   page?: number;

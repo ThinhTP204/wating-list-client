@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useUsers, useDeleteUser, useReferralStats } from "@/hooks/useUser";
+import { useUsers, useDeleteUser, useReferralStats } from "@/features/employees/hooks/useEmployees";
 import { useIsMobile } from "@/hooks/useMobile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

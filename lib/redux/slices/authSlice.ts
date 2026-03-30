@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { setCookie, deleteCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
-import apiService from "@/lib/api/core";
+import apiService from "@/shared/lib/api/client";
 import type { RootState } from "../store";
 
 // Types

@@ -1,5 +1,5 @@
 "use client";
-import FeaturesSectionDemo from "@/components/features-section-demo-2";
+import FeaturesGrid from "@/app/(landing)/components/FeaturesGrid";
 import { useIsMobile } from "@/hooks/useMobile";
 
 export default function Blog() {
@@ -25,7 +25,7 @@ export default function Blog() {
           </p>
         </div>
 
-        <FeaturesSectionDemo />
+        <FeaturesGrid />
       </div>
     </section>
   );

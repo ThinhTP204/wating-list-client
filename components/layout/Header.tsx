@@ -16,7 +16,7 @@ import { getCookie } from "cookies-next";
 import { Button } from "../ui/button";
 import { InteractiveHoverButton } from "../ui/interactive-hover-button";
 import { useIsMobile } from "@/hooks/useMobile";
-import { useRegisterDialog } from "@/hooks/useRegisterDialog";
+import { useRegisterDialog } from "@/features/waitlist/hooks/useRegisterDialog";
 import SparklesIcon from "@/components/ui/sparkles-icon";
 import { ChainThemeToggle } from "@/components/ui/chain-theme-toggle";
 

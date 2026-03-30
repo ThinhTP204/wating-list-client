@@ -10,7 +10,7 @@ import Register from "./components/Register";
 import RegisterDialog from "./components/RegisterDialog";
 import Footer from "@/components/layout/Footer";
 import { useIsMobile } from "@/hooks/useMobile";
-import { RegisterDialogProvider } from "@/hooks/useRegisterDialog";
+import { RegisterDialogProvider } from "@/features/waitlist/hooks/useRegisterDialog";
 import SplashScreen from "@/components/SplashScreen";
 import Conclusion from "./components/Conclusion";
 

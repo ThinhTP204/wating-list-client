@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRegister } from "@/hooks/useRegister";
-import { useRegisterDialog } from "@/hooks/useRegisterDialog";
+import { useRegister } from "@/features/waitlist/hooks/useRegister";
+import { useRegisterDialog } from "@/features/waitlist/hooks/useRegisterDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

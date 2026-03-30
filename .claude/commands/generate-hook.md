@@ -1,6 +1,6 @@
 # /generate-hook
 
-Generate a typed React Query hook inside the appropriate feature module.
+Generate a typed React Query hook inside the appropriate feature module. (Tạo một React Query hook có đầy đủ type trong module feature phù hợp.)
 
 **Usage**: `/generate-hook [feature/resource] [--mutation]`
 

@@ -1,6 +1,6 @@
 # /enhance-ui
 
-Cải thiện giao diện của một component hiện có — nâng cao visual quality, animation, và UX mà không thay đổi behavior.
+Enhance the UI of an existing component — improve visual quality, animation, and UX without changing behavior. (Cải thiện giao diện của một component hiện có — nâng cao visual quality, animation, và UX mà không thay đổi behavior.)
 
 **Usage**: `/enhance-ui [file hoặc component name]`
 

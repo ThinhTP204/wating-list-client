@@ -1,6 +1,6 @@
 # /new-feature
 
-Scaffold a new feature following the FSD architecture.
+Scaffold a new feature following the FSD architecture. (Khởi tạo cấu trúc cơ bản cho một feature mới theo kiến trúc FSD.)
 
 **Usage**: `/new-feature [feature-name]`
 

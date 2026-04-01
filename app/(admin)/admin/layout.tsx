@@ -10,6 +10,7 @@ const ADMIN_TABS: TabDef[] = [
   { name: "Chấm công", tab: "time-keeping" },
   { name: "Yêu cầu", tab: "request" },
   { name: "Lương", tab: "salary" },
+  { name: "Nhắn tin", tab: "chat" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

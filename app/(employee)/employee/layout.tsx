@@ -7,6 +7,7 @@ const EMPLOYEE_TABS: TabDef[] = [
   { name: "Lịch ca", tab: "calendar" },
   { name: "Đổi ca", tab: "shift-swap" },
   { name: "Thu nhập", tab: "earnings" },
+  { name: "Nhắn tin", tab: "chat" },
 ];
 
 export default function EmployeeLayout({ children }: { children: React.ReactNode }) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Plus,
@@ -97,6 +98,7 @@ function EmptyPanel({
 }
 
 export default function Page() {
+  const router = useRouter();
   const [posts, setPosts]         = useState<ShiftSwapPost[]>(MOCK_POSTS);
   const [available, setAvailable] = useState<AvailableEmployee[]>(MOCK_AVAILABLE);
   const [notifications, setNotifications] = useState<AppNotification[]>(MOCK_NOTIFICATIONS);
@@ -424,8 +426,14 @@ export default function Page() {
                     >
                       <AvailableCard
                         employee={emp}
-                        onContact={(e) => console.log("contact", e.name)}
-                        onInvite={(e) => console.log("invite", e.name)}
+                        onContact={(e) => {
+                          const message = `Xin chào ${e.name}, quản lý muốn trao đổi về lịch ca ngày ${new Date(e.availableDate).toLocaleDateString("vi-VN")} với bạn.`;
+                          router.push(`/admin?tab=chat&prefill=${encodeURIComponent(message)}`);
+                        }}
+                        onInvite={(e) => {
+                          const message = `Xin chào ${e.name}, bạn có thể nhận ca này không? Vui lòng phản hồi sớm nhé.`;
+                          router.push(`/admin?tab=chat&prefill=${encodeURIComponent(message)}`);
+                        }}
                         onCancel={handleCancelAvail}
                       />
                     </motion.div>
@@ -472,7 +480,10 @@ export default function Page() {
                     >
                       <ShiftSwapCard
                         post={post}
-                        onContact={(p) => console.log("contact", p.authorName)}
+                        onContact={(p) => {
+                          const message = `Xin chào ${p.authorName}, quản lý muốn trao đổi về yêu cầu đổi ca ${p.myShift.type} (${p.myShift.timeLabel}) ngày ${new Date(p.myShift.date).toLocaleDateString("vi-VN")} của bạn.`;
+                          router.push(`/admin?tab=chat&prefill=${encodeURIComponent(message)}`);
+                        }}
                         onAccept={handleAcceptSwap}
                         onCancel={handleCancelSwap}
                       />

@@ -4,6 +4,7 @@ import EmployeesPage from "@/app/(admin)/admin/components/employees/EmployeesPag
 import TimeKeepingPage from "@/app/(admin)/admin/components/time-keeping/TimeKeepingPage";
 import RequestPage from "@/app/(admin)/admin/components/request/RequestPage";
 import SalaryPage from "@/app/(admin)/admin/components/salary/SalaryPage";
+import ChatPage from "@/app/(features)/features/components/chat/ChatPage";
 
 const TAB_COMPONENTS: Record<string, React.ComponentType> = {
   dashboard: DashboardPage,
@@ -12,6 +13,7 @@ const TAB_COMPONENTS: Record<string, React.ComponentType> = {
   "time-keeping": TimeKeepingPage,
   request: RequestPage,
   salary: SalaryPage,
+  chat: ChatPage,
 };
 
 export default async function AdminPage({

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Plus,
@@ -135,6 +136,7 @@ function KarmaScoreRing({ score }: { score: number }) {
 }
 
 export default function UserRequestPage() {
+  const router = useRouter();
   const [posts, setPosts] = useState<ShiftSwapPost[]>(MOCK_POSTS);
   const [available, setAvailable] = useState<AvailableEmployee[]>(MOCK_AVAILABLE);
   const [notifications, setNotifications] = useState<AppNotification[]>(MOCK_NOTIFICATIONS);
@@ -554,7 +556,10 @@ export default function UserRequestPage() {
                     >
                       <ShiftSwapCard
                         post={post}
-                        onContact={(p) => console.log("contact", p.authorName)}
+                        onContact={(p) => {
+                          const message = `Xin chào ${p.authorName}, mình thấy bạn cần đổi ca ${p.myShift.type} (${p.myShift.timeLabel}) ngày ${new Date(p.myShift.date).toLocaleDateString("vi-VN")}. Mình có thể hỗ trợ bạn không?`;
+                          router.push(`/employee?tab=chat&prefill=${encodeURIComponent(message)}`);
+                        }}
                         onAccept={handleAccept}
                       />
                     </motion.div>
@@ -589,8 +594,14 @@ export default function UserRequestPage() {
                     >
                       <AvailableCard
                         employee={emp}
-                        onContact={(e) => console.log("contact", e.name)}
-                        onInvite={(e) => console.log("invite", e.name)}
+                        onContact={(e) => {
+                          const message = `Xin chào ${e.name}, mình thấy bạn sẵn sàng nhận ca ngày ${new Date(e.availableDate).toLocaleDateString("vi-VN")}. Mình muốn trao đổi thêm về lịch ca với bạn.`;
+                          router.push(`/employee?tab=chat&prefill=${encodeURIComponent(message)}`);
+                        }}
+                        onInvite={(e) => {
+                          const message = `Xin chào ${e.name}, mình muốn mời bạn nhận ca của mình. Bạn có thể giúp được không?`;
+                          router.push(`/employee?tab=chat&prefill=${encodeURIComponent(message)}`);
+                        }}
                       />
                     </motion.div>
                   ))

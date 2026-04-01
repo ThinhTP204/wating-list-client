@@ -41,6 +41,7 @@ export function formatMonthYear(date: Date): string {
 export function formatWeekRangeLabel(baseDate: Date): string {
   const monday = getMonday(baseDate);
   const sunday = addDays(monday, 6);
-  const format = (d: Date) => `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
+  const format = (d: Date) =>
+    `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
   return `${format(monday)} - ${format(sunday)}`;
 }

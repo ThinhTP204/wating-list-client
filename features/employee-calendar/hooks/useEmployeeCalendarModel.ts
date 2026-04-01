@@ -35,13 +35,16 @@ export function useEmployeeCalendarModel(): EmployeeCalendarModel {
     };
   }, [baseDate, viewMode]);
 
-  const { data: shifts = [], isLoading: shiftsLoading, isError: shiftsError } = useShiftsByEmployee(
-    DEMO_EMPLOYEE_ID,
-    fetchRange.start,
-    fetchRange.end,
-    true
-  );
-  const { data: configs = [], isLoading: configsLoading, isError: configsError } = useShiftConfigs();
+  const {
+    data: shifts = [],
+    isLoading: shiftsLoading,
+    isError: shiftsError,
+  } = useShiftsByEmployee(DEMO_EMPLOYEE_ID, fetchRange.start, fetchRange.end, true);
+  const {
+    data: configs = [],
+    isLoading: configsLoading,
+    isError: configsError,
+  } = useShiftConfigs();
 
   const configsMap = useMemo(
     () => new Map<string, ShiftConfig>(configs.map((config) => [config.id, config])),

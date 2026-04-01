@@ -37,9 +37,15 @@ export default function EmployeeCalendarPage() {
       <div className="h-full bg-brand-tint p-4 sm:p-6">
         <div className="mx-auto flex max-w-xl flex-col items-center rounded-2xl border border-red-300 bg-red-50 px-6 py-10 text-center dark:border-red-900 dark:bg-red-950/20">
           <AlertTriangle className="h-8 w-8 text-red-500" />
-          <p className="mt-3 text-card-title text-red-700 dark:text-red-300">Khong tai duoc lich ca</p>
-          <p className="mt-1 text-body text-red-600 dark:text-red-400">Vui long thu lai sau it phut.</p>
-          <Button onClick={model.goToday} className="mt-4">Ve hom nay</Button>
+          <p className="mt-3 text-card-title text-red-700 dark:text-red-300">
+            Khong tai duoc lich ca
+          </p>
+          <p className="mt-1 text-body text-red-600 dark:text-red-400">
+            Vui long thu lai sau it phut.
+          </p>
+          <Button onClick={model.goToday} className="mt-4">
+            Ve hom nay
+          </Button>
         </div>
       </div>
     );

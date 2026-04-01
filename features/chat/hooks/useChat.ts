@@ -1,40 +1,121 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { QUERY_KEYS } from "@/lib/constants";
 import type { ApiError } from "@/shared/lib/api/client";
-import { fetchMessages, sendMessage } from "@/features/chat/services/chatApi";
-import type { ChatMessage, SendMessagePayload } from "@/features/chat/types";
+import {
+  DEFAULT_GROUP_ID,
+  fetchChatUsers,
+  fetchConversations,
+  fetchMessagesByConversation,
+  openDirectConversation,
+  sendConversationMessage,
+} from "@/features/chat/services/chatApi";
+import type {
+  ChatConversation,
+  ChatMessage,
+  ChatParticipant,
+  OpenDirectConversationPayload,
+  SendMessagePayload,
+} from "@/features/chat/types";
 
-// ── Query hook ─────────────────────────────────────────────────────────────
-
-interface UseChatMessagesOptions {
-  enabled: boolean;
+interface UseChatConversationsOptions {
+  currentUserId: string;
+  enabled?: boolean;
 }
 
-export function useChatMessages({ enabled }: UseChatMessagesOptions) {
+interface UseChatMessagesOptions {
+  conversationId: string;
+  currentUserId: string;
+  enabled?: boolean;
+}
+
+interface UseChatUsersOptions {
+  currentUserId: string;
+  enabled?: boolean;
+}
+
+export function useChatConversations({
+  currentUserId,
+  enabled = true,
+}: UseChatConversationsOptions) {
+  return useQuery<ChatConversation[], ApiError>({
+    queryKey: [QUERY_KEYS.CHAT_CONVERSATIONS, currentUserId],
+    queryFn: () => fetchConversations({ currentUserId }),
+    enabled: enabled && !!currentUserId,
+    refetchInterval: 10000,
+    refetchIntervalInBackground: false,
+  });
+}
+
+export function useChatMessages({
+  conversationId,
+  currentUserId,
+  enabled = true,
+}: UseChatMessagesOptions) {
   return useQuery<ChatMessage[], ApiError>({
-    queryKey: [QUERY_KEYS.CHAT_MESSAGES],
-    queryFn: fetchMessages,
-    enabled,
+    queryKey: [QUERY_KEYS.CHAT_MESSAGES, conversationId, currentUserId],
+    queryFn: () => fetchMessagesByConversation({ conversationId, currentUserId }),
+    enabled: enabled && !!conversationId && !!currentUserId,
     refetchInterval: 5000,
     refetchIntervalInBackground: false,
   });
 }
 
-// ── Mutation hook ──────────────────────────────────────────────────────────
+export function useChatUsers({ currentUserId, enabled = true }: UseChatUsersOptions) {
+  return useQuery<ChatParticipant[], ApiError>({
+    queryKey: [QUERY_KEYS.CHAT_USERS, currentUserId],
+    queryFn: () => fetchChatUsers(currentUserId),
+    enabled: enabled && !!currentUserId,
+    staleTime: 60_000,
+  });
+}
 
-export function useSendMessage() {
+export function useOpenDirectConversation() {
+  const queryClient = useQueryClient();
+
+  return useMutation<ChatConversation, ApiError, OpenDirectConversationPayload>({
+    mutationFn: openDirectConversation,
+    onSuccess: (conversation, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.CHAT_CONVERSATIONS, payload.currentUserId],
+      });
+
+      queryClient.setQueryData<ChatConversation[]>(
+        [QUERY_KEYS.CHAT_CONVERSATIONS, payload.currentUserId],
+        (old) => {
+          if (!old) {
+            return [conversation];
+          }
+
+          const withoutCurrent = old.filter((item) => item.id !== conversation.id);
+          return [conversation, ...withoutCurrent];
+        }
+      );
+    },
+    onError: () => {
+      toast.error("Không thể mở cuộc trò chuyện riêng. Vui lòng thử lại.");
+    },
+  });
+}
+
+export function useSendMessage(currentUserId: string) {
   const queryClient = useQueryClient();
 
   return useMutation<ChatMessage, ApiError, SendMessagePayload>({
-    mutationFn: sendMessage,
+    mutationFn: sendConversationMessage,
     onMutate: async (payload) => {
-      await queryClient.cancelQueries({ queryKey: [QUERY_KEYS.CHAT_MESSAGES] });
+      const messageKey = [QUERY_KEYS.CHAT_MESSAGES, payload.conversationId, currentUserId] as const;
+      const conversationKey = [QUERY_KEYS.CHAT_CONVERSATIONS, currentUserId] as const;
 
-      const previous = queryClient.getQueryData<ChatMessage[]>([QUERY_KEYS.CHAT_MESSAGES]);
+      await queryClient.cancelQueries({ queryKey: messageKey });
+
+      const previousMessages = queryClient.getQueryData<ChatMessage[]>(messageKey);
+      const previousConversations = queryClient.getQueryData<ChatConversation[]>(conversationKey);
 
       const optimistic: ChatMessage = {
         id: `optimistic-${Date.now()}`,
+        conversationId: payload.conversationId,
+        senderId: payload.senderId,
         senderName: payload.senderName,
         senderRole: payload.senderRole,
         senderInitial:
@@ -45,21 +126,67 @@ export function useSendMessage() {
         isOwn: true,
       };
 
-      queryClient.setQueryData<ChatMessage[]>([QUERY_KEYS.CHAT_MESSAGES], (old) =>
+      queryClient.setQueryData<ChatMessage[]>(messageKey, (old) =>
         old ? [...old, optimistic] : [optimistic]
       );
 
-      return { previous };
+      queryClient.setQueryData<ChatConversation[]>(conversationKey, (old) => {
+        if (!old) {
+          return old;
+        }
+
+        const updated = old.map((item) =>
+          item.id === payload.conversationId
+            ? {
+                ...item,
+                updatedAt: optimistic.createdAt,
+              }
+            : item
+        );
+
+        return updated.sort(
+          (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
+      });
+
+      return { previousMessages, previousConversations, messageKey, conversationKey };
     },
     onError: (_error, _variables, context) => {
-      const ctx = context as { previous?: ChatMessage[] } | undefined;
-      if (ctx?.previous !== undefined) {
-        queryClient.setQueryData([QUERY_KEYS.CHAT_MESSAGES], ctx.previous);
+      const ctx = context as
+        | {
+            previousMessages?: ChatMessage[];
+            previousConversations?: ChatConversation[];
+            messageKey?: readonly [string, string, string];
+            conversationKey?: readonly [string, string];
+          }
+        | undefined;
+
+      if (ctx?.messageKey && ctx.previousMessages) {
+        queryClient.setQueryData(ctx.messageKey, ctx.previousMessages);
       }
+
+      if (ctx?.conversationKey && ctx.previousConversations) {
+        queryClient.setQueryData(ctx.conversationKey, ctx.previousConversations);
+      }
+
       toast.error("Không thể gửi tin nhắn. Vui lòng thử lại.");
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.CHAT_MESSAGES] });
+    onSettled: (_data, _error, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.CHAT_MESSAGES, variables.conversationId, currentUserId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.CHAT_CONVERSATIONS, currentUserId],
+      });
     },
+  });
+}
+
+// Compatibility helpers for legacy single-group chat paths.
+export function useLegacyChatMessages(enabled: boolean, currentUserId: string) {
+  return useChatMessages({
+    conversationId: DEFAULT_GROUP_ID,
+    currentUserId,
+    enabled,
   });
 }

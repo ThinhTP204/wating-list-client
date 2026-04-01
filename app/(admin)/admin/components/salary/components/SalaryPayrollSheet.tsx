@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import SafeImage from "@/components/ui/SafeImage";
-import { BanknoteArrowUp, CalendarClock, CircleAlert, Clock3, QrCode } from "lucide-react";
+import { BanknoteArrowUp, CircleAlert, Clock3 } from "lucide-react";
 
 interface Props {
   employees: EmployeeSalaryRow[];
@@ -149,12 +149,6 @@ export default function SalaryPayrollSheet({ employees }: Props) {
   const activePlannedHours = activeEmployee ? getPlannedHours(activeEmployee) : 0;
   const activeWorkedHours = activeEmployee ? getWorkedHours(activeEmployee) : 0;
   const activeShiftLogs = activeEmployee ? getPayrollShiftLogs(activeEmployee) : [];
-
-  const qrPayload = activeEmployee
-    ? `BANK:${getBankCodeByDepartment(activeEmployee.department)}|ACC:${getAccountNumber(activeEmployee)}|AMOUNT:${activeEmployee.actualSalary}|DESC:Luong thang 03/2026 - ${activeEmployee.name}`
-    : "";
-
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(qrPayload)}`;
 
   return (
     <div className="bg-white dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden">
@@ -341,7 +335,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
       )}
 
       <Dialog open={!!activeEmployee} onOpenChange={(open) => !open && setActiveEmployee(null)}>
-        <DialogContent className="max-h-[90vh] w-[96vw] max-w-6xl overflow-hidden border-slate-200 bg-white p-0 dark:border-neutral-800 dark:bg-neutral-950">
+        <DialogContent className="max-h-[90vh] w-[96vw] max-w-6xl overflow-hidden border-slate-200 bg-white p-0 dark:border-neutral-800 dark:bg-neutral-950 [&>button]:hidden">
           <DialogTitle className="sr-only">Chi tiết bảng lương nhân viên</DialogTitle>
 
           {activeEmployee && activeEmployeeStatus && (
@@ -357,7 +351,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
 
                 <div className="mt-4 rounded-2xl bg-white p-3 shadow-lg">
                   <SafeImage
-                    src={qrUrl}
+                    src="/QR.png"
                     alt={`QR chuyen khoan ${activeEmployee.name}`}
                     width={280}
                     height={280}

@@ -36,6 +36,7 @@ interface ShiftSchedulerGridProps {
   shifts: Shift[];
   configs: ShiftConfig[];
   employees: MockEmployee[];
+  disableAddShift?: boolean;
   onAddShift: (employeeId: string, date: string) => void;
   onEditShift: (shift: Shift) => void;
   onMoveShift: (shiftId: string, newEmployeeId: string, newDate: string) => void;
@@ -47,6 +48,7 @@ export default function ShiftSchedulerGrid({
   shifts,
   configs,
   employees,
+  disableAddShift,
   onAddShift,
   onEditShift,
   onMoveShift,
@@ -86,7 +88,10 @@ export default function ShiftSchedulerGrid({
       <div className="overflow-x-auto">
         <div
           className={cn(viewMode === "month" ? "min-w-[1200px]" : "min-w-[900px]")}
-          style={{ display: "grid", gridTemplateColumns: `240px repeat(${viewDays.length}, minmax(${colWidth}, 1fr))` }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: `240px repeat(${viewDays.length}, minmax(${colWidth}, 1fr))`,
+          }}
         >
           {/* ── Header row ── */}
           <div className="sticky top-0 left-0 z-30 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border-b border-r border-slate-200 dark:border-neutral-700 px-3 py-2 flex items-end shadow-[2px_0_8px_-4px_rgba(0,0,0,0.06)] dark:shadow-[2px_0_8px_-4px_rgba(0,0,0,0.25)]">
@@ -106,21 +111,36 @@ export default function ShiftSchedulerGrid({
                   isToday
                     ? "bg-blue-50/80 dark:bg-blue-900/20"
                     : isWeekend
-                    ? "bg-slate-50/80 dark:bg-neutral-800/50"
-                    : "bg-white dark:bg-neutral-900/80 backdrop-blur-md"
+                      ? "bg-slate-50/80 dark:bg-neutral-800/50"
+                      : "bg-white dark:bg-neutral-900/80 backdrop-blur-md"
                 )}
               >
-                <p className={cn("text-xs font-semibold", isWeekend ? "text-slate-400" : "text-slate-500")}>
+                <p
+                  className={cn(
+                    "text-xs font-semibold",
+                    isWeekend ? "text-slate-400" : "text-slate-500"
+                  )}
+                >
                   {dayName}
                 </p>
                 {isToday ? (
                   <div className="flex items-center justify-center mt-0.5">
-                    <span className={cn("rounded-full bg-[#1D4D8F] text-white font-bold flex items-center justify-center leading-none", viewMode === "month" ? "w-6 h-6 text-sm" : "w-8 h-8 text-base")}>
+                    <span
+                      className={cn(
+                        "rounded-full bg-[#1D4D8F] text-white font-bold flex items-center justify-center leading-none",
+                        viewMode === "month" ? "w-6 h-6 text-sm" : "w-8 h-8 text-base"
+                      )}
+                    >
                       {dayNum}
                     </span>
                   </div>
                 ) : (
-                  <p className={cn("font-bold leading-tight text-slate-700 dark:text-slate-200", viewMode === "month" ? "text-base" : "text-lg")}>
+                  <p
+                    className={cn(
+                      "font-bold leading-tight text-slate-700 dark:text-slate-200",
+                      viewMode === "month" ? "text-base" : "text-lg"
+                    )}
+                  >
                     {dayNum}
                   </p>
                 )}
@@ -135,9 +155,7 @@ export default function ShiftSchedulerGrid({
             return (
               <div key={emp.id} className="contents group">
                 {/* Employee name cell */}
-                <div
-                  className="sticky left-0 z-10 border-b border-r border-slate-200 dark:border-neutral-700 px-2.5 py-2 flex items-center gap-2.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-[2px_0_8px_-4px_rgba(0,0,0,0.06)] dark:shadow-[2px_0_8px_-4px_rgba(0,0,0,0.25)]"
-                >
+                <div className="sticky left-0 z-10 border-b border-r border-slate-200 dark:border-neutral-700 px-2.5 py-2 flex items-center gap-2.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-[2px_0_8px_-4px_rgba(0,0,0,0.06)] dark:shadow-[2px_0_8px_-4px_rgba(0,0,0,0.25)]">
                   <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-white text-sm font-bold bg-gradient-to-br from-[#1D4D8F] to-[#4C88C6]">
                     {emp.name.split(" ").pop()?.charAt(0) ?? emp.name.charAt(0)}
                   </div>
@@ -170,6 +188,7 @@ export default function ShiftSchedulerGrid({
                       configs={configs}
                       isWeekend={isWeekend}
                       isToday={isToday}
+                      disableAddShift={disableAddShift}
                       onAddShift={onAddShift}
                       onEditShift={onEditShift}
                     />

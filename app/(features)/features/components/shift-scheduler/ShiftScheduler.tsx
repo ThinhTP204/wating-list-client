@@ -3,11 +3,13 @@
 import { useState, useMemo } from "react";
 import { AnimatePresence } from "motion/react";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Shift, ShiftStatus } from "@/features/shifts/types";
+import type { Shift, ShiftStatus, AIDraftConflict } from "@/features/shifts/types";
 import {
   useShifts,
   useShiftConfigs,
   useMockEmployees,
+  useGenerateAIDraft,
+  useApplyAIDraft,
   useCreateShift,
   useUpdateShift,
   useDeleteShift,
@@ -21,6 +23,7 @@ import ShiftSchedulerToolbar from "./components/ShiftSchedulerToolbar";
 import ShiftSchedulerGrid from "./components/ShiftSchedulerGrid";
 import ShiftConfigPanel from "./components/ShiftConfigPanel";
 import AssignShiftDialog from "./components/AssignShiftDialog";
+import AISchedulePreviewPanel from "./components/AISchedulePreviewPanel";
 
 // ── Date helpers ─────────────────────────────────────────────────────────────
 
@@ -54,6 +57,9 @@ export default function ShiftScheduler() {
   const [editingShift, setEditingShift] = useState<Shift | null>(null);
   const [prefillEmployeeId, setPrefillEmployeeId] = useState<string | undefined>();
   const [prefillDate, setPrefillDate] = useState<string | undefined>();
+  const [aiConflicts, setAiConflicts] = useState<AIDraftConflict[]>([]);
+  const [aiDraftShifts, setAiDraftShifts] = useState<Shift[]>([]);
+  const [isAIPreviewOpen, setIsAIPreviewOpen] = useState(false);
 
   const viewDays = useMemo(() => {
     if (viewMode === "week") {
@@ -86,6 +92,8 @@ export default function ShiftScheduler() {
   const deleteShift = useDeleteShift();
   const publishShifts = usePublishShifts();
   const copyWeekShifts = useCopyWeekShifts();
+  const generateAIDraft = useGenerateAIDraft();
+  const applyAIDraft = useApplyAIDraft();
 
   // Config mutations
   const createConfig = useCreateShiftConfig();
@@ -95,12 +103,15 @@ export default function ShiftScheduler() {
   const draftCount = shifts.filter((s) => s.status === "draft").length;
   const isLoading = shiftsLoading || configsLoading || employeesLoading;
 
-  const stats = useMemo(() => ({
-    total: shifts.length,
-    published: shifts.filter((s) => s.status === "published").length,
-    draft: shifts.filter((s) => s.status === "draft").length,
-    absent: shifts.filter((s) => s.status === "absent").length,
-  }), [shifts]);
+  const stats = useMemo(
+    () => ({
+      total: shifts.length,
+      published: shifts.filter((s) => s.status === "published").length,
+      draft: shifts.filter((s) => s.status === "draft").length,
+      absent: shifts.filter((s) => s.status === "absent").length,
+    }),
+    [shifts]
+  );
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -126,7 +137,10 @@ export default function ShiftScheduler() {
     note?: string;
   }) {
     if (editingShift) {
-      updateShift.mutate({ id: editingShift.id, ...payload }, { onSuccess: () => setDialogOpen(false) });
+      updateShift.mutate(
+        { id: editingShift.id, ...payload },
+        { onSuccess: () => setDialogOpen(false) }
+      );
     } else {
       createShift.mutate(payload, { onSuccess: () => setDialogOpen(false) });
     }
@@ -147,7 +161,77 @@ export default function ShiftScheduler() {
   function handleCopyPrevWeek() {
     // Only valid in week mode, copies previous week exactly
     const currentMonday = getMonday(baseDate);
-    copyWeekShifts.mutate({ sourceWeekStart: prevWeekStartStr, targetWeekStart: toISODate(currentMonday) });
+    copyWeekShifts.mutate({
+      sourceWeekStart: prevWeekStartStr,
+      targetWeekStart: toISODate(currentMonday),
+    });
+  }
+
+  function handleGenerateAISchedule() {
+    setAiConflicts([]);
+    setAiDraftShifts([]);
+    setIsAIPreviewOpen(true);
+    generateAIDraft.mutate(
+      { weekStart: fetchStartStr, weekEnd: fetchEndStr },
+      {
+        onSuccess: (result) => {
+          setAiDraftShifts(result.createdShifts);
+          setAiConflicts(result.conflicts);
+          setIsAIPreviewOpen(true);
+        },
+        onError: () => {
+          setIsAIPreviewOpen(false);
+        },
+      }
+    );
+  }
+
+  function handleMoveAIDraftShift(shiftId: string, newEmployeeId: string, newDate: string) {
+    setAiDraftShifts((prev) =>
+      prev.map((shift) => {
+        if (shift.id !== shiftId) {
+          return shift;
+        }
+        const employee = employees.find((item) => item.id === newEmployeeId);
+        if (!employee) {
+          return shift;
+        }
+        return {
+          ...shift,
+          employeeId: employee.id,
+          employeeName: employee.name,
+          employeeRole: employee.role,
+          date: newDate,
+          note: "AI draft da duoc admin chinh tay truoc khi ap dung",
+        };
+      })
+    );
+  }
+
+  function handleApplyAIDraft() {
+    if (aiDraftShifts.length === 0) {
+      return;
+    }
+
+    applyAIDraft.mutate(
+      {
+        weekStart: fetchStartStr,
+        weekEnd: fetchEndStr,
+        shifts: aiDraftShifts,
+      },
+      {
+        onSuccess: () => {
+          setAiDraftShifts([]);
+          setAiConflicts([]);
+          setIsAIPreviewOpen(false);
+        },
+      }
+    );
+  }
+
+  function handleDiscardAIDraft() {
+    setAiDraftShifts([]);
+    setAiConflicts([]);
   }
 
   function handlePrev() {
@@ -190,65 +274,86 @@ export default function ShiftScheduler() {
   return (
     <div className="p-4 h-full bg-slate-50/50 dark:bg-black/20">
       <div className="flex flex-col h-full overflow-hidden bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] border border-white dark:border-neutral-800">
-      <ShiftSchedulerToolbar
-        baseDate={viewMode === "week" ? getMonday(baseDate) : baseDate}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        draftCount={draftCount}
-        stats={stats}
-        configs={configs}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onToday={() => setBaseDate(new Date())}
-        onPublish={handlePublish}
-        onCopyPrevWeek={handleCopyPrevWeek}
-        onToggleConfigPanel={() => setIsConfigPanelOpen((v) => !v)}
-        isConfigPanelOpen={isConfigPanelOpen}
-        isPublishing={publishShifts.isPending}
-        isCopying={copyWeekShifts.isPending}
-      />
-
-      <div className="flex-1 overflow-y-auto">
-        <ShiftSchedulerGrid
-          viewDays={viewDays}
+        <ShiftSchedulerToolbar
+          baseDate={viewMode === "week" ? getMonday(baseDate) : baseDate}
           viewMode={viewMode}
-          shifts={shifts}
+          onViewModeChange={setViewMode}
+          draftCount={draftCount}
+          stats={stats}
+          configs={configs}
+          onPrev={handlePrev}
+          onNext={handleNext}
+          onToday={() => setBaseDate(new Date())}
+          onPublish={handlePublish}
+          onCopyPrevWeek={handleCopyPrevWeek}
+          onGenerateAI={handleGenerateAISchedule}
+          onToggleConfigPanel={() => setIsConfigPanelOpen((v) => !v)}
+          isConfigPanelOpen={isConfigPanelOpen}
+          isPublishing={publishShifts.isPending}
+          isCopying={copyWeekShifts.isPending}
+          isGeneratingAI={generateAIDraft.isPending}
+        />
+
+        <AISchedulePreviewPanel
+          draftShifts={aiDraftShifts}
+          conflicts={aiConflicts}
           configs={configs}
           employees={employees}
-          onAddShift={openAddDialog}
-          onEditShift={openEditDialog}
-          onMoveShift={handleMoveShift}
+          viewDays={viewDays}
+          isSaving={applyAIDraft.isPending}
+          onMoveDraftShift={handleMoveAIDraftShift}
+          onApplyDraft={handleApplyAIDraft}
+          onDiscardDraft={() => {
+            handleDiscardAIDraft();
+            setIsAIPreviewOpen(false);
+          }}
+          open={isAIPreviewOpen}
+          onOpenChange={setIsAIPreviewOpen}
+        />
+
+        <div className="flex-1 overflow-y-auto">
+          <ShiftSchedulerGrid
+            viewDays={viewDays}
+            viewMode={viewMode}
+            shifts={shifts}
+            configs={configs}
+            employees={employees}
+            onAddShift={openAddDialog}
+            onEditShift={openEditDialog}
+            onMoveShift={handleMoveShift}
+          />
+        </div>
+
+        {/* Config panel overlay */}
+        <AnimatePresence>
+          {isConfigPanelOpen && (
+            <ShiftConfigPanel
+              configs={configs}
+              onClose={() => setIsConfigPanelOpen(false)}
+              onCreate={(data) => createConfig.mutate(data)}
+              onUpdate={(id, data) => updateConfig.mutate({ id, data })}
+              onDelete={(id) => deleteConfig.mutate(id)}
+              isMutating={
+                createConfig.isPending || updateConfig.isPending || deleteConfig.isPending
+              }
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Assign/edit dialog */}
+        <AssignShiftDialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          editingShift={editingShift}
+          prefillEmployeeId={prefillEmployeeId}
+          prefillDate={prefillDate}
+          employees={employees}
+          configs={configs}
+          onSave={handleSaveShift}
+          onDelete={handleDeleteShift}
+          isSaving={createShift.isPending || updateShift.isPending || deleteShift.isPending}
         />
       </div>
-
-      {/* Config panel overlay */}
-      <AnimatePresence>
-        {isConfigPanelOpen && (
-          <ShiftConfigPanel
-            configs={configs}
-            onClose={() => setIsConfigPanelOpen(false)}
-            onCreate={(data) => createConfig.mutate(data)}
-            onUpdate={(id, data) => updateConfig.mutate({ id, data })}
-            onDelete={(id) => deleteConfig.mutate(id)}
-            isMutating={createConfig.isPending || updateConfig.isPending || deleteConfig.isPending}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Assign/edit dialog */}
-      <AssignShiftDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        editingShift={editingShift}
-        prefillEmployeeId={prefillEmployeeId}
-        prefillDate={prefillDate}
-        employees={employees}
-        configs={configs}
-        onSave={handleSaveShift}
-        onDelete={handleDeleteShift}
-        isSaving={createShift.isPending || updateShift.isPending || deleteShift.isPending}
-      />
-    </div>
     </div>
   );
 }

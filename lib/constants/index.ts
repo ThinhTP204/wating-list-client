@@ -18,6 +18,8 @@ export const QUERY_KEYS = {
   SHIFT_CONFIGS: "shift-configs",
   SHIFTS: "shifts",
   MOCK_EMPLOYEES: "mock-employees",
+  AVAILABILITY: "availability",
+  STAFFING_DEMAND: "staffing-demand",
 } as const;
 
 // Routes

@@ -2,9 +2,22 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { QUERY_KEYS } from "@/lib/constants";
 import type { ApiError } from "@/shared/lib/api/client";
-import type { ShiftConfig, Shift, MockEmployee } from "@/features/shifts/types";
+import type {
+  ShiftConfig,
+  Shift,
+  MockEmployee,
+  Availability,
+  StaffingDemand,
+  AIGenerateDraftResult,
+} from "@/features/shifts/types";
 import {
   fetchMockEmployees,
+  fetchAvailability,
+  upsertAvailability,
+  fetchStaffingDemand,
+  upsertStaffingDemand,
+  generateAIDraftSchedule,
+  applyAIDraftSchedule,
   fetchShiftConfigs,
   createShiftConfig,
   updateShiftConfig,
@@ -28,6 +41,69 @@ export function useMockEmployees() {
     queryKey: [QUERY_KEYS.MOCK_EMPLOYEES],
     queryFn: fetchMockEmployees,
     staleTime: Infinity,
+  });
+}
+
+export function useAvailability(weekStart: string, weekEnd: string, enabled = true) {
+  return useQuery<Availability[], ApiError>({
+    queryKey: [QUERY_KEYS.AVAILABILITY, weekStart, weekEnd],
+    queryFn: () => fetchAvailability(weekStart, weekEnd),
+    enabled: enabled && !!weekStart && !!weekEnd,
+  });
+}
+
+export function useUpsertAvailability() {
+  const qc = useQueryClient();
+  return useMutation<Availability[], ApiError, Availability[]>({
+    mutationFn: upsertAvailability,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [QUERY_KEYS.AVAILABILITY] });
+      toast.success("Da cap nhat dang ky ranh");
+    },
+    onError: () => toast.error("Khong the cap nhat dang ky ranh. Vui long thu lai."),
+  });
+}
+
+export function useStaffingDemand() {
+  return useQuery<StaffingDemand[], ApiError>({
+    queryKey: [QUERY_KEYS.STAFFING_DEMAND],
+    queryFn: fetchStaffingDemand,
+  });
+}
+
+export function useUpsertStaffingDemand() {
+  const qc = useQueryClient();
+  return useMutation<StaffingDemand[], ApiError, StaffingDemand[]>({
+    mutationFn: upsertStaffingDemand,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [QUERY_KEYS.STAFFING_DEMAND] });
+      toast.success("Da cap nhat nhu cau nhan su");
+    },
+    onError: () => toast.error("Khong the cap nhat nhu cau nhan su. Vui long thu lai."),
+  });
+}
+
+export function useGenerateAIDraft() {
+  const qc = useQueryClient();
+  return useMutation<AIGenerateDraftResult, ApiError, { weekStart: string; weekEnd: string }>({
+    mutationFn: ({ weekStart, weekEnd }) => generateAIDraftSchedule({ weekStart, weekEnd }),
+    onSuccess: () => {
+      toast.success("AI da de xuat lich nhap");
+    },
+    onError: () => toast.error("Khong the xep lich bang AI. Vui long thu lai."),
+  });
+}
+
+export function useApplyAIDraft() {
+  const qc = useQueryClient();
+  return useMutation<Shift[], ApiError, { weekStart: string; weekEnd: string; shifts: Shift[] }>({
+    mutationFn: ({ weekStart, weekEnd, shifts }) =>
+      applyAIDraftSchedule({ weekStart, weekEnd, shifts }),
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: [QUERY_KEYS.SHIFTS] });
+      toast.success(`Da ap dung ${data.length} ca AI vao lich tuan`);
+    },
+    onError: () => toast.error("Khong the ap dung lich AI. Vui long thu lai."),
   });
 }
 
@@ -55,14 +131,16 @@ export function useCreateShiftConfig() {
 
 export function useUpdateShiftConfig() {
   const qc = useQueryClient();
-  return useMutation<ShiftConfig, ApiError, { id: string; data: Partial<Omit<ShiftConfig, "id">> }>({
-    mutationFn: ({ id, data }) => updateShiftConfig(id, data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: [QUERY_KEYS.SHIFT_CONFIGS] });
-      toast.success("Đã cập nhật cấu hình ca");
-    },
-    onError: () => toast.error("Không thể cập nhật cấu hình ca. Vui lòng thử lại."),
-  });
+  return useMutation<ShiftConfig, ApiError, { id: string; data: Partial<Omit<ShiftConfig, "id">> }>(
+    {
+      mutationFn: ({ id, data }) => updateShiftConfig(id, data),
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: [QUERY_KEYS.SHIFT_CONFIGS] });
+        toast.success("Đã cập nhật cấu hình ca");
+      },
+      onError: () => toast.error("Không thể cập nhật cấu hình ca. Vui lòng thử lại."),
+    }
+  );
 }
 
 export function useDeleteShiftConfig() {

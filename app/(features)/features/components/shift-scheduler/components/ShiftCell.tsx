@@ -13,6 +13,7 @@ interface ShiftCellProps {
   configs: ShiftConfig[];
   isWeekend: boolean;
   isToday: boolean;
+  disableAddShift?: boolean;
   onAddShift: (employeeId: string, date: string) => void;
   onEditShift: (shift: Shift) => void;
 }
@@ -24,6 +25,7 @@ export default function ShiftCell({
   configs,
   isWeekend,
   isToday,
+  disableAddShift,
   onAddShift,
   onEditShift,
 }: ShiftCellProps) {
@@ -33,19 +35,24 @@ export default function ShiftCell({
   return (
     <div
       ref={setNodeRef}
-      onClick={() => onAddShift(employeeId, date)}
+      onClick={() => {
+        if (!disableAddShift) {
+          onAddShift(employeeId, date);
+        }
+      }}
       className={cn(
         "group relative min-h-[68px] p-1.5 border-b border-r border-slate-100 dark:border-neutral-800",
         "transition-all duration-150 cursor-pointer flex flex-col gap-1.5",
         isWeekend && "bg-slate-50/50 dark:bg-neutral-900/50",
         isToday && "bg-blue-50/30 dark:bg-blue-950/10",
         isOver && "bg-blue-100 dark:bg-blue-900/30 ring-2 ring-inset ring-blue-400",
-        "hover:bg-slate-50 dark:hover:bg-neutral-800/40"
+        "hover:bg-slate-50 dark:hover:bg-neutral-800/40",
+        disableAddShift && "cursor-default"
       )}
     >
       {/* Dashed Hover Overlay */}
       <div className="absolute inset-1 pointer-events-none rounded border-2 border-dashed border-transparent transition-colors duration-200 group-hover:border-blue-300 dark:group-hover:border-blue-700/60 z-0 flex items-center justify-center opacity-0 group-hover:opacity-100">
-        {shifts.length === 0 && (
+        {!disableAddShift && shifts.length === 0 && (
           <Plus className="w-5 h-5 text-blue-400 scale-90 group-hover:scale-110 transition-transform duration-200" />
         )}
       </div>

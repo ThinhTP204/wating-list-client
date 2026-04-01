@@ -1,6 +1,14 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Copy, Send, Settings, CalendarDays } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+  Send,
+  Settings,
+  CalendarDays,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -44,10 +52,12 @@ interface ShiftSchedulerToolbarProps {
   onToday: () => void;
   onPublish: () => void;
   onCopyPrevWeek: () => void;
+  onGenerateAI: () => void;
   onToggleConfigPanel: () => void;
   isConfigPanelOpen: boolean;
   isPublishing?: boolean;
   isCopying?: boolean;
+  isGeneratingAI?: boolean;
 }
 
 export default function ShiftSchedulerToolbar({
@@ -62,10 +72,12 @@ export default function ShiftSchedulerToolbar({
   onToday,
   onPublish,
   onCopyPrevWeek,
+  onGenerateAI,
   onToggleConfigPanel,
   isConfigPanelOpen,
   isPublishing,
   isCopying,
+  isGeneratingAI,
 }: ShiftSchedulerToolbarProps) {
   const weekLabel = formatWeekLabel(baseDate);
   const weekNum = getWeekNumber(baseDate);
@@ -139,17 +151,29 @@ export default function ShiftSchedulerToolbar({
 
           <Button
             size="sm"
+            onClick={onGenerateAI}
+            disabled={isGeneratingAI}
+            className="h-8 text-xs border-0 text-white bg-linear-to-r from-violet-600 to-fuchsia-600 hover:brightness-110"
+          >
+            <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+            {isGeneratingAI ? "AI đang xếp..." : "Sắp xếp lịch ca bằng A.I"}
+          </Button>
+
+          <Button
+            size="sm"
             onClick={onPublish}
             disabled={isPublishing || draftCount === 0}
             className={cn(
               "h-8 text-xs border-0 text-white",
               draftCount > 0
-                ? "bg-gradient-to-r from-[#1D4D8F] to-[#4C88C6] hover:brightness-110"
+                ? "bg-linear-to-r from-brand-700 to-brand-500 hover:brightness-110"
                 : "bg-slate-200 dark:bg-neutral-700 text-slate-400 cursor-not-allowed"
             )}
           >
             <Send className="w-3.5 h-3.5 mr-1.5" />
-            {isPublishing ? "Đang công bố..." : `Công bố${draftCount > 0 ? ` (${draftCount})` : ""}`}
+            {isPublishing
+              ? "Đang công bố..."
+              : `Công bố${draftCount > 0 ? ` (${draftCount})` : ""}`}
           </Button>
 
           <Button
@@ -170,7 +194,10 @@ export default function ShiftSchedulerToolbar({
       <div className="flex items-center justify-between gap-4 px-4 py-2 border-t border-slate-100 dark:border-neutral-800 flex-wrap">
         {/* Stats pills */}
         <div className="flex items-center gap-2 flex-wrap">
-          <Badge variant="outline" className="text-xs font-medium text-slate-600 dark:text-slate-300">
+          <Badge
+            variant="outline"
+            className="text-xs font-medium text-slate-600 dark:text-slate-300"
+          >
             Tổng: {stats.total}
           </Badge>
           <Badge

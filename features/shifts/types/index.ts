@@ -4,15 +4,45 @@ export interface ShiftConfig {
   id: string;
   name: string;
   startTime: string; // "08:30"
-  endTime: string;   // "17:30"
-  color: string;     // hex
+  endTime: string; // "17:30"
+  color: string; // hex
   isBreak: boolean;
 }
 
 export interface MockEmployee {
   id: string;
   name: string;
-  role: string; // default: "Nhân viên" — businesses define custom roles
+  role: string; // e.g. "Nhân viên", "Trưởng ca", "Thu ngân"
+}
+
+export type AvailabilityStatus = "available" | "busy" | "preferred";
+
+export interface Availability {
+  employeeId: string;
+  date: string;
+  status: AvailabilityStatus;
+}
+
+export interface StaffingDemand {
+  dayOfWeek: number; // 0-6
+  shiftConfigId: string;
+  minStaff: number;
+  requiredRole?: string;
+}
+
+export interface AIDraftConflict {
+  date: string;
+  shiftConfigId: string;
+  required: number;
+  assigned: number;
+  reason: string;
+  suggestion: string;
+}
+
+export interface AIGenerationMeta {
+  generated: boolean;
+  reason?: string;
+  confidenceScore?: number;
 }
 
 export interface Shift {
@@ -24,6 +54,12 @@ export interface Shift {
   date: string; // "YYYY-MM-DD"
   status: ShiftStatus;
   note?: string;
+  aiMeta?: AIGenerationMeta;
+}
+
+export interface AIGenerateDraftResult {
+  createdShifts: Shift[];
+  conflicts: AIDraftConflict[];
 }
 
 export const SHIFT_STATUS_META: Record<

@@ -622,7 +622,7 @@ export default function UserRequestPage() {
                           }}
                           className="h-8 flex-1 border-0 bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] text-xs text-white"
                         >
-                          Moi nhan ca
+                          Mời nhận ca
                         </Button>
                       </div>
                     </div>

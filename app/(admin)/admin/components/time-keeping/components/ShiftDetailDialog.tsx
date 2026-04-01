@@ -3,11 +3,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -20,14 +16,19 @@ import type { Shift, AttendanceStatus } from "../TimeKeepingPage";
 import { Clock, LogIn, LogOut, Trash2 } from "lucide-react";
 
 const EDITABLE_STATUSES: { value: AttendanceStatus; label: string }[] = [
-  { value: "on-time",       label: "Chấm công đúng giờ" },
-  { value: "late-early",    label: "Vào trễ, ra sớm" },
-  { value: "no-checkin",    label: "Chưa vào/ra ca" },
-  { value: "paid-leave",    label: "Nghỉ phép có lương" },
-  { value: "unpaid-leave",  label: "Nghỉ phép không lương" },
-  { value: "business-trip", label: "Công tác ra ngoài" },
-  { value: "day-off",       label: "Ngày nghỉ" },
-  { value: "not-yet",       label: "Chưa tới" },
+  { value: "on-time", label: "Đúng giờ" },
+  { value: "late-or-early", label: "Đến muộn hoặc về sớm" },
+  { value: "edited", label: "Đã chỉnh sửa" },
+  { value: "forgot-check-in", label: "Quên chấm công" },
+  { value: "not-time-yet", label: "Chưa đến giờ" },
+  { value: "pending-extra-shift", label: "Ca bổ sung chờ duyệt" },
+  { value: "in-shift", label: "Đang trong ca làm việc" },
+  { value: "leave-requested", label: "Đã xin nghỉ" },
+  { value: "overtime", label: "Tăng ca" },
+  { value: "manager-added", label: "Quản lý bổ sung" },
+  { value: "paid-leave-request", label: "Xin nghỉ được tính lương" },
+  { value: "auto-tracked", label: "Tự động chấm công" },
+  { value: "holiday", label: "Nghỉ lễ" },
 ];
 
 interface ShiftDetailDialogProps {
@@ -82,7 +83,9 @@ export default function ShiftDetailDialog({
               <div className="w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mb-3">
                 <Clock className="w-5 h-5 text-neutral-400" />
               </div>
-              <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Không có ca nào</p>
+              <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
+                Không có ca nào
+              </p>
               <p className="text-xs text-neutral-400 mt-1">Ngày này chưa được xếp ca</p>
             </div>
           ) : (
@@ -134,11 +137,15 @@ function ShiftEditCard({
   const colors = ATTENDANCE_COLORS[shift.status];
 
   return (
-    <div className={`rounded-xl ${colors.bg} border border-black/5 dark:border-white/5 overflow-hidden`}>
+    <div
+      className={`rounded-xl ${colors.bg} border border-black/5 dark:border-white/5 overflow-hidden`}
+    >
       {/* Top bar */}
       <div className="flex items-center justify-between px-3 pt-3 pb-2">
         <div className="flex items-center gap-2">
-          <div className={`w-2.5 h-2.5 rounded-full ${colors.dot} ring-2 ring-white/60 dark:ring-black/20`} />
+          <div
+            className={`w-2.5 h-2.5 rounded-full ${colors.dot} ring-2 ring-white/60 dark:ring-black/20`}
+          />
           <span className={`text-sm font-semibold ${colors.text}`}>{shift.name}</span>
         </div>
         <div className="flex items-center gap-1.5">

@@ -1,7 +1,11 @@
 import { AlertCircle, Clock, FileEdit } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { Shift, ShiftConfig } from "@/features/shifts/types";
+import {
+  EMPLOYEE_SHIFT_ATTENDANCE_STATUS_META,
+  type Shift,
+  type ShiftConfig,
+} from "@/features/shifts/types";
 
 interface EmployeeShiftCardProps {
   shift: Shift;
@@ -16,12 +20,20 @@ export default function EmployeeShiftCard({
 }: EmployeeShiftCardProps) {
   const isDraft = shift.status === "draft";
   const isAbsent = shift.status === "absent";
-  const statusLabel = isAbsent ? "Vang" : isDraft ? "Nhap" : "Da chot";
-  const statusClass = isAbsent
+
+  const fallbackStatusLabel = isAbsent ? "Vắng" : isDraft ? "Nháp" : "Đã chốt";
+  const fallbackStatusClass = isAbsent
     ? "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950/30 dark:text-red-300"
     : isDraft
       ? "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300"
       : "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300";
+
+  const attendanceMeta = shift.attendanceStatus
+    ? EMPLOYEE_SHIFT_ATTENDANCE_STATUS_META[shift.attendanceStatus]
+    : null;
+
+  const statusLabel = attendanceMeta?.label ?? fallbackStatusLabel;
+  const statusClass = attendanceMeta?.badgeClass ?? fallbackStatusClass;
 
   return (
     <div
@@ -61,10 +73,7 @@ export default function EmployeeShiftCard({
         <div className="flex shrink-0 items-center gap-1.5">
           {isDraft && <FileEdit className="h-3.5 w-3.5 opacity-70" />}
           {isAbsent && <AlertCircle className="h-3.5 w-3.5" />}
-          <Badge
-            variant="outline"
-            className={cn("border text-[10px] font-semibold uppercase", statusClass)}
-          >
+          <Badge variant="outline" className={cn("border text-[10px] font-semibold", statusClass)}>
             {statusLabel}
           </Badge>
         </div>

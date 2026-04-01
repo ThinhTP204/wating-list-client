@@ -11,23 +11,101 @@ import EmployeeSummaryDialog from "./components/EmployeeSummaryDialog";
 // ─── Types ───────────────────────────────────────────────
 export type AttendanceStatus =
   | "on-time"
-  | "late-early"
-  | "no-checkin"
-  | "paid-leave"
-  | "unpaid-leave"
-  | "business-trip"
-  | "day-off"
-  | "not-yet";
+  | "late-or-early"
+  | "edited"
+  | "forgot-check-in"
+  | "not-time-yet"
+  | "pending-extra-shift"
+  | "in-shift"
+  | "leave-requested"
+  | "overtime"
+  | "manager-added"
+  | "paid-leave-request"
+  | "auto-tracked"
+  | "holiday";
 
-export const ATTENDANCE_COLORS: Record<AttendanceStatus, { bg: string; text: string; dot: string; label: string }> = {
-  "on-time":       { bg: "bg-emerald-100 dark:bg-emerald-900/30", text: "text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500", label: "Chấm công đúng giờ" },
-  "late-early":    { bg: "bg-amber-100 dark:bg-amber-900/30",     text: "text-amber-700 dark:text-amber-400",     dot: "bg-amber-500",   label: "Vào trễ, ra sớm" },
-  "no-checkin":    { bg: "bg-red-100 dark:bg-red-900/30",         text: "text-red-700 dark:text-red-400",         dot: "bg-red-500",     label: "Chưa vào/ra ca" },
-  "paid-leave":    { bg: "bg-blue-100 dark:bg-blue-900/30",   text: "text-blue-700 dark:text-blue-400",   dot: "bg-blue-500",  label: "Nghỉ phép có lương" },
-  "unpaid-leave":  { bg: "bg-orange-100 dark:bg-orange-900/30",   text: "text-orange-800 dark:text-orange-400",   dot: "bg-orange-800",  label: "Nghỉ phép không lương" },
-  "business-trip": { bg: "bg-blue-100 dark:bg-blue-900/30",       text: "text-blue-700 dark:text-blue-400",       dot: "bg-blue-500",    label: "Công tác ra ngoài" },
-  "day-off":       { bg: "bg-neutral-100 dark:bg-neutral-800/50", text: "text-neutral-500 dark:text-neutral-400", dot: "bg-neutral-400", label: "Ngày nghỉ" },
-  "not-yet":       { bg: "bg-neutral-50 dark:bg-neutral-900/20",  text: "text-neutral-400 dark:text-neutral-500", dot: "bg-neutral-300", label: "Chưa tới" },
+export const ATTENDANCE_COLORS: Record<
+  AttendanceStatus,
+  { bg: string; text: string; dot: string; label: string }
+> = {
+  "on-time": {
+    bg: "bg-emerald-100 dark:bg-emerald-900/30",
+    text: "text-emerald-700 dark:text-emerald-400",
+    dot: "bg-emerald-500",
+    label: "Đúng giờ",
+  },
+  "late-or-early": {
+    bg: "bg-amber-100 dark:bg-amber-900/30",
+    text: "text-amber-700 dark:text-amber-400",
+    dot: "bg-amber-500",
+    label: "Đến muộn hoặc về sớm",
+  },
+  edited: {
+    bg: "bg-sky-100 dark:bg-sky-900/30",
+    text: "text-sky-700 dark:text-sky-400",
+    dot: "bg-sky-500",
+    label: "Đã chỉnh sửa",
+  },
+  "forgot-check-in": {
+    bg: "bg-rose-100 dark:bg-rose-900/30",
+    text: "text-rose-700 dark:text-rose-400",
+    dot: "bg-rose-500",
+    label: "Quên chấm công",
+  },
+  "not-time-yet": {
+    bg: "bg-neutral-50 dark:bg-neutral-900/20",
+    text: "text-neutral-400 dark:text-neutral-500",
+    dot: "bg-neutral-300",
+    label: "Chưa đến giờ",
+  },
+  "pending-extra-shift": {
+    bg: "bg-yellow-100 dark:bg-yellow-900/30",
+    text: "text-yellow-700 dark:text-yellow-400",
+    dot: "bg-yellow-500",
+    label: "Ca bổ sung chờ duyệt",
+  },
+  "in-shift": {
+    bg: "bg-cyan-100 dark:bg-cyan-900/30",
+    text: "text-cyan-700 dark:text-cyan-400",
+    dot: "bg-cyan-500",
+    label: "Đang trong ca làm việc",
+  },
+  "leave-requested": {
+    bg: "bg-orange-100 dark:bg-orange-900/30",
+    text: "text-orange-800 dark:text-orange-400",
+    dot: "bg-orange-600",
+    label: "Đã xin nghỉ",
+  },
+  overtime: {
+    bg: "bg-indigo-100 dark:bg-indigo-900/30",
+    text: "text-indigo-700 dark:text-indigo-400",
+    dot: "bg-indigo-500",
+    label: "Tăng ca",
+  },
+  "manager-added": {
+    bg: "bg-blue-100 dark:bg-blue-900/30",
+    text: "text-blue-700 dark:text-blue-400",
+    dot: "bg-blue-500",
+    label: "Quản lý bổ sung",
+  },
+  "paid-leave-request": {
+    bg: "bg-teal-100 dark:bg-teal-900/30",
+    text: "text-teal-700 dark:text-teal-400",
+    dot: "bg-teal-500",
+    label: "Xin nghỉ được tính lương",
+  },
+  "auto-tracked": {
+    bg: "bg-violet-100 dark:bg-violet-900/30",
+    text: "text-violet-700 dark:text-violet-400",
+    dot: "bg-violet-500",
+    label: "Tự động chấm công",
+  },
+  holiday: {
+    bg: "bg-neutral-100 dark:bg-neutral-800/50",
+    text: "text-neutral-500 dark:text-neutral-400",
+    dot: "bg-neutral-400",
+    label: "Nghỉ lễ",
+  },
 };
 
 export interface Shift {
@@ -64,11 +142,11 @@ export interface DayData {
 }
 
 export const AVAILABLE_SHIFTS = [
-  { id: "shift-admin",     name: "Ca hành chính", time: "08:00 - 17:00" },
-  { id: "shift-morning",   name: "Ca sáng",       time: "06:00 - 14:00" },
-  { id: "shift-afternoon", name: "Ca chiều",      time: "14:00 - 22:00" },
-  { id: "shift-evening",   name: "Ca tối",        time: "18:00 - 22:00" },
-  { id: "shift-night",     name: "Ca đêm",        time: "22:00 - 06:00" },
+  { id: "shift-admin", name: "Ca hành chính", time: "08:00 - 17:00" },
+  { id: "shift-morning", name: "Ca sáng", time: "06:00 - 14:00" },
+  { id: "shift-afternoon", name: "Ca chiều", time: "14:00 - 22:00" },
+  { id: "shift-evening", name: "Ca tối", time: "18:00 - 22:00" },
+  { id: "shift-night", name: "Ca đêm", time: "22:00 - 06:00" },
 ];
 
 // ─── Helper ───────────────────────────────────────────────
@@ -99,7 +177,10 @@ function getDaysOfMonth(monthOffset: number = 0): DayData[] {
 export default function Page() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [shiftDialogOpen, setShiftDialogOpen] = useState(false);
-  const [shiftDialogTarget, setShiftDialogTarget] = useState<{ employeeId: string; dayDate: number } | null>(null);
+  const [shiftDialogTarget, setShiftDialogTarget] = useState<{
+    employeeId: string;
+    dayDate: number;
+  } | null>(null);
   const [summaryEmployee, setSummaryEmployee] = useState<Employee | null>(null);
   const [currentMonth, setCurrentMonth] = useState(0);
   const [days, setDays] = useState<DayData[]>(getDaysOfMonth(0));
@@ -108,47 +189,231 @@ export default function Page() {
   // Mock data — shifts keyed by day-of-month (1-31), March 2026
   const [employees, setEmployees] = useState<Employee[]>([
     {
-      id: "1", name: "Nguyễn Văn A", phone: "0123456789", role: "Nhân viên",
+      id: "1",
+      name: "Nguyễn Văn A",
+      phone: "0123456789",
+      role: "Nhân viên",
       shifts: {
-        3:  [{ id: "s1",  name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:55", checkOut: "17:02" }],
-        4:  [{ id: "s2",  name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:58", checkOut: "17:05" }],
-        5:  [{ id: "s3",  name: "Ca sáng",       time: "06:00 - 14:00", status: "no-checkin" }],
-        6:  [{ id: "s4",  name: "Ca hành chính", time: "08:00 - 17:00", status: "day-off" }],
-        10: [{ id: "s5",  name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:50", checkOut: "17:00" }],
-        11: [{ id: "s6",  name: "Ca hành chính", time: "08:00 - 17:00", status: "late-early", checkIn: "08:15", checkOut: "16:55" }],
-        12: [{ id: "s7",  name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:52", checkOut: "17:08" }],
-        17: [{ id: "s8",  name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:55", checkOut: "17:00" }],
-        18: [{ id: "s9",  name: "Ca tối",        time: "18:00 - 22:00", status: "late-early", checkIn: "18:15", checkOut: "21:50" }],
-        19: [{ id: "s10", name: "Ca hành chính", time: "08:00 - 17:00", status: "paid-leave" }],
-        23: [{ id: "s11", name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:55", checkOut: "17:02" },
-             { id: "s12", name: "Ca tối",        time: "18:00 - 22:00", status: "late-early", checkIn: "18:15", checkOut: "21:50" }],
-        24: [{ id: "s13", name: "Ca hành chính", time: "08:00 - 17:00", status: "not-yet" }],
+        3: [
+          {
+            id: "s1",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "on-time",
+            checkIn: "07:55",
+            checkOut: "17:02",
+          },
+        ],
+        4: [
+          {
+            id: "s2",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "auto-tracked",
+            checkIn: "07:58",
+            checkOut: "17:05",
+          },
+        ],
+        5: [{ id: "s3", name: "Ca sáng", time: "06:00 - 14:00", status: "forgot-check-in" }],
+        6: [{ id: "s4", name: "Ca hành chính", time: "08:00 - 17:00", status: "holiday" }],
+        10: [
+          {
+            id: "s5",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "on-time",
+            checkIn: "07:50",
+            checkOut: "17:00",
+          },
+        ],
+        11: [
+          {
+            id: "s6",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "late-or-early",
+            checkIn: "08:15",
+            checkOut: "16:55",
+          },
+        ],
+        12: [
+          {
+            id: "s7",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "edited",
+            checkIn: "07:52",
+            checkOut: "17:08",
+          },
+        ],
+        17: [
+          {
+            id: "s8",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "manager-added",
+            checkIn: "07:55",
+            checkOut: "17:00",
+          },
+        ],
+        18: [
+          {
+            id: "s9",
+            name: "Ca tối",
+            time: "18:00 - 22:00",
+            status: "overtime",
+            checkIn: "18:15",
+            checkOut: "21:50",
+          },
+        ],
+        19: [
+          { id: "s10", name: "Ca hành chính", time: "08:00 - 17:00", status: "paid-leave-request" },
+        ],
+        23: [
+          {
+            id: "s11",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "on-time",
+            checkIn: "07:55",
+            checkOut: "17:02",
+          },
+          {
+            id: "s12",
+            name: "Ca tối",
+            time: "18:00 - 22:00",
+            status: "late-or-early",
+            checkIn: "18:15",
+            checkOut: "21:50",
+          },
+        ],
+        24: [{ id: "s13", name: "Ca hành chính", time: "08:00 - 17:00", status: "in-shift" }],
       },
     },
     {
-      id: "2", name: "Trần Thị B", phone: "0987654321", role: "Quản lý",
+      id: "2",
+      name: "Trần Thị B",
+      phone: "0987654321",
+      role: "Quản lý",
       shifts: {
-        3:  [{ id: "s20", name: "Ca sáng",       time: "06:00 - 14:00", status: "on-time",     checkIn: "05:55", checkOut: "14:01" }],
-        4:  [{ id: "s21", name: "Ca hành chính", time: "08:00 - 17:00", status: "paid-leave" }],
-        5:  [{ id: "s22", name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",     checkIn: "07:50", checkOut: "17:10" }],
-        10: [{ id: "s23", name: "Ca chiều",      time: "14:00 - 22:00", status: "business-trip" }],
-        11: [{ id: "s24", name: "Ca hành chính", time: "08:00 - 17:00", status: "unpaid-leave" }],
-        17: [{ id: "s25", name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",     checkIn: "07:48", checkOut: "17:05" }],
-        18: [{ id: "s26", name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",     checkIn: "07:55", checkOut: "17:00" }],
-        23: [{ id: "s27", name: "Ca sáng",       time: "06:00 - 14:00", status: "on-time",     checkIn: "05:55", checkOut: "14:01" }],
-        24: [{ id: "s28", name: "Ca hành chính", time: "08:00 - 17:00", status: "not-yet" }],
+        3: [
+          {
+            id: "s20",
+            name: "Ca sáng",
+            time: "06:00 - 14:00",
+            status: "on-time",
+            checkIn: "05:55",
+            checkOut: "14:01",
+          },
+        ],
+        4: [
+          { id: "s21", name: "Ca hành chính", time: "08:00 - 17:00", status: "paid-leave-request" },
+        ],
+        5: [
+          {
+            id: "s22",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "on-time",
+            checkIn: "07:50",
+            checkOut: "17:10",
+          },
+        ],
+        10: [{ id: "s23", name: "Ca chiều", time: "14:00 - 22:00", status: "pending-extra-shift" }],
+        11: [
+          { id: "s24", name: "Ca hành chính", time: "08:00 - 17:00", status: "leave-requested" },
+        ],
+        17: [
+          {
+            id: "s25",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "on-time",
+            checkIn: "07:48",
+            checkOut: "17:05",
+          },
+        ],
+        18: [
+          {
+            id: "s26",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "auto-tracked",
+            checkIn: "07:55",
+            checkOut: "17:00",
+          },
+        ],
+        23: [
+          {
+            id: "s27",
+            name: "Ca sáng",
+            time: "06:00 - 14:00",
+            status: "on-time",
+            checkIn: "05:55",
+            checkOut: "14:01",
+          },
+        ],
+        24: [{ id: "s28", name: "Ca hành chính", time: "08:00 - 17:00", status: "not-time-yet" }],
       },
     },
     {
-      id: "3", name: "Lê Văn C", phone: "0909123456", role: "Nhân viên",
+      id: "3",
+      name: "Lê Văn C",
+      phone: "0909123456",
+      role: "Nhân viên",
       shifts: {
-        3:  [{ id: "s30", name: "Ca hành chính", time: "08:00 - 17:00", status: "late-early", checkIn: "08:20", checkOut: "17:00" }],
-        4:  [{ id: "s31", name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:50", checkOut: "17:05" }],
-        5:  [{ id: "s32", name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:55", checkOut: "17:02" }],
-        11: [{ id: "s33", name: "Ca tối",        time: "18:00 - 22:00", status: "not-yet" }],
-        17: [{ id: "s34", name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:52", checkOut: "17:08" }],
-        23: [{ id: "s35", name: "Ca hành chính", time: "08:00 - 17:00", status: "on-time",    checkIn: "07:55", checkOut: "17:00" }],
-        24: [{ id: "s36", name: "Ca tối",        time: "18:00 - 22:00", status: "not-yet" }],
+        3: [
+          {
+            id: "s30",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "late-or-early",
+            checkIn: "08:20",
+            checkOut: "17:00",
+          },
+        ],
+        4: [
+          {
+            id: "s31",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "on-time",
+            checkIn: "07:50",
+            checkOut: "17:05",
+          },
+        ],
+        5: [
+          {
+            id: "s32",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "on-time",
+            checkIn: "07:55",
+            checkOut: "17:02",
+          },
+        ],
+        11: [{ id: "s33", name: "Ca tối", time: "18:00 - 22:00", status: "not-time-yet" }],
+        17: [
+          {
+            id: "s34",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "on-time",
+            checkIn: "07:52",
+            checkOut: "17:08",
+          },
+        ],
+        23: [
+          {
+            id: "s35",
+            name: "Ca hành chính",
+            time: "08:00 - 17:00",
+            status: "on-time",
+            checkIn: "07:55",
+            checkOut: "17:00",
+          },
+        ],
+        24: [{ id: "s36", name: "Ca tối", time: "18:00 - 22:00", status: "not-time-yet" }],
       },
     },
   ]);
@@ -189,7 +454,7 @@ export default function Page() {
           id: `shift-${Date.now()}`,
           name: shiftTemplate.name,
           time: shiftTemplate.time,
-          status: "not-yet",
+          status: "not-time-yet",
         };
         return { ...emp, shifts: { ...emp.shifts, [dayDate]: [...existing, newShift] } };
       })
@@ -211,7 +476,12 @@ export default function Page() {
     );
   };
 
-  const handleUpdateShift = (employeeId: string, dayDate: number, shiftId: string, updates: Partial<Shift>) => {
+  const handleUpdateShift = (
+    employeeId: string,
+    dayDate: number,
+    shiftId: string,
+    updates: Partial<Shift>
+  ) => {
     setEmployees((prev) =>
       prev.map((emp) => {
         if (emp.id !== employeeId) return emp;
@@ -267,7 +537,9 @@ export default function Page() {
         <div className="flex items-center gap-0 divide-x divide-neutral-100 dark:divide-neutral-800 overflow-x-auto">
           {/* Label */}
           <div className="px-3 py-2 shrink-0 bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6]">
-            <p className="text-xs font-bold text-white/90 uppercase tracking-widest whitespace-nowrap">Chú thích</p>
+            <p className="text-xs font-bold text-white/90 uppercase tracking-widest whitespace-nowrap">
+              Chú thích
+            </p>
           </div>
           {/* Items */}
           {(Object.keys(ATTENDANCE_COLORS) as AttendanceStatus[]).map((status) => {
@@ -277,7 +549,9 @@ export default function Page() {
                 key={status}
                 className="flex items-center gap-1.5 px-3 py-2 shrink-0 group cursor-default hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-colors"
               >
-                <div className={`w-2 h-2 rounded-full ${c.dot} shrink-0 transition-transform duration-150 group-hover:scale-125`} />
+                <div
+                  className={`w-2 h-2 rounded-full ${c.dot} shrink-0 transition-transform duration-150 group-hover:scale-125`}
+                />
                 <span className={`text-xs font-medium whitespace-nowrap ${c.text}`}>{c.label}</span>
               </div>
             );
@@ -312,7 +586,9 @@ export default function Page() {
       {summaryEmployee && (
         <EmployeeSummaryDialog
           open={!!summaryEmployee}
-          onOpenChange={(open) => { if (!open) setSummaryEmployee(null); }}
+          onOpenChange={(open) => {
+            if (!open) setSummaryEmployee(null);
+          }}
           employee={employees.find((e) => e.id === summaryEmployee.id) ?? summaryEmployee}
           days={days}
         />

@@ -8,11 +8,30 @@ import type { Employee, AttendanceStatus, Shift, DayData } from "../TimeKeepingP
 import { Clock, DollarSign, Download, MoreVertical, TrendingUp } from "lucide-react";
 
 const HOURLY_RATE = 25_000;
-const WORKED_STATUSES: AttendanceStatus[] = ["on-time", "late-early", "business-trip"];
+const WORKED_STATUSES: AttendanceStatus[] = [
+  "on-time",
+  "late-or-early",
+  "edited",
+  "in-shift",
+  "overtime",
+  "manager-added",
+  "auto-tracked",
+];
 
 const STATUS_ORDER: AttendanceStatus[] = [
-  "on-time", "late-early", "business-trip",
-  "paid-leave", "unpaid-leave", "no-checkin", "day-off",
+  "on-time",
+  "late-or-early",
+  "edited",
+  "forgot-check-in",
+  "not-time-yet",
+  "pending-extra-shift",
+  "in-shift",
+  "leave-requested",
+  "overtime",
+  "manager-added",
+  "paid-leave-request",
+  "auto-tracked",
+  "holiday",
 ];
 
 function parseMinutes(time: string): number {
@@ -64,7 +83,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
 
   const totalSalary = Math.round(totalHours * HOURLY_RATE);
   const month = days[0]?.month ?? new Date().getMonth() + 1;
-  const year  = days[0]?.year  ?? new Date().getFullYear();
+  const year = days[0]?.year ?? new Date().getFullYear();
   const maxCount = Math.max(...[...statusMap.values()].map((d) => d.count), 1);
 
   return (
@@ -80,9 +99,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
                 {employee.name.charAt(0)}
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white leading-tight">
-                  {employee.name}
-                </h2>
+                <h2 className="text-xl font-bold text-white leading-tight">{employee.name}</h2>
                 <div className="flex items-center gap-2 text-sm mt-1">
                   <span className="bg-white/20 text-white/90 font-semibold px-2.5 py-0.5 rounded-full text-xs">
                     {employee.role}
@@ -110,7 +127,9 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
               <Clock className="w-4 h-4 text-white/70 shrink-0" />
               <div>
                 <p className="text-xs text-white/50 leading-none">Tổng giờ</p>
-                <p className="text-base font-bold text-white leading-tight mt-0.5">{formatHM(totalHours)}</p>
+                <p className="text-base font-bold text-white leading-tight mt-0.5">
+                  {formatHM(totalHours)}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-1.5 bg-white/10 rounded-xl px-3 py-2 flex-1">
@@ -126,7 +145,9 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
               <TrendingUp className="w-4 h-4 text-white/70 shrink-0" />
               <div>
                 <p className="text-xs text-white/50 leading-none">Số ca</p>
-                <p className="text-base font-bold text-white leading-tight mt-0.5">{totalShifts} ca</p>
+                <p className="text-base font-bold text-white leading-tight mt-0.5">
+                  {totalShifts} ca
+                </p>
               </div>
             </div>
           </div>
@@ -206,10 +227,18 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
 
           <div className="rounded-xl overflow-hidden border border-neutral-100 dark:border-neutral-800">
             <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800/50">
-              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide">Trạng thái</span>
-              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide text-center w-8">Ca</span>
-              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide text-center w-14">Giờ</span>
-              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide text-right w-16">Lương</span>
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide">
+                Trạng thái
+              </span>
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide text-center w-8">
+                Ca
+              </span>
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide text-center w-14">
+                Giờ
+              </span>
+              <span className="text-xs font-bold text-neutral-400 uppercase tracking-wide text-right w-16">
+                Lương
+              </span>
             </div>
 
             {STATUS_ORDER.filter((s) => statusMap.has(s)).map((status, i) => {
@@ -227,7 +256,9 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
                   <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 px-4 pt-3 pb-2 items-center">
                     <div className="flex items-center gap-2.5">
                       <div className={`w-2.5 h-2.5 rounded-full ${c.dot} shrink-0`} />
-                      <span className="text-sm text-neutral-700 dark:text-neutral-300">{c.label}</span>
+                      <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                        {c.label}
+                      </span>
                     </div>
                     <span className="text-sm font-semibold text-neutral-900 dark:text-white text-center w-8">
                       {data.count}
@@ -236,9 +267,7 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
                       {data.hours > 0 ? `${data.hours.toFixed(1)}h` : "—"}
                     </span>
                     <span className="text-sm font-medium text-neutral-900 dark:text-white text-right w-16">
-                      {data.hours > 0
-                        ? `${((data.hours * HOURLY_RATE) / 1000).toFixed(0)}k`
-                        : "—"}
+                      {data.hours > 0 ? `${((data.hours * HOURLY_RATE) / 1000).toFixed(0)}k` : "—"}
                     </span>
                   </div>
                   {/* Progress bar */}
@@ -285,7 +314,10 @@ export default function EmployeeSummaryDialog({ open, onOpenChange, employee, da
           </div>
 
           <div className="flex gap-2.5">
-            <Button variant="outline" className="flex-1 h-10 text-sm hover:shadow-sm transition-shadow gap-1.5">
+            <Button
+              variant="outline"
+              className="flex-1 h-10 text-sm hover:shadow-sm transition-shadow gap-1.5"
+            >
               <Download className="w-4 h-4" />
               Export PDF
             </Button>

@@ -1,6 +1,23 @@
 import { cn } from "@/lib/utils";
-import type { Shift, ShiftConfig } from "@/features/shifts/types";
+import {
+  EMPLOYEE_SHIFT_ATTENDANCE_STATUS_META,
+  type Shift,
+  type ShiftConfig,
+} from "@/features/shifts/types";
 import { DAY_NAMES, toISODate } from "@/features/employee-calendar/utils/date";
+
+function getStatusLabel(shift: Shift): string {
+  if (shift.attendanceStatus) {
+    return EMPLOYEE_SHIFT_ATTENDANCE_STATUS_META[shift.attendanceStatus].label;
+  }
+  if (shift.status === "absent") {
+    return "Vắng";
+  }
+  if (shift.status === "draft") {
+    return "Nháp";
+  }
+  return "Đã chốt";
+}
 
 interface EmployeeMonthViewProps {
   monthCells: Array<Date | null>;
@@ -80,7 +97,10 @@ export default function EmployeeMonthView({
                                 style={{ borderLeftWidth: 3, borderLeftColor: config?.color }}
                                 title={`${config?.name ?? "Ca"} ${config?.startTime ?? ""} - ${config?.endTime ?? ""}`}
                               >
-                                {config?.name ?? "Ca"}
+                                <span className="block truncate">{config?.name ?? "Ca"}</span>
+                                <span className="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+                                  {getStatusLabel(shift)}
+                                </span>
                               </div>
                             );
                           })
@@ -158,7 +178,10 @@ export default function EmployeeMonthView({
                         style={{ borderLeftWidth: 3, borderLeftColor: config?.color }}
                         title={`${config?.name ?? "Ca"} ${config?.startTime ?? ""} - ${config?.endTime ?? ""}`}
                       >
-                        {config?.name ?? "Ca"}
+                        <span className="block truncate">{config?.name ?? "Ca"}</span>
+                        <span className="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+                          {getStatusLabel(shift)}
+                        </span>
                       </div>
                     );
                   })}

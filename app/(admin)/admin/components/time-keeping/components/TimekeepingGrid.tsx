@@ -16,7 +16,12 @@ interface TimekeepingGridProps {
   onAddEmployee: () => void;
   onRemoveEmployee: (employeeId: string) => void;
   onRemoveShift: (employeeId: string, dayDate: number, shiftId: string) => void;
-  onUpdateShift: (employeeId: string, dayDate: number, shiftId: string, updates: Partial<Shift>) => void;
+  onUpdateShift: (
+    employeeId: string,
+    dayDate: number,
+    shiftId: string,
+    updates: Partial<Shift>
+  ) => void;
   onEmployeeClick: (employee: Employee) => void;
 }
 
@@ -56,10 +61,21 @@ export default function TimekeepingGrid({
   );
 
   const getDominantStatus = (shifts: Shift[]): AttendanceStatus => {
-    if (shifts.length === 0) return "not-yet";
+    if (shifts.length === 0) return "not-time-yet";
     const priority: AttendanceStatus[] = [
-      "no-checkin", "late-early", "on-time",
-      "paid-leave", "unpaid-leave", "business-trip", "day-off", "not-yet",
+      "forgot-check-in",
+      "late-or-early",
+      "pending-extra-shift",
+      "in-shift",
+      "overtime",
+      "manager-added",
+      "edited",
+      "auto-tracked",
+      "on-time",
+      "paid-leave-request",
+      "leave-requested",
+      "holiday",
+      "not-time-yet",
     ];
     for (const p of priority) {
       if (shifts.some((s) => s.status === p)) return p;
@@ -79,7 +95,6 @@ export default function TimekeepingGrid({
   return (
     <div className="border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-sm overflow-x-auto">
       <div style={{ minWidth: `${totalWidth}px` }}>
-
         {/* ── Header ── */}
         <div
           className="grid bg-gradient-to-b from-neutral-50 to-neutral-50/70 dark:from-neutral-800/80 dark:to-neutral-800/50 border-b border-neutral-200 dark:border-neutral-800"
@@ -104,26 +119,30 @@ export default function TimekeepingGrid({
                 day.isToday
                   ? "bg-[#4C88C6]/10 dark:bg-[#4C88C6]/20"
                   : isWeekend(day)
-                  ? "bg-neutral-100/80 dark:bg-neutral-700/30"
-                  : ""
+                    ? "bg-neutral-100/80 dark:bg-neutral-700/30"
+                    : ""
               }`}
             >
               {/* Today top accent line */}
               {day.isToday && (
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#4C88C6]/60 via-[#4C88C6] to-[#4C88C6]/60 rounded-full" />
               )}
-              <p className={`text-xs font-bold uppercase leading-none tracking-wider ${
-                day.isToday ? "text-[#4C88C6]" : "text-neutral-400"
-              }`}>
+              <p
+                className={`text-xs font-bold uppercase leading-none tracking-wider ${
+                  day.isToday ? "text-[#4C88C6]" : "text-neutral-400"
+                }`}
+              >
                 {day.dayName}
               </p>
-              <p className={`text-sm font-bold mt-1 leading-none ${
-                day.isToday
-                  ? "text-[#4C88C6]"
-                  : isWeekend(day)
-                  ? "text-neutral-500 dark:text-neutral-400"
-                  : "text-neutral-800 dark:text-neutral-200"
-              }`}>
+              <p
+                className={`text-sm font-bold mt-1 leading-none ${
+                  day.isToday
+                    ? "text-[#4C88C6]"
+                    : isWeekend(day)
+                      ? "text-neutral-500 dark:text-neutral-400"
+                      : "text-neutral-800 dark:text-neutral-200"
+                }`}
+              >
                 {day.date}
               </p>
               {day.isToday && (
@@ -140,13 +159,19 @@ export default function TimekeepingGrid({
         >
           <div className="px-3 h-11 flex items-center gap-2 sticky left-0 z-10 bg-amber-50/60 dark:bg-amber-900/10 backdrop-blur-sm border-r border-neutral-200 dark:border-neutral-800">
             <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
-            <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400">Ca mở</span>
+            <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400">
+              Ca mở
+            </span>
           </div>
           {days.map((day) => (
             <div
               key={day.date}
               className={`border-l border-neutral-200 dark:border-neutral-800 h-11 flex items-center justify-center ${
-                day.isToday ? "bg-[#4C88C6]/5" : isWeekend(day) ? "bg-neutral-100/60 dark:bg-neutral-700/20" : ""
+                day.isToday
+                  ? "bg-[#4C88C6]/5"
+                  : isWeekend(day)
+                    ? "bg-neutral-100/60 dark:bg-neutral-700/20"
+                    : ""
               }`}
             >
               <motion.button
@@ -163,7 +188,7 @@ export default function TimekeepingGrid({
 
         {/* ── Employee rows ── */}
         <motion.div variants={containerVariants} initial="hidden" animate="show">
-        <AnimatePresence mode="popLayout">
+          <AnimatePresence mode="popLayout">
             {filteredEmployees.map((employee) => (
               <motion.div
                 key={employee.id}
@@ -192,7 +217,9 @@ export default function TimekeepingGrid({
                       <p className="text-xs font-semibold text-neutral-900 dark:text-white truncate leading-snug">
                         {employee.name}
                       </p>
-                      <p className="text-xs text-[#4C88C6] leading-snug font-medium">{employee.role}</p>
+                      <p className="text-xs text-[#4C88C6] leading-snug font-medium">
+                        {employee.role}
+                      </p>
                     </div>
                   </motion.button>
                   <motion.button
@@ -220,8 +247,8 @@ export default function TimekeepingGrid({
                         day.isToday
                           ? "bg-[#4C88C6]/5 dark:bg-[#4C88C6]/10"
                           : isWeekend(day)
-                          ? "bg-neutral-100/40 dark:bg-neutral-700/10"
-                          : ""
+                            ? "bg-neutral-100/40 dark:bg-neutral-700/10"
+                            : ""
                       }`}
                     >
                       {hasShifts ? (
@@ -247,7 +274,9 @@ export default function TimekeepingGrid({
                               +{dayShifts.length}
                             </span>
                           ) : (
-                            <span className={`text-xs font-semibold ${colors.text} leading-none opacity-70`}>
+                            <span
+                              className={`text-xs font-semibold ${colors.text} leading-none opacity-70`}
+                            >
                               1 ca
                             </span>
                           )}
@@ -270,7 +299,7 @@ export default function TimekeepingGrid({
                 })}
               </motion.div>
             ))}
-        </AnimatePresence>
+          </AnimatePresence>
         </motion.div>
 
         {/* ── Empty state ── */}
@@ -291,7 +320,9 @@ export default function TimekeepingGrid({
                   {searchQuery ? "Không tìm thấy nhân viên" : "Chưa có nhân viên"}
                 </p>
                 <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-0.5">
-                  {searchQuery ? `Không có kết quả cho "${searchQuery}"` : "Thêm nhân viên để bắt đầu chấm công"}
+                  {searchQuery
+                    ? `Không có kết quả cho "${searchQuery}"`
+                    : "Thêm nhân viên để bắt đầu chấm công"}
                 </p>
               </div>
               {!searchQuery && (
@@ -331,7 +362,9 @@ export default function TimekeepingGrid({
       {selectedEmployee && selectedInfo && (
         <ShiftDetailDialog
           open={!!selectedInfo}
-          onOpenChange={(open) => { if (!open) setSelectedInfo(null); }}
+          onOpenChange={(open) => {
+            if (!open) setSelectedInfo(null);
+          }}
           employeeName={selectedEmployee.name}
           dayLabel={selectedInfo.dayLabel}
           shifts={selectedEmployee.shifts[selectedInfo.dayDate] ?? []}

@@ -2,6 +2,7 @@ import type {
   ShiftConfig,
   Shift,
   ShiftStatus,
+  EmployeeShiftAttendanceStatus,
   MockEmployee,
   Availability,
   StaffingDemand,
@@ -84,6 +85,32 @@ function toISODate(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
+const EMPLOYEE_ATTENDANCE_STATUSES: EmployeeShiftAttendanceStatus[] = [
+  "on_time",
+  "late_or_early",
+  "edited",
+  "missing_checkin",
+  "not_started",
+  "extra_shift_pending",
+  "in_progress",
+  "leave_requested",
+  "overtime",
+  "manager_added",
+  "paid_leave",
+  "auto_checked",
+  "holiday",
+];
+
+function getDefaultAttendanceStatus(status: ShiftStatus): EmployeeShiftAttendanceStatus {
+  if (status === "absent") {
+    return "leave_requested";
+  }
+  if (status === "draft") {
+    return "not_started";
+  }
+  return "on_time";
+}
+
 function generateInitialShifts(): Shift[] {
   const today = new Date();
   const thisMonday = getMonday(today);
@@ -131,6 +158,10 @@ function generateInitialShifts(): Shift[] {
             configId,
             date,
             status,
+            attendanceStatus:
+              EMPLOYEE_ATTENDANCE_STATUSES[
+                Math.abs(seed + dayOffset * 11 + shiftIdx * 7) % EMPLOYEE_ATTENDANCE_STATUSES.length
+              ],
           });
         }
       }
@@ -318,6 +349,7 @@ export interface CreateShiftPayload {
   configId: string;
   date: string;
   status: ShiftStatus;
+  attendanceStatus?: EmployeeShiftAttendanceStatus;
   note?: string;
 }
 
@@ -333,6 +365,7 @@ export async function createShift(payload: CreateShiftPayload): Promise<Shift> {
     configId: payload.configId,
     date: payload.date,
     status: payload.status,
+    attendanceStatus: payload.attendanceStatus ?? getDefaultAttendanceStatus(payload.status),
     note: payload.note,
   };
   mockShifts = [...mockShifts, newShift];
@@ -345,6 +378,7 @@ export interface UpdateShiftPayload {
   configId?: string;
   date?: string;
   status?: ShiftStatus;
+  attendanceStatus?: EmployeeShiftAttendanceStatus;
   note?: string;
 }
 

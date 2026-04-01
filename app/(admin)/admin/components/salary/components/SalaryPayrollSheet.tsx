@@ -348,7 +348,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
             <div className="grid max-h-[90vh] grid-cols-1 overflow-auto md:grid-cols-[320px_1fr]">
               <div className="border-b border-slate-200 bg-gradient-to-br from-[#102854] via-[#1D4D8F] to-[#4C88C6] p-5 text-white md:border-b-0 md:border-r md:border-slate-300/30">
                 <p className="text-xs font-bold uppercase tracking-wider text-white/75">
-                  Chuyen khoan nhanh
+                  Chuyển khoản nhanh
                 </p>
                 <p className="mt-1 text-lg font-black leading-tight">{activeEmployee.name}</p>
                 <p className="text-xs text-white/75">
@@ -367,17 +367,17 @@ export default function SalaryPayrollSheet({ employees }: Props) {
 
                 <div className="mt-4 space-y-2 rounded-2xl border border-white/20 bg-white/10 p-3 text-sm">
                   <p className="flex items-center justify-between gap-3">
-                    <span className="text-white/75">Ngan hang</span>
+                    <span className="text-white/75">Ngân hàng</span>
                     <span className="font-semibold">
                       {getBankCodeByDepartment(activeEmployee.department)}
                     </span>
                   </p>
                   <p className="flex items-center justify-between gap-3">
-                    <span className="text-white/75">So tai khoan</span>
+                    <span className="text-white/75">Số tài khoản</span>
                     <span className="font-semibold">{getAccountNumber(activeEmployee)}</span>
                   </p>
                   <p className="flex items-center justify-between gap-3">
-                    <span className="text-white/75">Tong chuyen</span>
+                    <span className="text-white/75">Tổng chuyển</span>
                     <span className="text-base font-black">
                       {fmtFull(activeEmployee.actualSalary)}đ
                     </span>
@@ -389,10 +389,10 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400">
-                      Thong ke luong va cong
+                      Thống kê công
                     </p>
                     <p className="mt-1 text-lg font-black text-slate-900 dark:text-white">
-                      Bang luong thang 03/2026
+                      Bảng lương tháng 03/2026
                     </p>
                   </div>
                   <span
@@ -414,7 +414,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                 <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                   <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-neutral-700 dark:bg-neutral-900/60">
                     <p className="text-xs font-semibold text-slate-500 dark:text-neutral-400">
-                      Gio du kien
+                      Giờ dự kiến
                     </p>
                     <p className="mt-1 text-lg font-black text-slate-900 dark:text-white">
                       {activePlannedHours}h
@@ -422,7 +422,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                   </div>
                   <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-neutral-700 dark:bg-neutral-900/60">
                     <p className="text-xs font-semibold text-slate-500 dark:text-neutral-400">
-                      Gio da lam
+                      Giờ đã làm
                     </p>
                     <p className="mt-1 text-lg font-black text-slate-900 dark:text-white">
                       {activeWorkedHours}h
@@ -430,7 +430,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                   </div>
                   <div className="rounded-xl border border-red-200 bg-red-50 p-3 dark:border-red-900/50 dark:bg-red-950/20">
                     <p className="text-xs font-semibold text-red-600 dark:text-red-300">
-                      Loi bi tru
+                      Lỗi bị trừ
                     </p>
                     <p className="mt-1 text-lg font-black text-red-700 dark:text-red-200">
                       {activePenaltyCount}
@@ -438,7 +438,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                   </div>
                   <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 dark:border-emerald-900/50 dark:bg-emerald-950/20">
                     <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
-                      Thuc nhan
+                      Thực nhận
                     </p>
                     <p className="mt-1 text-lg font-black text-emerald-700 dark:text-emerald-200">
                       {fmtFull(activeEmployee.actualSalary)}đ
@@ -449,7 +449,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                 <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
                   <div className="rounded-2xl border border-slate-200 p-4 dark:border-neutral-700">
                     <p className="text-sm font-bold text-slate-800 dark:text-slate-100">
-                      Lich lam gan day
+                      Lịch làm gần đây
                     </p>
                     <div className="mt-3 space-y-2">
                       {activeShiftLogs.map((log) => (
@@ -473,7 +473,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
                             {log.hasPenalty && (
                               <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">
                                 <CircleAlert className="h-3 w-3" />
-                                Loi
+                                Lỗi
                               </span>
                             )}
                           </div>
@@ -484,26 +484,26 @@ export default function SalaryPayrollSheet({ employees }: Props) {
 
                   <div className="rounded-2xl border border-slate-200 p-4 dark:border-neutral-700">
                     <p className="text-sm font-bold text-slate-800 dark:text-slate-100">
-                      Tong hop luong
+                      Tổng hợp lương
                     </p>
                     <div className="mt-3 space-y-2 text-sm">
                       <p className="flex items-center justify-between">
                         <span className="text-slate-500 dark:text-neutral-400">
-                          Tong luong co ban
+                          Tổng lương cơ bản
                         </span>
                         <span className="font-semibold text-slate-800 dark:text-slate-100">
                           {fmtFull(activeEmployee.totalBasic)}đ
                         </span>
                       </p>
                       <p className="flex items-center justify-between">
-                        <span className="text-slate-500 dark:text-neutral-400">Tong tru loi</span>
+                        <span className="text-slate-500 dark:text-neutral-400">Tổng trừ lỗi</span>
                         <span className="font-semibold text-red-600 dark:text-red-300">
                           -{fmtFull(activePenaltyAmount)}đ
                         </span>
                       </p>
                       <p className="flex items-center justify-between border-t border-slate-200 pt-2 dark:border-neutral-700">
                         <span className="text-slate-600 dark:text-neutral-300">
-                          Luong chuyen khoan
+                          Lương chuyển khoản
                         </span>
                         <span className="text-base font-black text-emerald-700 dark:text-emerald-300">
                           {fmtFull(activeEmployee.actualSalary)}đ
@@ -513,7 +513,7 @@ export default function SalaryPayrollSheet({ employees }: Props) {
 
                     <div className="mt-4 space-y-2">
                       <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-400">
-                        Cap nhat trang thai
+                        Cập nhật trạng thái
                       </p>
                       <div className="grid gap-2">
                         {(["paid", "pending", "hold"] as const).map((status) => (
@@ -544,12 +544,11 @@ export default function SalaryPayrollSheet({ employees }: Props) {
 
                 <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-neutral-700 dark:bg-neutral-900/60">
                   <p className="text-sm text-slate-600 dark:text-neutral-300">
-                    Quan ly co the quet QR de chuyen khoan nhanh hoac cap nhat trang thai phieu
-                    luong tai day.
+                    Quản lý có thể quét mã QR ở đây để có thể chuyển khoản nhanh cho nhân viên
                   </p>
                   <Button className="gap-2 bg-gradient-to-r from-[#102854] to-[#4C88C6] text-white">
                     <BanknoteArrowUp className="h-4 w-4" />
-                    Xac nhan da chuyen
+                    Xác nhận đã chuyển
                   </Button>
                 </div>
               </div>

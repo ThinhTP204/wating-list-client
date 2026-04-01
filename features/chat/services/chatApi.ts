@@ -244,8 +244,8 @@ export async function fetchConversations({
         ...conversation,
         title:
           conversation.type === "direct"
-            ? conversation.participants.find((participant) => participant.id !== currentUserId)?.name ??
-              "Nhắn tin riêng"
+            ? (conversation.participants.find((participant) => participant.id !== currentUserId)
+                ?.name ?? "Nhắn tin riêng")
             : conversation.title,
         updatedAt: getLastMessageTime(conversation.id),
       }));
@@ -273,8 +273,8 @@ export async function fetchConversations({
         ...conversation,
         title:
           conversation.type === "direct"
-            ? conversation.participants.find((participant) => participant.id !== currentUserId)?.name ??
-              "Nhắn tin riêng"
+            ? (conversation.participants.find((participant) => participant.id !== currentUserId)
+                ?.name ?? "Nhắn tin riêng")
             : conversation.title,
         updatedAt: getLastMessageTime(conversation.id),
       }));

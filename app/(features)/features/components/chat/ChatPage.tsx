@@ -138,7 +138,9 @@ function UserConversationItem({
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold text-slate-800 dark:text-white truncate">{user.name}</p>
-        <p className="text-xs text-slate-400 dark:text-neutral-500 truncate">Cuộc trò chuyện riêng</p>
+        <p className="text-xs text-slate-400 dark:text-neutral-500 truncate">
+          Cuộc trò chuyện riêng
+        </p>
       </div>
     </button>
   );
@@ -165,10 +167,10 @@ export default function ChatPage() {
     refetch: refetchConversations,
   } = useChatConversations({ currentUserId, enabled: true });
 
-  const {
-    data: directoryUsers,
-    isLoading: directoryLoading,
-  } = useChatUsers({ currentUserId, enabled: true });
+  const { data: directoryUsers, isLoading: directoryLoading } = useChatUsers({
+    currentUserId,
+    enabled: true,
+  });
 
   const resolvedConversationId = useMemo(() => {
     if (!conversations || conversations.length === 0) {
@@ -205,7 +207,9 @@ export default function ChatPage() {
     (conversations ?? [])
       .filter((item) => item.type === "direct")
       .forEach((conversation) => {
-        const partner = conversation.participants.find((participant) => participant.id !== currentUserId);
+        const partner = conversation.participants.find(
+          (participant) => participant.id !== currentUserId
+        );
         if (partner) {
           mapping.set(partner.id, conversation);
         }
@@ -361,7 +365,9 @@ export default function ChatPage() {
         <div className="bg-white/90 dark:bg-neutral-900/90 border border-slate-200 dark:border-neutral-800 rounded-2xl p-3 flex flex-col overflow-hidden">
           <div className="mb-3">
             <h2 className="text-sm font-bold text-slate-800 dark:text-white">Cuộc trò chuyện</h2>
-            <p className="text-xs text-slate-400 dark:text-neutral-500">Nhóm chung và toàn bộ nhân viên</p>
+            <p className="text-xs text-slate-400 dark:text-neutral-500">
+              Nhóm chung và toàn bộ nhân viên
+            </p>
           </div>
 
           <div className="mb-3 relative">

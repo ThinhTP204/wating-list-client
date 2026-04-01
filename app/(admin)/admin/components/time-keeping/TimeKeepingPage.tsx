@@ -1,7 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
+import {
+  fetchMockEmployees,
+  fetchShiftConfigs,
+  fetchShifts,
+} from "@/features/shifts/services/shiftApi";
+import type {
+  EmployeeShiftAttendanceStatus,
+  MockEmployee,
+  Shift as SchedulerShift,
+} from "@/features/shifts/types";
 import TimekeepingFilters from "./components/TimekeepingFilters";
 import TimekeepingGrid from "./components/TimekeepingGrid";
 import AddEmployeeDialog from "./components/AddEmployeeDialog";
@@ -149,6 +159,21 @@ export const AVAILABLE_SHIFTS = [
   { id: "shift-night", name: "Ca đêm", time: "22:00 - 06:00" },
 ];
 
+const TIMEKEEPING_FALLBACK_EMPLOYEES: MockEmployee[] = [
+  { id: "emp-01", name: "Nguyễn Văn Minh", role: "Trưởng ca" },
+  { id: "emp-02", name: "Trần Thị Lan", role: "Thu ngân" },
+  { id: "emp-03", name: "Lê Văn Hùng", role: "Nhân viên" },
+  { id: "emp-04", name: "Phạm Thị Mai", role: "Trưởng ca" },
+  { id: "emp-05", name: "Hoàng Văn Đức", role: "Thu ngân" },
+  { id: "emp-06", name: "Võ Thị Hoa", role: "Nhân viên" },
+  { id: "emp-07", name: "Đặng Văn Tuân", role: "Nhân viên" },
+  { id: "emp-08", name: "Bùi Thị Ngọc", role: "Nhân viên" },
+  { id: "emp-09", name: "Ngô Văn Long", role: "Nhân viên" },
+  { id: "emp-10", name: "Đỗ Thị Hương", role: "Nhân viên" },
+  { id: "emp-11", name: "Trương Văn Khánh", role: "Trưởng ca" },
+  { id: "emp-12", name: "Lý Thị Thảo", role: "Nhân viên" },
+];
+
 // ─── Helper ───────────────────────────────────────────────
 function getDaysOfMonth(monthOffset: number = 0): DayData[] {
   const today = new Date();
@@ -173,6 +198,106 @@ function getDaysOfMonth(monthOffset: number = 0): DayData[] {
   return days;
 }
 
+function mapMockEmployeeToTimekeepingEmployee(
+  mockEmployee: MockEmployee,
+  index: number,
+  existingShifts: Record<number, Shift[]> = {}
+): Employee {
+  const phone = `09${String(index + 1).padStart(8, "0")}`;
+  return {
+    id: mockEmployee.id,
+    name: mockEmployee.name,
+    role: mockEmployee.role,
+    phone,
+    shifts: existingShifts,
+  };
+}
+
+function getBaselineTimekeepingEmployees(): Employee[] {
+  return TIMEKEEPING_FALLBACK_EMPLOYEES.map((mockEmployee, index) =>
+    mapMockEmployeeToTimekeepingEmployee(mockEmployee, index)
+  );
+}
+
+function getMonthDateRange(monthOffset: number): { startISO: string; endISO: string } {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + monthOffset + 1, 0);
+
+  const toISODate = (date: Date): string => {
+    const local = new Date(date);
+    local.setHours(0, 0, 0, 0);
+    const tzOffset = local.getTimezoneOffset() * 60_000;
+    return new Date(local.getTime() - tzOffset).toISOString().slice(0, 10);
+  };
+
+  return {
+    startISO: toISODate(monthStart),
+    endISO: toISODate(monthEnd),
+  };
+}
+
+function mapAttendanceStatus(
+  attendanceStatus?: EmployeeShiftAttendanceStatus,
+  shiftStatus?: SchedulerShift["status"]
+): AttendanceStatus {
+  if (attendanceStatus) {
+    const mapping: Record<EmployeeShiftAttendanceStatus, AttendanceStatus> = {
+      on_time: "on-time",
+      late_or_early: "late-or-early",
+      edited: "edited",
+      missing_checkin: "forgot-check-in",
+      not_started: "not-time-yet",
+      extra_shift_pending: "pending-extra-shift",
+      in_progress: "in-shift",
+      leave_requested: "leave-requested",
+      overtime: "overtime",
+      manager_added: "manager-added",
+      paid_leave: "paid-leave-request",
+      auto_checked: "auto-tracked",
+      holiday: "holiday",
+    };
+
+    return mapping[attendanceStatus];
+  }
+
+  if (shiftStatus === "absent") {
+    return "leave-requested";
+  }
+  if (shiftStatus === "draft") {
+    return "not-time-yet";
+  }
+
+  return "on-time";
+}
+
+function mapSchedulerShiftsToTimekeepingShifts(
+  shifts: SchedulerShift[],
+  shiftNameByConfigId: Map<string, string>,
+  shiftTimeByConfigId: Map<string, string>
+): Record<string, Record<number, Shift[]>> {
+  const mapped: Record<string, Record<number, Shift[]>> = {};
+
+  for (const shift of shifts) {
+    const [, , dayPart] = shift.date.split("-");
+    const dayDate = Number(dayPart);
+    const employeeDayMap = mapped[shift.employeeId] ?? {};
+    const dayShifts = employeeDayMap[dayDate] ?? [];
+
+    dayShifts.push({
+      id: shift.id,
+      name: shiftNameByConfigId.get(shift.configId) ?? shift.configId,
+      time: shiftTimeByConfigId.get(shift.configId) ?? "--:-- - --:--",
+      status: mapAttendanceStatus(shift.attendanceStatus, shift.status),
+    });
+
+    employeeDayMap[dayDate] = dayShifts;
+    mapped[shift.employeeId] = employeeDayMap;
+  }
+
+  return mapped;
+}
+
 // ─── Component ───────────────────────────────────────────
 export default function Page() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -186,244 +311,87 @@ export default function Page() {
   const [days, setDays] = useState<DayData[]>(getDaysOfMonth(0));
   const [viewMode, setViewMode] = useState<"employee" | "shift">("employee");
 
-  // Mock data — shifts keyed by day-of-month (1-31), March 2026
-  const [employees, setEmployees] = useState<Employee[]>([
-    {
-      id: "1",
-      name: "Nguyễn Văn A",
-      phone: "0123456789",
-      role: "Nhân viên",
-      shifts: {
-        3: [
-          {
-            id: "s1",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "on-time",
-            checkIn: "07:55",
-            checkOut: "17:02",
-          },
-        ],
-        4: [
-          {
-            id: "s2",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "auto-tracked",
-            checkIn: "07:58",
-            checkOut: "17:05",
-          },
-        ],
-        5: [{ id: "s3", name: "Ca sáng", time: "06:00 - 14:00", status: "forgot-check-in" }],
-        6: [{ id: "s4", name: "Ca hành chính", time: "08:00 - 17:00", status: "holiday" }],
-        10: [
-          {
-            id: "s5",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "on-time",
-            checkIn: "07:50",
-            checkOut: "17:00",
-          },
-        ],
-        11: [
-          {
-            id: "s6",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "late-or-early",
-            checkIn: "08:15",
-            checkOut: "16:55",
-          },
-        ],
-        12: [
-          {
-            id: "s7",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "edited",
-            checkIn: "07:52",
-            checkOut: "17:08",
-          },
-        ],
-        17: [
-          {
-            id: "s8",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "manager-added",
-            checkIn: "07:55",
-            checkOut: "17:00",
-          },
-        ],
-        18: [
-          {
-            id: "s9",
-            name: "Ca tối",
-            time: "18:00 - 22:00",
-            status: "overtime",
-            checkIn: "18:15",
-            checkOut: "21:50",
-          },
-        ],
-        19: [
-          { id: "s10", name: "Ca hành chính", time: "08:00 - 17:00", status: "paid-leave-request" },
-        ],
-        23: [
-          {
-            id: "s11",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "on-time",
-            checkIn: "07:55",
-            checkOut: "17:02",
-          },
-          {
-            id: "s12",
-            name: "Ca tối",
-            time: "18:00 - 22:00",
-            status: "late-or-early",
-            checkIn: "18:15",
-            checkOut: "21:50",
-          },
-        ],
-        24: [{ id: "s13", name: "Ca hành chính", time: "08:00 - 17:00", status: "in-shift" }],
-      },
-    },
-    {
-      id: "2",
-      name: "Trần Thị B",
-      phone: "0987654321",
-      role: "Quản lý",
-      shifts: {
-        3: [
-          {
-            id: "s20",
-            name: "Ca sáng",
-            time: "06:00 - 14:00",
-            status: "on-time",
-            checkIn: "05:55",
-            checkOut: "14:01",
-          },
-        ],
-        4: [
-          { id: "s21", name: "Ca hành chính", time: "08:00 - 17:00", status: "paid-leave-request" },
-        ],
-        5: [
-          {
-            id: "s22",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "on-time",
-            checkIn: "07:50",
-            checkOut: "17:10",
-          },
-        ],
-        10: [{ id: "s23", name: "Ca chiều", time: "14:00 - 22:00", status: "pending-extra-shift" }],
-        11: [
-          { id: "s24", name: "Ca hành chính", time: "08:00 - 17:00", status: "leave-requested" },
-        ],
-        17: [
-          {
-            id: "s25",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "on-time",
-            checkIn: "07:48",
-            checkOut: "17:05",
-          },
-        ],
-        18: [
-          {
-            id: "s26",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "auto-tracked",
-            checkIn: "07:55",
-            checkOut: "17:00",
-          },
-        ],
-        23: [
-          {
-            id: "s27",
-            name: "Ca sáng",
-            time: "06:00 - 14:00",
-            status: "on-time",
-            checkIn: "05:55",
-            checkOut: "14:01",
-          },
-        ],
-        24: [{ id: "s28", name: "Ca hành chính", time: "08:00 - 17:00", status: "not-time-yet" }],
-      },
-    },
-    {
-      id: "3",
-      name: "Lê Văn C",
-      phone: "0909123456",
-      role: "Nhân viên",
-      shifts: {
-        3: [
-          {
-            id: "s30",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "late-or-early",
-            checkIn: "08:20",
-            checkOut: "17:00",
-          },
-        ],
-        4: [
-          {
-            id: "s31",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "on-time",
-            checkIn: "07:50",
-            checkOut: "17:05",
-          },
-        ],
-        5: [
-          {
-            id: "s32",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "on-time",
-            checkIn: "07:55",
-            checkOut: "17:02",
-          },
-        ],
-        11: [{ id: "s33", name: "Ca tối", time: "18:00 - 22:00", status: "not-time-yet" }],
-        17: [
-          {
-            id: "s34",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "on-time",
-            checkIn: "07:52",
-            checkOut: "17:08",
-          },
-        ],
-        23: [
-          {
-            id: "s35",
-            name: "Ca hành chính",
-            time: "08:00 - 17:00",
-            status: "on-time",
-            checkIn: "07:55",
-            checkOut: "17:00",
-          },
-        ],
-        24: [{ id: "s36", name: "Ca tối", time: "18:00 - 22:00", status: "not-time-yet" }],
-      },
-    },
-  ]);
+  const [employees, setEmployees] = useState<Employee[]>(() => getBaselineTimekeepingEmployees());
+
+  useEffect(() => {
+    let isActive = true;
+
+    const syncEmployeesFromShiftModule = async () => {
+      try {
+        const { startISO, endISO } = getMonthDateRange(currentMonth);
+
+        const [mockEmployees, monthShifts, shiftConfigs] = await Promise.all([
+          fetchMockEmployees(),
+          fetchShifts({ weekStart: startISO, weekEnd: endISO }),
+          fetchShiftConfigs(),
+        ]);
+
+        if (!isActive) {
+          return;
+        }
+
+        const sourceEmployees =
+          mockEmployees.length > 0 ? mockEmployees : TIMEKEEPING_FALLBACK_EMPLOYEES;
+
+        const shiftNameByConfigId = new Map(shiftConfigs.map((item) => [item.id, item.name]));
+        const shiftTimeByConfigId = new Map(
+          shiftConfigs.map((item) => [item.id, `${item.startTime} - ${item.endTime}`])
+        );
+        const shiftsByEmployee = mapSchedulerShiftsToTimekeepingShifts(
+          monthShifts,
+          shiftNameByConfigId,
+          shiftTimeByConfigId
+        );
+
+        setEmployees((previousEmployees) => {
+          const previousShiftByEmployeeId = new Map(
+            previousEmployees.map((employee) => [employee.id, employee.shifts])
+          );
+
+          return sourceEmployees.map((mockEmployee, index) =>
+            mapMockEmployeeToTimekeepingEmployee(
+              mockEmployee,
+              index,
+              shiftsByEmployee[mockEmployee.id] ?? previousShiftByEmployeeId.get(mockEmployee.id)
+            )
+          );
+        });
+      } catch {
+        if (!isActive) {
+          return;
+        }
+
+        // Always keep a visible baseline for UI even when shift sync fails.
+        setEmployees((previousEmployees) => {
+          const previousShiftByEmployeeId = new Map(
+            previousEmployees.map((employee) => [employee.id, employee.shifts])
+          );
+
+          return TIMEKEEPING_FALLBACK_EMPLOYEES.map((mockEmployee, index) =>
+            mapMockEmployeeToTimekeepingEmployee(
+              mockEmployee,
+              index,
+              previousShiftByEmployeeId.get(mockEmployee.id)
+            )
+          );
+        });
+      }
+    };
+
+    void syncEmployeesFromShiftModule();
+
+    return () => {
+      isActive = false;
+    };
+  }, [currentMonth]);
 
   const handleMonthChange = (offset: number) => {
     setCurrentMonth(offset);
     setDays(getDaysOfMonth(offset));
   };
 
-  const handleAddEmployee = (employeeData: EmployeeFormData[], _branchId: string) => {
+  const handleAddEmployee = (employeeData: EmployeeFormData[], branchId: string) => {
+    void branchId;
     const newEmployees = employeeData.map((data, index) => ({
       id: `emp-${Date.now()}-${index}`,
       name: data.name,

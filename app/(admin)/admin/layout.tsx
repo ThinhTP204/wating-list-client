@@ -8,7 +8,7 @@ const ADMIN_TABS: TabDef[] = [
   { name: "Lịch ca", tab: "calendar" },
   { name: "Nhân viên", tab: "employees" },
   { name: "Chấm công", tab: "time-keeping" },
-  { name: "Yêu cầu", tab: "request" },
+  { name: "Đổi ca", tab: "request" },
   { name: "Lương", tab: "salary" },
   { name: "Nhắn tin", tab: "chat" },
 ];

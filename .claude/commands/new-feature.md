@@ -58,7 +58,10 @@ export async function fetchFeatureItems({
 export async function deleteFeatureItem({
   id,
   apiKey,
-}: { id: string; apiKey: string }): Promise<void> {
+}: {
+  id: string;
+  apiKey: string;
+}): Promise<void> {
   await apiService.request({
     method: "DELETE",
     url: `/api/v1/[resource]/${id}`,
@@ -82,7 +85,12 @@ import {
 } from "@/features/[feature-name]/services/[featureName]Api";
 import type { FeatureItem } from "@/shared/types/[domain]";
 
-export function useFeatureItems({ apiKey, page, limit, enabled = true }: FetchFeatureParams & { enabled?: boolean }) {
+export function useFeatureItems({
+  apiKey,
+  page,
+  limit,
+  enabled = true,
+}: FetchFeatureParams & { enabled?: boolean }) {
   return useQuery<FeatureItem[], ApiError>({
     queryKey: [QUERY_KEYS.FEATURE, page, limit, apiKey],
     queryFn: () => fetchFeatureItems({ apiKey, page, limit }),
@@ -108,26 +116,26 @@ export function useDeleteFeatureItem(apiKey: string) {
 ## Form pattern (no react-hook-form)
 
 ```tsx
-const [formData, setFormData] = useState<CreateRequest>(initialState)
-const [errors, setErrors] = useState<Record<string, string>>({})
+const [formData, setFormData] = useState<CreateRequest>(initialState);
+const [errors, setErrors] = useState<Record<string, string>>({});
 
 const handleChange = (field: keyof CreateRequest, value: string) => {
-  setFormData(prev => ({ ...prev, [field]: value }))
-  if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }))
-}
+  setFormData((prev) => ({ ...prev, [field]: value }));
+  if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
+};
 
 const validate = (): boolean => {
-  const newErrors: Record<string, string> = {}
-  if (!formData.name.trim()) newErrors.name = 'Tên không được để trống'
-  setErrors(newErrors)
-  return Object.keys(newErrors).length === 0
-}
+  const newErrors: Record<string, string> = {};
+  if (!formData.name.trim()) newErrors.name = "Tên không được để trống";
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
 
 const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault()
-  if (!validate()) return
-  mutate(formData)
-}
+  e.preventDefault();
+  if (!validate()) return;
+  mutate(formData);
+};
 ```
 
 ## Dialog pattern
@@ -141,13 +149,15 @@ const handleSubmit = (e: React.FormEvent) => {
       ...
     </div>
     {/* Scrollable body */}
-    <div className="px-4 py-3 space-y-3">
-      ...
-    </div>
+    <div className="px-4 py-3 space-y-3">...</div>
     {/* Footer */}
     <div className="px-4 pb-4 pt-3 flex justify-end gap-2 border-t border-neutral-100 dark:border-neutral-800">
-      <Button variant="outline" onClick={() => onOpenChange(false)}>Hủy</Button>
-      <Button variant="brand" type="submit">Lưu</Button>
+      <Button variant="outline" onClick={() => onOpenChange(false)}>
+        Hủy
+      </Button>
+      <Button variant="brand" type="submit">
+        Lưu
+      </Button>
     </div>
   </DialogContent>
 </Dialog>
@@ -165,17 +175,17 @@ const handleSubmit = (e: React.FormEvent) => {
 
 ## UI component map
 
-| Raw HTML | Component (`@/components/ui/*`) |
-|----------|----------------------------------|
-| `<button>` | `<Button variant="brand\|brand-outline\|outline\|ghost\|destructive">` |
-| `<input>` | `<Input>` |
-| `<select>` | `<Select>` + `<SelectTrigger>` + `<SelectContent>` + `<SelectItem>` |
-| `<label>` | `<Label>` |
-| `<table>` / `<tr>` / `<td>` | `<Table>` / `<TableHeader>` / `<TableRow>` / `<TableCell>` |
-| `<hr>` | `<Separator>` |
-| `<img>` | `<SafeImage>` |
-| loading div | `<Skeleton>` |
-| status tag | `<Badge variant="default\|secondary\|outline\|destructive">` |
-| card wrapper | `<Card>` + `<CardHeader>` + `<CardContent>` + `<CardFooter>` |
-| modal | `<Dialog>` + `<DialogContent>` + `<DialogTitle className="sr-only">` |
-| chart | `@/components/ui/chart` (wraps Recharts) |
+| Raw HTML                    | Component (`@/components/ui/*`)                                        |
+| --------------------------- | ---------------------------------------------------------------------- |
+| `<button>`                  | `<Button variant="brand\|brand-outline\|outline\|ghost\|destructive">` |
+| `<input>`                   | `<Input>`                                                              |
+| `<select>`                  | `<Select>` + `<SelectTrigger>` + `<SelectContent>` + `<SelectItem>`    |
+| `<label>`                   | `<Label>`                                                              |
+| `<table>` / `<tr>` / `<td>` | `<Table>` / `<TableHeader>` / `<TableRow>` / `<TableCell>`             |
+| `<hr>`                      | `<Separator>`                                                          |
+| `<img>`                     | `<SafeImage>`                                                          |
+| loading div                 | `<Skeleton>`                                                           |
+| status tag                  | `<Badge variant="default\|secondary\|outline\|destructive">`           |
+| card wrapper                | `<Card>` + `<CardHeader>` + `<CardContent>` + `<CardFooter>`           |
+| modal                       | `<Dialog>` + `<DialogContent>` + `<DialogTitle className="sr-only">`   |
+| chart                       | `@/components/ui/chart` (wraps Recharts)                               |

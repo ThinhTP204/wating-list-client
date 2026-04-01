@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Employee, STATUS_META, ROLE_META, DEPARTMENT_META } from "./types";
+import { Employee, STATUS_META, DEPARTMENT_META } from "./types";
 
 interface EmployeeListProps {
   employees: Employee[];
+  roleOptions: Array<{ value: string; label: string }>;
   onEdit: (employee: Employee) => void;
   onDelete: (employee: Employee) => void;
 }
@@ -12,11 +13,17 @@ interface EmployeeListProps {
 type SortField = "name" | "email" | "department" | "role" | "status" | "joinDate";
 type SortOrder = "asc" | "desc";
 
-export default function EmployeeList({ employees, onEdit, onDelete }: EmployeeListProps) {
+export default function EmployeeList({
+  employees,
+  roleOptions,
+  onEdit,
+  onDelete,
+}: EmployeeListProps) {
   const [sortField, setSortField] = useState<SortField>("name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const roleLabelByValue = new Map(roleOptions.map((option) => [option.value, option.label]));
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -62,11 +69,25 @@ export default function EmployeeList({ employees, onEdit, onDelete }: EmployeeLi
   if (employees.length === 0) {
     return (
       <div className="bg-white dark:bg-neutral-950 rounded-xl border border-neutral-200 dark:border-neutral-800 p-12 text-center">
-        <svg className="w-16 h-16 mx-auto text-neutral-300 dark:text-neutral-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        <svg
+          className="w-16 h-16 mx-auto text-neutral-300 dark:text-neutral-600 mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.5}
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
+          />
         </svg>
-        <h3 className="text-lg font-semibold text-neutral-600 dark:text-neutral-400 mb-2">Không tìm thấy nhân viên</h3>
-        <p className="text-sm text-neutral-500 dark:text-neutral-500">Thử thay đổi bộ lọc hoặc thêm nhân viên mới</p>
+        <h3 className="text-lg font-semibold text-neutral-600 dark:text-neutral-400 mb-2">
+          Không tìm thấy nhân viên
+        </h3>
+        <p className="text-sm text-neutral-500 dark:text-neutral-500">
+          Thử thay đổi bộ lọc hoặc thêm nhân viên mới
+        </p>
       </div>
     );
   }
@@ -136,8 +157,12 @@ export default function EmployeeList({ employees, onEdit, onDelete }: EmployeeLi
                         {employee.name.split(" ").pop()?.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-medium text-neutral-900 dark:text-white">{employee.name}</div>
-                        <div className="text-sm text-neutral-500 dark:text-neutral-400">{employee.email}</div>
+                        <div className="font-medium text-neutral-900 dark:text-white">
+                          {employee.name}
+                        </div>
+                        <div className="text-sm text-neutral-500 dark:text-neutral-400">
+                          {employee.email}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -145,10 +170,12 @@ export default function EmployeeList({ employees, onEdit, onDelete }: EmployeeLi
                     {DEPARTMENT_META[employee.department].name}
                   </td>
                   <td className="px-4 py-3 text-sm text-neutral-600 dark:text-neutral-300">
-                    {ROLE_META[employee.role].name}
+                    {roleLabelByValue.get(employee.role) ?? employee.role}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${statusMeta.bg} ${statusMeta.text}`}>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${statusMeta.bg} ${statusMeta.text}`}
+                    >
                       {statusMeta.name}
                     </span>
                   </td>
@@ -162,8 +189,18 @@ export default function EmployeeList({ employees, onEdit, onDelete }: EmployeeLi
                         className="p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors text-blue-600 dark:text-blue-400"
                         title="Chỉnh sửa"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          />
                         </svg>
                       </button>
                       <button
@@ -171,8 +208,18 @@ export default function EmployeeList({ employees, onEdit, onDelete }: EmployeeLi
                         className="p-2 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors text-red-600 dark:text-red-400"
                         title="Xóa"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
                         </svg>
                       </button>
                     </div>
@@ -188,7 +235,9 @@ export default function EmployeeList({ employees, onEdit, onDelete }: EmployeeLi
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-3 border-t border-neutral-200 dark:border-neutral-800">
           <div className="text-sm text-neutral-500 dark:text-neutral-400">
-            Hiển thị {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, employees.length)} của {employees.length} nhân viên
+            Hiển thị {(currentPage - 1) * itemsPerPage + 1} -{" "}
+            {Math.min(currentPage * itemsPerPage, employees.length)} của {employees.length} nhân
+            viên
           </div>
           <div className="flex items-center gap-1">
             <button
@@ -197,7 +246,12 @@ export default function EmployeeList({ employees, onEdit, onDelete }: EmployeeLi
               className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -219,7 +273,12 @@ export default function EmployeeList({ employees, onEdit, onDelete }: EmployeeLi
               className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>

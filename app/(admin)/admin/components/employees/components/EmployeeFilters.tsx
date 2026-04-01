@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { EmployeeStatus, EmployeeDepartment, EmployeeRole, DEPARTMENT_META, ROLE_META, STATUS_META } from "./types";
+import { EmployeeStatus, EmployeeDepartment, DEPARTMENT_META, STATUS_META } from "./types";
 
 interface EmployeeFiltersProps {
   onSearchChange: (query: string) => void;
   onStatusChange: (status: EmployeeStatus | "all") => void;
   onDepartmentChange: (department: EmployeeDepartment | "all") => void;
-  onRoleChange: (role: EmployeeRole | "all") => void;
+  onRoleChange: (role: string | "all") => void;
+  roleOptions: Array<{ value: string; label: string }>;
   currentStatus: EmployeeStatus | "all";
   currentDepartment: EmployeeDepartment | "all";
-  currentRole: EmployeeRole | "all";
+  currentRole: string | "all";
 }
 
 export default function EmployeeFilters({
@@ -18,6 +19,7 @@ export default function EmployeeFilters({
   onStatusChange,
   onDepartmentChange,
   onRoleChange,
+  roleOptions,
   currentStatus,
   currentDepartment,
   currentRole,
@@ -67,7 +69,9 @@ export default function EmployeeFilters({
         >
           <option value="all">Tất cả trạng thái</option>
           {Object.entries(STATUS_META).map(([key, meta]) => (
-            <option key={key} value={key}>{meta.name}</option>
+            <option key={key} value={key}>
+              {meta.name}
+            </option>
           ))}
         </select>
 
@@ -79,19 +83,23 @@ export default function EmployeeFilters({
         >
           <option value="all">Tất cả phòng ban</option>
           {Object.entries(DEPARTMENT_META).map(([key, meta]) => (
-            <option key={key} value={key}>{meta.name}</option>
+            <option key={key} value={key}>
+              {meta.name}
+            </option>
           ))}
         </select>
 
         {/* Role Filter */}
         <select
           value={currentRole}
-          onChange={(e) => onRoleChange(e.target.value as EmployeeRole | "all")}
+          onChange={(e) => onRoleChange(e.target.value as string | "all")}
           className="px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors"
         >
           <option value="all">Tất cả chức vụ</option>
-          {Object.entries(ROLE_META).map(([key, meta]) => (
-            <option key={key} value={key}>{meta.name}</option>
+          {roleOptions.map((role) => (
+            <option key={role.value} value={role.value}>
+              {role.label}
+            </option>
           ))}
         </select>
       </div>

@@ -15,6 +15,9 @@ export const QUERY_KEYS = {
   ORDERS: "orders",
   REGISTER: "register",
   CHAT_MESSAGES: "chat-messages",
+  SHIFT_CONFIGS: "shift-configs",
+  SHIFTS: "shifts",
+  MOCK_EMPLOYEES: "mock-employees",
 } as const;
 
 // Routes

@@ -1,5 +1,5 @@
 import DashboardPage from "@/app/(admin)/admin/components/dashboard/DashboardPage";
-import CalendarPage from "@/app/(features)/features/components/calendar/CalendarPage";
+import ShiftScheduler from "@/app/(features)/features/components/shift-scheduler/ShiftScheduler";
 import EmployeesPage from "@/app/(admin)/admin/components/employees/EmployeesPageWrapper";
 import TimeKeepingPage from "@/app/(admin)/admin/components/time-keeping/TimeKeepingPage";
 import RequestPage from "@/app/(admin)/admin/components/request/RequestPage";
@@ -8,7 +8,7 @@ import ChatPage from "@/app/(features)/features/components/chat/ChatPage";
 
 const TAB_COMPONENTS: Record<string, React.ComponentType> = {
   dashboard: DashboardPage,
-  calendar: CalendarPage,
+  calendar: ShiftScheduler,
   employees: EmployeesPage,
   "time-keeping": TimeKeepingPage,
   request: RequestPage,

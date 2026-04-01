@@ -32,6 +32,7 @@ import {
   SHIFT_TYPE_META,
   MIN_DAYS_AHEAD,
 } from "@/app/(admin)/admin/components/request/components/types";
+import { buildCandidateSuggestions } from "@/features/shift-swap/utils/suggestCandidates";
 import ShiftSwapCard from "@/app/(admin)/admin/components/request/components/ShiftSwapCard";
 import AvailableCard from "@/app/(admin)/admin/components/request/components/AvailableCard";
 import ShiftSwapDialog from "@/app/(admin)/admin/components/request/components/ShiftSwapDialog";
@@ -180,7 +181,23 @@ export default function UserRequestPage() {
     [available, search]
   );
 
+  const suggestionPool = useMemo(
+    () =>
+      available.filter((e) => {
+        if (e.isOwn) return false;
+        return new Date(e.availableDate) >= new Date(new Date().toDateString());
+      }),
+    [available]
+  );
+
   const tabCount = { swap: marketSwap.length, avail: marketAvail.length };
+
+  const suggestedCandidates = useMemo(() => {
+    if (!mySwapPost) {
+      return [];
+    }
+    return buildCandidateSuggestions(mySwapPost, suggestionPool, 3);
+  }, [mySwapPost, suggestionPool]);
 
   const handleSaveSwap = (p: ShiftSwapPost) => setPosts((prev) => [p, ...prev]);
   const handleAccept = (p: ShiftSwapPost) =>
@@ -524,6 +541,93 @@ export default function UserRequestPage() {
                   Có <strong>{marketSwap.filter((p) => (p.matchScore ?? 0) >= 80).length}</strong>{" "}
                   yêu cầu phù hợp cao (&ge;80%) với nhu cầu của bạn
                 </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {activeTab === "swap" && mySwapPost && suggestedCandidates.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="rounded-2xl border border-[#4C88C6]/25 bg-white/85 p-3 shadow-sm dark:border-blue-800/50 dark:bg-neutral-900/85"
+              >
+                <div className="mb-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-[#4C88C6]" />
+                    <p className="text-sm font-bold text-slate-800 dark:text-white">
+                      De xuat phu hop nhat cho ca ban can doi
+                    </p>
+                  </div>
+                  <Badge className="border border-[#4C88C6]/30 bg-[#BCE8F5]/40 text-xs text-[#1D4D8F] dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                    {SHIFT_TYPE_META[mySwapPost.myShift.type].label} ·{" "}
+                    {mySwapPost.myShift.timeLabel}
+                  </Badge>
+                </div>
+
+                <div className="space-y-2">
+                  {suggestedCandidates.map((item, index) => (
+                    <div
+                      key={item.employee.id}
+                      className="rounded-xl border border-slate-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-900"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-slate-800 dark:text-white">
+                            #{index + 1} · {item.employee.name}
+                          </p>
+                          <p className="mt-0.5 text-xs text-slate-500 dark:text-neutral-400">
+                            {item.employee.department} · {item.employee.branch}
+                          </p>
+                        </div>
+                        <Badge className="border border-[#4C88C6]/30 bg-[#BCE8F5]/40 text-xs font-bold text-[#1D4D8F] dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                          {item.score}%
+                        </Badge>
+                      </div>
+
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {item.reasons.slice(0, 3).map((reason) => (
+                          <span
+                            key={`${item.employee.id}-${reason}`}
+                            className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                          >
+                            {reason}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="mt-2 flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const message = `Xin chao ${item.employee.name}, minh can doi ca ${SHIFT_TYPE_META[mySwapPost.myShift.type].label} (${mySwapPost.myShift.timeLabel}) ngay ${new Date(mySwapPost.myShift.date).toLocaleDateString("vi-VN")}. Ban co the ho tro minh khong?`;
+                            router.push(
+                              `/employee?tab=chat&prefill=${encodeURIComponent(message)}`
+                            );
+                          }}
+                          className="h-8 flex-1 text-xs"
+                        >
+                          Nhắn tin
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            const message = `Xin chao ${item.employee.name}, minh muon moi ban nhan giup ca ${SHIFT_TYPE_META[mySwapPost.myShift.type].label} (${mySwapPost.myShift.timeLabel}) ngay ${new Date(mySwapPost.myShift.date).toLocaleDateString("vi-VN")}. Neu duoc ban xac nhan giup minh nhe.`;
+                            router.push(
+                              `/employee?tab=chat&prefill=${encodeURIComponent(message)}`
+                            );
+                          }}
+                          className="h-8 flex-1 border-0 bg-gradient-to-r from-[#102854] via-[#1D4D8F] to-[#4C88C6] text-xs text-white"
+                        >
+                          Moi nhan ca
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

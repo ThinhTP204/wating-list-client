@@ -42,6 +42,7 @@ export const Compare = ({
   // Sync with external controlled value
   useEffect(() => {
     if (controlledPercentage !== undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSliderXPercent(controlledPercentage);
     }
   }, [controlledPercentage]);
@@ -59,8 +60,7 @@ export const Compare = ({
     const startTime = Date.now();
     const animate = () => {
       const elapsedTime = Date.now() - startTime;
-      const progress =
-        (elapsedTime % (autoplayDuration * 2)) / autoplayDuration;
+      const progress = (elapsedTime % (autoplayDuration * 2)) / autoplayDuration;
       const percentage = progress <= 1 ? progress * 100 : (2 - progress) * 100;
 
       setSliderXPercent(percentage);
@@ -136,10 +136,7 @@ export const Compare = ({
     [handleStart]
   );
   const handleMouseUp = useCallback(() => handleEnd(), [handleEnd]);
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => handleMove(e.clientX),
-    [handleMove]
-  );
+  const handleMouseMove = useCallback((e: React.MouseEvent) => handleMove(e.clientX), [handleMove]);
 
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {

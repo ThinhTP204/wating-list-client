@@ -1,5 +1,5 @@
 ---
-description: "Use when writing or updating tests, validating changes, or finishing a task. Enforces project validation commands, test quality expectations, and completion checks."
+description: "Use when writing or updating tests, validating code changes, or finishing a task. Enforces deterministic testing, realistic validation order, and transparent completion reporting."
 name: "Testing And Validation Workflow"
 applyTo: "**/*.{test,spec}.{ts,tsx,js,jsx}"
 ---
@@ -8,6 +8,7 @@ applyTo: "**/*.{test,spec}.{ts,tsx,js,jsx}"
 
 - Before claiming completion, run relevant checks for changed scope.
 - Prefer targeted checks first, then full validation when change is broad.
+- Keep tests deterministic and independent from local environment assumptions.
 
 ## Commands
 
@@ -28,8 +29,9 @@ applyTo: "**/*.{test,spec}.{ts,tsx,js,jsx}"
 
 - Summarize what was validated and what was not run.
 - If a command fails, include the blocker and next concrete action.
+- Separate verified facts from assumptions.
 
 ## References
 
-- See ../copilot-instructions.md for global project commands.
-- See ../../CLAUDE.md for stack and workflow context.
+- See `../copilot-instructions.md` for global project commands.
+- See `../../CLAUDE.md` for stack and workflow context.

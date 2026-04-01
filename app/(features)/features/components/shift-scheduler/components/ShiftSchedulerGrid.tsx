@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import {
   DndContext,
   DragOverlay,
@@ -82,6 +83,18 @@ export default function ShiftSchedulerGrid({
   }
 
   const colWidth = viewMode === "month" ? "85px" : "120px";
+  const overlay = (
+    <DragOverlay>
+      {activeShift && (
+        <ShiftChip
+          shift={activeShift}
+          config={configs.find((c) => c.id === activeShift.configId)}
+          onClick={() => {}}
+          isDragOverlay
+        />
+      )}
+    </DragOverlay>
+  );
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
@@ -209,16 +222,7 @@ export default function ShiftSchedulerGrid({
         />
       </div>
 
-      <DragOverlay>
-        {activeShift && (
-          <ShiftChip
-            shift={activeShift}
-            config={configs.find((c) => c.id === activeShift.configId)}
-            onClick={() => {}}
-            isDragOverlay
-          />
-        )}
-      </DragOverlay>
+      {typeof document !== "undefined" ? createPortal(overlay, document.body) : overlay}
     </DndContext>
   );
 }

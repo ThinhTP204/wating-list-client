@@ -13,6 +13,35 @@ interface EmployeeListProps {
 type SortField = "name" | "email" | "department" | "role" | "status" | "joinDate";
 type SortOrder = "asc" | "desc";
 
+function SortIcon({
+  field,
+  sortField,
+  sortOrder,
+}: {
+  field: SortField;
+  sortField: SortField;
+  sortOrder: SortOrder;
+}) {
+  return (
+    <span className="ml-1 inline-flex flex-col">
+      <svg
+        className={`w-3 h-3 ${sortField === field && sortOrder === "asc" ? "text-blue-500" : "text-neutral-300"}`}
+        fill="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path d="M12 5l-8 8h16z" />
+      </svg>
+      <svg
+        className={`w-3 h-3 -mt-1 ${sortField === field && sortOrder === "desc" ? "text-blue-500" : "text-neutral-300"}`}
+        fill="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path d="M12 19l-8-8h16z" />
+      </svg>
+    </span>
+  );
+}
+
 export default function EmployeeList({
   employees,
   roleOptions,
@@ -45,25 +74,6 @@ export default function EmployeeList({
   const paginatedEmployees = sortedEmployees.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
-  );
-
-  const SortIcon = ({ field }: { field: SortField }) => (
-    <span className="ml-1 inline-flex flex-col">
-      <svg
-        className={`w-3 h-3 ${sortField === field && sortOrder === "asc" ? "text-blue-500" : "text-neutral-300"}`}
-        fill="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path d="M12 5l-8 8h16z" />
-      </svg>
-      <svg
-        className={`w-3 h-3 -mt-1 ${sortField === field && sortOrder === "desc" ? "text-blue-500" : "text-neutral-300"}`}
-        fill="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path d="M12 19l-8-8h16z" />
-      </svg>
-    </span>
   );
 
   if (employees.length === 0) {
@@ -103,7 +113,7 @@ export default function EmployeeList({
                   onClick={() => handleSort("name")}
                   className="flex items-center hover:text-blue-500 transition-colors"
                 >
-                  Nhân viên <SortIcon field="name" />
+                  Nhân viên <SortIcon field="name" sortField={sortField} sortOrder={sortOrder} />
                 </button>
               </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
@@ -111,7 +121,8 @@ export default function EmployeeList({
                   onClick={() => handleSort("department")}
                   className="flex items-center hover:text-blue-500 transition-colors"
                 >
-                  Phòng ban <SortIcon field="department" />
+                  Phòng ban{" "}
+                  <SortIcon field="department" sortField={sortField} sortOrder={sortOrder} />
                 </button>
               </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
@@ -119,7 +130,7 @@ export default function EmployeeList({
                   onClick={() => handleSort("role")}
                   className="flex items-center hover:text-blue-500 transition-colors"
                 >
-                  Chức vụ <SortIcon field="role" />
+                  Chức vụ <SortIcon field="role" sortField={sortField} sortOrder={sortOrder} />
                 </button>
               </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
@@ -127,7 +138,7 @@ export default function EmployeeList({
                   onClick={() => handleSort("status")}
                   className="flex items-center hover:text-blue-500 transition-colors"
                 >
-                  Trạng thái <SortIcon field="status" />
+                  Trạng thái <SortIcon field="status" sortField={sortField} sortOrder={sortOrder} />
                 </button>
               </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
@@ -135,7 +146,7 @@ export default function EmployeeList({
                   onClick={() => handleSort("joinDate")}
                   className="flex items-center hover:text-blue-500 transition-colors"
                 >
-                  Ngày vào <SortIcon field="joinDate" />
+                  Ngày vào <SortIcon field="joinDate" sortField={sortField} sortOrder={sortOrder} />
                 </button>
               </th>
               <th className="text-right px-4 py-3 text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">

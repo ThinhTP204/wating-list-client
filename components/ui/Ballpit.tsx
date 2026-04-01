@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useRef, useEffect } from "react";
 import {
   Clock,
   PerspectiveCamera,
@@ -20,11 +21,11 @@ import {
   PointLight,
   ACESFilmicToneMapping,
   Raycaster,
-  Plane
-} from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { Observer } from 'gsap/Observer';
-import { gsap } from 'gsap';
+  Plane,
+} from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { Observer } from "gsap/Observer";
+import { gsap } from "gsap";
 
 gsap.registerPlugin(Observer);
 
@@ -32,7 +33,7 @@ interface XConfig {
   canvas?: HTMLCanvasElement;
   id?: string;
   rendererOptions?: Partial<WebGLRendererParameters>;
-  size?: 'parent' | { width: number; height: number };
+  size?: "parent" | { width: number; height: number };
 }
 
 interface SizeData {
@@ -71,7 +72,7 @@ class X {
     wWidth: 0,
     wHeight: 0,
     ratio: 0,
-    pixelRatio: 0
+    pixelRatio: 0,
   };
 
   render: () => void = this.#render.bind(this);
@@ -106,16 +107,16 @@ class X {
       if (elem instanceof HTMLCanvasElement) {
         this.canvas = elem;
       } else {
-        console.error('Three: Missing canvas or id parameter');
+        console.error("Three: Missing canvas or id parameter");
       }
     } else {
-      console.error('Three: Missing canvas or id parameter');
+      console.error("Three: Missing canvas or id parameter");
     }
-    this.canvas!.style.display = 'block';
+    this.canvas!.style.display = "block";
     const rendererOptions: WebGLRendererParameters = {
       canvas: this.canvas,
-      powerPreference: 'high-performance',
-      ...(this.#config.rendererOptions ?? {})
+      powerPreference: "high-performance",
+      ...(this.#config.rendererOptions ?? {}),
     };
     this.renderer = new WebGLRenderer(rendererOptions);
     this.renderer.outputColorSpace = SRGBColorSpace;
@@ -123,19 +124,19 @@ class X {
 
   #initObservers() {
     if (!(this.#config.size instanceof Object)) {
-      window.addEventListener('resize', this.#onResize.bind(this));
-      if (this.#config.size === 'parent' && this.canvas.parentNode) {
+      window.addEventListener("resize", this.#onResize.bind(this));
+      if (this.#config.size === "parent" && this.canvas.parentNode) {
         this.#resizeObserver = new ResizeObserver(this.#onResize.bind(this));
         this.#resizeObserver.observe(this.canvas.parentNode as Element);
       }
     }
     this.#intersectionObserver = new IntersectionObserver(this.#onIntersection.bind(this), {
       root: null,
-      rootMargin: '0px',
-      threshold: 0
+      rootMargin: "0px",
+      threshold: 0,
     });
     this.#intersectionObserver.observe(this.canvas);
-    document.addEventListener('visibilitychange', this.#onVisibilityChange.bind(this));
+    document.addEventListener("visibilitychange", this.#onVisibilityChange.bind(this));
   }
 
   #onResize() {
@@ -148,7 +149,7 @@ class X {
     if (this.#config.size instanceof Object) {
       w = this.#config.size.width;
       h = this.#config.size.height;
-    } else if (this.#config.size === 'parent' && this.canvas.parentNode) {
+    } else if (this.#config.size === "parent" && this.canvas.parentNode) {
       w = (this.canvas.parentNode as HTMLElement).offsetWidth;
       h = (this.canvas.parentNode as HTMLElement).offsetHeight;
     } else {
@@ -256,11 +257,15 @@ class X {
   }
 
   clear() {
-    this.scene.traverse(obj => {
-      if ((obj as any).isMesh && typeof (obj as any).material === 'object' && (obj as any).material !== null) {
-        Object.keys((obj as any).material).forEach(key => {
+    this.scene.traverse((obj) => {
+      if (
+        (obj as any).isMesh &&
+        typeof (obj as any).material === "object" &&
+        (obj as any).material !== null
+      ) {
+        Object.keys((obj as any).material).forEach((key) => {
           const matProp = (obj as any).material[key];
-          if (matProp && typeof matProp === 'object' && typeof matProp.dispose === 'function') {
+          if (matProp && typeof matProp === "object" && typeof matProp.dispose === "function") {
             matProp.dispose();
           }
         });
@@ -281,10 +286,10 @@ class X {
   }
 
   #onResizeCleanup() {
-    window.removeEventListener('resize', this.#onResize.bind(this));
+    window.removeEventListener("resize", this.#onResize.bind(this));
     this.#resizeObserver?.disconnect();
     this.#intersectionObserver?.disconnect();
-    document.removeEventListener('visibilitychange', this.#onVisibilityChange.bind(this));
+    document.removeEventListener("visibilitychange", this.#onVisibilityChange.bind(this));
   }
 }
 
@@ -427,13 +432,13 @@ class Y extends MeshPhysicalMaterial {
     thicknessAmbient: { value: 0 },
     thicknessAttenuation: { value: 0.1 },
     thicknessPower: { value: 2 },
-    thicknessScale: { value: 10 }
+    thicknessScale: { value: 10 },
   };
 
   constructor(params: any) {
     super(params);
-    this.defines = { USE_UV: '' };
-    this.onBeforeCompile = shader => {
+    this.defines = { USE_UV: "" };
+    this.onBeforeCompile = (shader) => {
       Object.assign(shader.uniforms, this.uniforms);
       shader.fragmentShader =
         `
@@ -444,7 +449,7 @@ class Y extends MeshPhysicalMaterial {
         uniform float thicknessAttenuation;
         ` + shader.fragmentShader;
       shader.fragmentShader = shader.fragmentShader.replace(
-        'void main() {',
+        "void main() {",
         `
         void RE_Direct_Scattering(const in IncidentLight directLight, const in vec2 uv, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, inout ReflectedLight reflectedLight) {
           vec3 scatteringHalf = normalize(directLight.direction + (geometryNormal * thicknessDistortion));
@@ -461,13 +466,16 @@ class Y extends MeshPhysicalMaterial {
         `
       );
       const lightsChunk = ShaderChunk.lights_fragment_begin.replaceAll(
-        'RE_Direct( directLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );',
+        "RE_Direct( directLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );",
         `
           RE_Direct( directLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );
           RE_Direct_Scattering(directLight, vUv, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, reflectedLight);
         `
       );
-      shader.fragmentShader = shader.fragmentShader.replace('#include <lights_fragment_begin>', lightsChunk);
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "#include <lights_fragment_begin>",
+        lightsChunk
+      );
       if (this.onBeforeCompile2) this.onBeforeCompile2(shader);
     };
   }
@@ -484,7 +492,7 @@ const XConfig = {
     metalness: 0.5,
     roughness: 0.5,
     clearcoat: 1,
-    clearcoatRoughness: 0.15
+    clearcoatRoughness: 0.15,
   },
   minSize: 0.5,
   maxSize: 1,
@@ -497,7 +505,7 @@ const XConfig = {
   maxY: 5,
   maxZ: 2,
   controlSphere0: false,
-  followCursor: true
+  followCursor: true,
 };
 
 const U = new Object3D();
@@ -519,7 +527,9 @@ interface PointerData {
 
 const pointerMap = new Map<HTMLElement, PointerData>();
 
-function createPointerData(options: Partial<PointerData> & { domElement: HTMLElement }): PointerData {
+function createPointerData(
+  options: Partial<PointerData> & { domElement: HTMLElement }
+): PointerData {
   const defaultData: PointerData = {
     position: new Vector2(),
     nPosition: new Vector2(),
@@ -529,26 +539,26 @@ function createPointerData(options: Partial<PointerData> & { domElement: HTMLEle
     onMove: () => {},
     onClick: () => {},
     onLeave: () => {},
-    ...options
+    ...options,
   };
   if (!pointerMap.has(options.domElement)) {
     pointerMap.set(options.domElement, defaultData);
     if (!globalPointerActive) {
-      document.body.addEventListener('pointermove', onPointerMove as EventListener);
-      document.body.addEventListener('pointerleave', onPointerLeave as EventListener);
-      document.body.addEventListener('click', onPointerClick as EventListener);
+      document.body.addEventListener("pointermove", onPointerMove as EventListener);
+      document.body.addEventListener("pointerleave", onPointerLeave as EventListener);
+      document.body.addEventListener("click", onPointerClick as EventListener);
 
-      document.body.addEventListener('touchstart', onTouchStart as EventListener, {
-        passive: false
+      document.body.addEventListener("touchstart", onTouchStart as EventListener, {
+        passive: false,
       });
-      document.body.addEventListener('touchmove', onTouchMove as EventListener, {
-        passive: false
+      document.body.addEventListener("touchmove", onTouchMove as EventListener, {
+        passive: false,
       });
-      document.body.addEventListener('touchend', onTouchEnd as EventListener, {
-        passive: false
+      document.body.addEventListener("touchend", onTouchEnd as EventListener, {
+        passive: false,
       });
-      document.body.addEventListener('touchcancel', onTouchEnd as EventListener, {
-        passive: false
+      document.body.addEventListener("touchcancel", onTouchEnd as EventListener, {
+        passive: false,
       });
       globalPointerActive = true;
     }
@@ -556,14 +566,14 @@ function createPointerData(options: Partial<PointerData> & { domElement: HTMLEle
   defaultData.dispose = () => {
     pointerMap.delete(options.domElement);
     if (pointerMap.size === 0) {
-      document.body.removeEventListener('pointermove', onPointerMove as EventListener);
-      document.body.removeEventListener('pointerleave', onPointerLeave as EventListener);
-      document.body.removeEventListener('click', onPointerClick as EventListener);
+      document.body.removeEventListener("pointermove", onPointerMove as EventListener);
+      document.body.removeEventListener("pointerleave", onPointerLeave as EventListener);
+      document.body.removeEventListener("click", onPointerClick as EventListener);
 
-      document.body.removeEventListener('touchstart', onTouchStart as EventListener);
-      document.body.removeEventListener('touchmove', onTouchMove as EventListener);
-      document.body.removeEventListener('touchend', onTouchEnd as EventListener);
-      document.body.removeEventListener('touchcancel', onTouchEnd as EventListener);
+      document.body.removeEventListener("touchstart", onTouchStart as EventListener);
+      document.body.removeEventListener("touchmove", onTouchMove as EventListener);
+      document.body.removeEventListener("touchend", onTouchEnd as EventListener);
+      document.body.removeEventListener("touchcancel", onTouchEnd as EventListener);
       globalPointerActive = false;
     }
   };
@@ -672,7 +682,10 @@ function onPointerLeave() {
 
 function updatePointerData(data: PointerData, rect: DOMRect) {
   data.position.set(pointerPosition.x - rect.left, pointerPosition.y - rect.top);
-  data.nPosition.set((data.position.x / rect.width) * 2 - 1, (-data.position.y / rect.height) * 2 + 1);
+  data.nPosition.set(
+    (data.position.x / rect.width) * 2 - 1,
+    (-data.position.y / rect.height) * 2 + 1
+  );
 }
 
 function isInside(rect: DOMRect) {
@@ -717,14 +730,14 @@ class Z extends InstancedMesh {
       const colorUtils = (function (colorsArr: number[]) {
         let baseColors: number[] = colorsArr;
         let colorObjects: Color[] = [];
-        baseColors.forEach(col => {
+        baseColors.forEach((col) => {
           colorObjects.push(new Color(col));
         });
         return {
           setColors: (cols: number[]) => {
             baseColors = cols;
             colorObjects = [];
-            baseColors.forEach(col => {
+            baseColors.forEach((col) => {
               colorObjects.push(new Color(col));
             });
           },
@@ -740,7 +753,7 @@ class Z extends InstancedMesh {
             out.g = start.g + alpha * (end.g - start.g);
             out.b = start.b + alpha * (end.b - start.b);
             return out;
-          }
+          },
         };
       })(colors);
       for (let idx = 0; idx < this.count; idx++) {
@@ -784,8 +797,8 @@ interface CreateBallpitReturn {
 function createBallpit(canvas: HTMLCanvasElement, config: any = {}): CreateBallpitReturn {
   const threeInstance = new X({
     canvas,
-    size: 'parent',
-    rendererOptions: { antialias: true, alpha: true }
+    size: "parent",
+    rendererOptions: { antialias: true, alpha: true },
   });
   let spheres: Z;
   threeInstance.renderer.toneMapping = ACESFilmicToneMapping;
@@ -799,9 +812,9 @@ function createBallpit(canvas: HTMLCanvasElement, config: any = {}): CreateBallp
   const intersectionPoint = new Vector3();
   let isPaused = false;
 
-  canvas.style.touchAction = 'none';
-  canvas.style.userSelect = 'none';
-  (canvas.style as any).webkitUserSelect = 'none';
+  canvas.style.touchAction = "none";
+  canvas.style.userSelect = "none";
+  (canvas.style as any).webkitUserSelect = "none";
 
   const pointerData = createPointerData({
     domElement: canvas,
@@ -814,7 +827,7 @@ function createBallpit(canvas: HTMLCanvasElement, config: any = {}): CreateBallp
     },
     onLeave() {
       spheres.config.controlSphere0 = false;
-    }
+    },
   });
   function initialize(cfg: any) {
     if (spheres) {
@@ -824,10 +837,10 @@ function createBallpit(canvas: HTMLCanvasElement, config: any = {}): CreateBallp
     spheres = new Z(threeInstance.renderer, cfg);
     threeInstance.scene.add(spheres);
   }
-  threeInstance.onBeforeRender = deltaInfo => {
+  threeInstance.onBeforeRender = (deltaInfo) => {
     if (!isPaused) spheres.update(deltaInfo);
   };
-  threeInstance.onAfterResize = size => {
+  threeInstance.onAfterResize = (size) => {
     spheres.config.maxX = size.wWidth / 2;
     spheres.config.maxY = size.wHeight / 2;
   };
@@ -845,7 +858,7 @@ function createBallpit(canvas: HTMLCanvasElement, config: any = {}): CreateBallp
     dispose() {
       pointerData.dispose?.();
       threeInstance.dispose();
-    }
+    },
   };
 }
 
@@ -855,7 +868,7 @@ interface BallpitProps {
   [key: string]: any;
 }
 
-const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, ...props }) => {
+const Ballpit: React.FC<BallpitProps> = ({ className = "", followCursor = true, ...props }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const spheresInstanceRef = useRef<CreateBallpitReturn | null>(null);
 
@@ -865,7 +878,7 @@ const Ballpit: React.FC<BallpitProps> = ({ className = '', followCursor = true, 
 
     spheresInstanceRef.current = createBallpit(canvas, {
       followCursor,
-      ...props
+      ...props,
     });
 
     return () => {

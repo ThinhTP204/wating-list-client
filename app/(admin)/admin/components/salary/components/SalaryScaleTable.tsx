@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Edit2, Trash2, ChevronDown, Inbox } from "lucide-react";
-import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "@/components/ui/table";
 import { SalaryScaleEntry } from "./types";
 import { cn } from "@/lib/utils";
 
@@ -49,7 +56,7 @@ export default function SalaryScaleTable({ entries, onEdit, onDelete }: Props) {
           Chưa có khung lương
         </p>
         <p className="text-xs text-neutral-400 dark:text-neutral-500">
-          Nhấn "+ Thêm mục" để bắt đầu
+          Nhấn &quot;+ Thêm mục&quot; để bắt đầu
         </p>
       </motion.div>
     );

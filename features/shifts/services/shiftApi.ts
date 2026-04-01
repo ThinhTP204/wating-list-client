@@ -14,7 +14,7 @@ import type {
 const delay = (ms = 200) => new Promise((r) => setTimeout(r, ms));
 
 // ── Mock Employees ─────────────────────────────────────────────────────────
-let mockEmployees: MockEmployee[] = [
+const mockEmployees: MockEmployee[] = [
   { id: "emp-01", name: "Nguyễn Văn Minh", role: "Trưởng ca" },
   { id: "emp-02", name: "Trần Thị Lan", role: "Thu ngân" },
   { id: "emp-03", name: "Lê Văn Hùng", role: "Nhân viên" },
@@ -172,7 +172,7 @@ function generateInitialShifts(): Shift[] {
 }
 
 let mockShifts: Shift[] = generateInitialShifts();
-let mockAvailability: Availability[] = [];
+const mockAvailability: Availability[] = [];
 let mockStaffingDemand: StaffingDemand[] = [];
 
 function getDateRange(startISO: string, endISO: string): string[] {

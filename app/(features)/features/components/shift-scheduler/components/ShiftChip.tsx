@@ -24,7 +24,8 @@ export default function ShiftChip({
     data: { shift },
   });
 
-  const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined;
+  const style =
+    !isDragOverlay && transform ? { transform: CSS.Translate.toString(transform) } : undefined;
   const chipColor = config?.color ?? "#4C88C6";
 
   const isDraft = shift.status === "draft";

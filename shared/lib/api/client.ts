@@ -28,9 +28,9 @@ class ApiService {
   private setupInterceptors() {
     // Request Interceptor
     this.client.interceptors.request.use(
-      (config) => {
+      async (config) => {
         // Lazy import to avoid circular dependency (client ↔ authSlice)
-        const { store } = require("@/lib/redux/store");
+        const { store } = await import("@/lib/redux/store");
         const token = store.getState().auth.token;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
@@ -51,8 +51,8 @@ class ApiService {
         if (error.response?.status === 401) {
           deleteCookie("auth-token", { path: "/" });
           // Lazy import to avoid circular dependency (client ↔ authSlice)
-          const { store } = require("@/lib/redux/store");
-          const { logout } = require("@/lib/redux/slices/authSlice");
+          const { store } = await import("@/lib/redux/store");
+          const { logout } = await import("@/lib/redux/slices/authSlice");
           store.dispatch(logout());
 
           if (typeof window !== "undefined") {
@@ -62,8 +62,7 @@ class ApiService {
 
         const apiError: ApiError = {
           code: error.response?.status,
-          message:
-            error.response?.data?.message || error.message || "Có lỗi xảy ra",
+          message: error.response?.data?.message || error.message || "Có lỗi xảy ra",
           status: false,
           data: error.response?.data,
         };
@@ -81,10 +80,7 @@ class ApiService {
     return await this.client.request<T>(config);
   }
 
-  async get<T>(
-    url: string,
-    params?: Record<string, any>
-  ): Promise<AxiosResponse<T>> {
+  async get<T>(url: string, params?: Record<string, any>): Promise<AxiosResponse<T>> {
     return this.request<T>({
       method: "GET",
       url,
@@ -119,9 +115,7 @@ class ApiService {
       data: formData,
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           onProgress(percentCompleted);
         }
       },

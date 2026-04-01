@@ -40,6 +40,7 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
 
   useEffect(() => {
     if (editing) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         name: editing.name,
         keyword: editing.keyword,
@@ -49,8 +50,10 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
         hiddenFromEmployee: editing.hiddenFromEmployee,
       });
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm(EMPTY_FORM);
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setErrors({});
   }, [editing, open]);
 
@@ -66,7 +69,10 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
 
   const handleSubmit = () => {
     const e = validate();
-    if (Object.keys(e).length > 0) { setErrors(e); return; }
+    if (Object.keys(e).length > 0) {
+      setErrors(e);
+      return;
+    }
 
     const board: SalaryBoard = {
       id: editing?.id ?? Date.now().toString(),
@@ -128,7 +134,9 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
                     {editing ? "Chỉnh sửa bảng lương" : "Tạo bảng lương"}
                   </h2>
                   <p className="text-xs text-white/70">
-                    {editing ? "Cập nhật thông tin bảng lương" : "Điền thông tin để tạo bảng lương mới"}
+                    {editing
+                      ? "Cập nhật thông tin bảng lương"
+                      : "Điền thông tin để tạo bảng lương mới"}
                   </p>
                 </div>
               </div>
@@ -196,7 +204,9 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
                 >
                   <option value="">Loại bảng lương</option>
                   {SALARY_TYPE_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
                   ))}
                 </select>
                 {errors.type && <p className="mt-1 text-xs text-red-500">{errors.type}</p>}
@@ -210,14 +220,20 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
                 <select
                   {...field("timeCalcType")}
                   value={form.timeCalcType}
-                  onChange={(e) => setForm((f) => ({ ...f, timeCalcType: e.target.value as TimeCalcType }))}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, timeCalcType: e.target.value as TimeCalcType }))
+                  }
                 >
                   <option value="">Loại thời gian tính lương</option>
                   {TIME_CALC_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
                   ))}
                 </select>
-                {errors.timeCalcType && <p className="mt-1 text-xs text-red-500">{errors.timeCalcType}</p>}
+                {errors.timeCalcType && (
+                  <p className="mt-1 text-xs text-red-500">{errors.timeCalcType}</p>
+                )}
               </div>
 
               {/* Toggle: Ẩn bảng lương */}
@@ -226,11 +242,15 @@ export default function SalaryDialog({ open, onClose, onSave, editing }: SalaryD
                   <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                     Ẩn bảng lương với nhân viên
                   </p>
-                  <p className="text-xs text-neutral-400 mt-0.5">Nhân viên sẽ không thấy bảng lương này</p>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    Nhân viên sẽ không thấy bảng lương này
+                  </p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => setForm((f) => ({ ...f, hiddenFromEmployee: !f.hiddenFromEmployee }))}
+                  onClick={() =>
+                    setForm((f) => ({ ...f, hiddenFromEmployee: !f.hiddenFromEmployee }))
+                  }
                   className={cn(
                     "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none",
                     form.hiddenFromEmployee

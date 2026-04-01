@@ -14,7 +14,7 @@ interface ShiftSummaryRowProps {
 function parseHours(startTime: string, endTime: string): number {
   const [sh, sm] = startTime.split(":").map(Number);
   const [eh, em] = endTime.split(":").map(Number);
-  let startMins = sh * 60 + sm;
+  const startMins = sh * 60 + sm;
   let endMins = eh * 60 + em;
   if (endMins <= startMins) endMins += 24 * 60; // overnight shift
   return (endMins - startMins) / 60;
@@ -33,14 +33,18 @@ export default function ShiftSummaryRow({
   return (
     <div
       className="grid"
-      style={{ gridTemplateColumns: `240px repeat(${weekDayStrings.length}, minmax(${colWidth}, 1fr))` }}
+      style={{
+        gridTemplateColumns: `240px repeat(${weekDayStrings.length}, minmax(${colWidth}, 1fr))`,
+      }}
     >
       {/* Label cell */}
       <div className="sticky left-0 z-10 bg-slate-50/95 dark:bg-neutral-800/95 backdrop-blur-md border-t border-r border-slate-200 dark:border-neutral-700 px-3 py-2 shadow-[2px_0_8px_-4px_rgba(0,0,0,0.08)] dark:shadow-[2px_0_8px_-4px_rgba(0,0,0,0.3)]">
         <p className="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">
           Tổng quát
         </p>
-        <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{totalPeriodShifts} ca</p>
+        <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+          {totalPeriodShifts} ca
+        </p>
       </div>
 
       {/* Per-day summary cells */}
@@ -58,9 +62,7 @@ export default function ShiftSummaryRow({
             key={dateStr}
             className={cn(
               "border-t border-r border-slate-200 dark:border-neutral-700 px-2 py-2 text-center",
-              isToday
-                ? "bg-blue-50/60 dark:bg-blue-950/20"
-                : "bg-slate-50 dark:bg-neutral-800/60"
+              isToday ? "bg-blue-50/60 dark:bg-blue-950/20" : "bg-slate-50 dark:bg-neutral-800/60"
             )}
           >
             <p className="text-xs font-bold text-slate-700 dark:text-slate-200">

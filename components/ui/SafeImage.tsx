@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface SafeImageProps {
@@ -27,25 +27,17 @@ export default function SafeImage({
   fallbackSrc = "/placeholder.png",
   onError,
 }: SafeImageProps) {
-  const [imageSrc, setImageSrc] = useState(src);
   const [hasError, setHasError] = useState(false);
 
-  useEffect(() => {
-    setImageSrc(src);
-    setHasError(false);
-  }, [src]);
+  const imageSrc = hasError ? fallbackSrc : src;
 
   const handleError = () => {
-    if (!hasError) {
-      setHasError(true);
-      setImageSrc(fallbackSrc);
-      onError?.();
-    }
+    setHasError(true);
+    onError?.();
   };
 
   // External URLs — use regular img tag
-  const isExternal =
-    imageSrc.startsWith("http://") || imageSrc.startsWith("https://");
+  const isExternal = imageSrc.startsWith("http://") || imageSrc.startsWith("https://");
 
   if (isExternal) {
     return (

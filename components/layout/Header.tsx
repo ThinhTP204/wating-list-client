@@ -13,11 +13,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
-import { Button } from "../ui/button";
 import { InteractiveHoverButton } from "../ui/interactive-hover-button";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useRegisterDialog } from "@/features/waitlist/hooks/useRegisterDialog";
-import SparklesIcon from "@/components/ui/sparkles-icon";
 import { ChainThemeToggle } from "@/components/ui/chain-theme-toggle";
 
 const navItems = [
@@ -35,7 +33,10 @@ export default function Header() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isMobile) setIsMobileMenuOpen(false);
+    if (!isMobile) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsMobileMenuOpen(false);
+    }
   }, [isMobile]);
 
   const handleAuthNav = (e: React.MouseEvent, link: string) => {
@@ -68,7 +69,9 @@ export default function Header() {
               className="h-8 w-auto object-contain"
               priority
             />
-            <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">Wokki</span>
+            <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">
+              Wokki
+            </span>
           </Link>
 
           <NavItems
@@ -107,7 +110,9 @@ export default function Header() {
                 height={32}
                 className="h-8 w-auto object-contain"
               />
-              <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">Wokki</span>
+              <span className="text-xl font-extrabold tracking-tight text-black dark:text-white">
+                Wokki
+              </span>
             </Link>
             <div className="flex items-center gap-2">
               <InteractiveHoverButton

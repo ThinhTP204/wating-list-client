@@ -18,14 +18,20 @@ type FormState = typeof EMPTY;
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
 export default function SalaryScaleDialog({
-  open, onClose, onSave, editing, existingPositions,
+  open,
+  onClose,
+  onSave,
+  editing,
+  existingPositions,
 }: Props) {
   const [form, setForm] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<FormErrors>({});
 
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm(editing ? { ...editing } : EMPTY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setErrors({});
     }
   }, [open, editing]);
@@ -82,9 +88,7 @@ export default function SalaryScaleDialog({
                 <h2 className="font-semibold text-white text-base">
                   {editing ? "Chỉnh sửa mức lương" : "Thêm mức lương"}
                 </h2>
-                <p className="text-blue-200 text-xs mt-0.5">
-                  Cấu hình khung lương theo chức danh
-                </p>
+                <p className="text-blue-200 text-xs mt-0.5">Cấu hình khung lương theo chức danh</p>
               </div>
               <button
                 onClick={onClose}
@@ -109,7 +113,9 @@ export default function SalaryScaleDialog({
                   className={inputCls(errors.position)}
                 />
                 <datalist id="scale-positions">
-                  {existingPositions.map((p) => <option key={p} value={p} />)}
+                  {existingPositions.map((p) => (
+                    <option key={p} value={p} />
+                  ))}
                 </datalist>
                 {errors.position && <p className="mt-1 text-xs text-red-500">{errors.position}</p>}
               </div>
@@ -135,7 +141,8 @@ export default function SalaryScaleDialog({
                     Cấp bậc <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="number" min={1}
+                    type="number"
+                    min={1}
                     value={form.rank}
                     onChange={(e) => set("rank", Number(e.target.value))}
                     className={inputCls(errors.rank)}
@@ -147,12 +154,15 @@ export default function SalaryScaleDialog({
                     Ưu tiên <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="number" min={1}
+                    type="number"
+                    min={1}
                     value={form.priority}
                     onChange={(e) => set("priority", Number(e.target.value))}
                     className={inputCls(errors.priority)}
                   />
-                  {errors.priority && <p className="mt-1 text-xs text-red-500">{errors.priority}</p>}
+                  {errors.priority && (
+                    <p className="mt-1 text-xs text-red-500">{errors.priority}</p>
+                  )}
                 </div>
               </div>
 
@@ -163,26 +173,34 @@ export default function SalaryScaleDialog({
                     Lương tối thiểu (₫) <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="number" min={0} step={500000}
+                    type="number"
+                    min={0}
+                    step={500000}
                     value={form.minSalary || ""}
                     onChange={(e) => set("minSalary", Number(e.target.value))}
                     placeholder="0"
                     className={inputCls(errors.minSalary)}
                   />
-                  {errors.minSalary && <p className="mt-1 text-xs text-red-500">{errors.minSalary}</p>}
+                  {errors.minSalary && (
+                    <p className="mt-1 text-xs text-red-500">{errors.minSalary}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-1.5">
                     Lương tối đa (₫) <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="number" min={0} step={500000}
+                    type="number"
+                    min={0}
+                    step={500000}
                     value={form.maxSalary || ""}
                     onChange={(e) => set("maxSalary", Number(e.target.value))}
                     placeholder="0"
                     className={inputCls(errors.maxSalary)}
                   />
-                  {errors.maxSalary && <p className="mt-1 text-xs text-red-500">{errors.maxSalary}</p>}
+                  {errors.maxSalary && (
+                    <p className="mt-1 text-xs text-red-500">{errors.maxSalary}</p>
+                  )}
                 </div>
               </div>
             </div>

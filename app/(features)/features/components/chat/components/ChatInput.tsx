@@ -18,6 +18,7 @@ export default function ChatInput({ onSend, initialValue = "", disabled = false 
 
   useEffect(() => {
     if (initialValue) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValue(initialValue);
       inputRef.current?.focus();
     }

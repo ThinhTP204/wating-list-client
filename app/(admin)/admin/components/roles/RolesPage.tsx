@@ -2,6 +2,19 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  DEPARTMENT_META,
+  MOCK_EMPLOYEES,
+  STATUS_META,
+  type Employee,
+} from "@/app/(admin)/admin/components/employees/components/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   createRole,
   deleteRole,
   loadRoles,
@@ -24,6 +37,7 @@ export default function RolesPage() {
   const [roles, setRoles] = useState<SystemRole[]>([]);
   const [form, setForm] = useState<RoleFormState>(EMPTY_FORM);
   const [editingRole, setEditingRole] = useState<SystemRole | null>(null);
+  const [selectedRole, setSelectedRole] = useState<SystemRole | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -34,12 +48,43 @@ export default function RolesPage() {
   }, []);
 
   const stats = useMemo(() => {
+    const headCountByRole = new Map<string, number>();
+    MOCK_EMPLOYEES.forEach((employee) => {
+      headCountByRole.set(employee.role, (headCountByRole.get(employee.role) ?? 0) + 1);
+    });
+
     return {
       total: roles.length,
       system: roles.filter((role) => role.isSystem).length,
       custom: roles.filter((role) => !role.isSystem).length,
+      assignedEmployees: roles.reduce((sum, role) => sum + (headCountByRole.get(role.key) ?? 0), 0),
     };
   }, [roles]);
+
+  const headCountByRole = useMemo(() => {
+    const counts = new Map<string, number>();
+
+    MOCK_EMPLOYEES.forEach((employee) => {
+      counts.set(employee.role, (counts.get(employee.role) ?? 0) + 1);
+    });
+
+    return counts;
+  }, []);
+
+  const employeesByRole = useMemo(() => {
+    const grouped = new Map<string, Employee[]>();
+
+    for (const employee of MOCK_EMPLOYEES) {
+      const existing = grouped.get(employee.role) ?? [];
+      grouped.set(employee.role, [...existing, employee]);
+    }
+
+    return grouped;
+  }, []);
+
+  const selectedRoleEmployees = selectedRole
+    ? employeesByRole.get(selectedRole.key) ?? []
+    : [];
 
   const resetForm = () => {
     setForm(EMPTY_FORM);
@@ -96,7 +141,7 @@ export default function RolesPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4">
             <p className="text-sm text-neutral-500 dark:text-neutral-400">Tổng role</p>
             <p className="text-2xl font-bold text-neutral-900 dark:text-white mt-1">
@@ -113,6 +158,12 @@ export default function RolesPage() {
             <p className="text-sm text-neutral-500 dark:text-neutral-400">Role tùy chỉnh</p>
             <p className="text-2xl font-bold text-neutral-900 dark:text-white mt-1">
               {stats.custom}
+            </p>
+          </div>
+          <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4">
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">Nhân sự đã gán role</p>
+            <p className="text-2xl font-bold text-neutral-900 dark:text-white mt-1">
+              {stats.assignedEmployees}
             </p>
           </div>
         </div>
@@ -138,6 +189,9 @@ export default function RolesPage() {
                     <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">
                       Loại
                     </th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">
+                      Số nhân viên
+                    </th>
                     <th className="text-right px-4 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">
                       Thao tác
                     </th>
@@ -150,7 +204,13 @@ export default function RolesPage() {
                       className="hover:bg-neutral-50 dark:hover:bg-neutral-900/40 transition-colors"
                     >
                       <td className="px-4 py-3">
-                        <p className="font-medium text-neutral-900 dark:text-white">{role.name}</p>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedRole(role)}
+                          className="font-medium text-neutral-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        >
+                          {role.name}
+                        </button>
                         <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
                           {role.key}
                         </p>
@@ -168,6 +228,15 @@ export default function RolesPage() {
                         >
                           {role.isSystem ? "Hệ thống" : "Tùy chỉnh"}
                         </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 font-medium">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedRole(role)}
+                          className="inline-flex items-center rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                        >
+                          {headCountByRole.get(role.key) ?? 0}
+                        </button>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-2">
@@ -252,6 +321,63 @@ export default function RolesPage() {
           </div>
         </div>
       </div>
+
+      <Dialog open={!!selectedRole} onOpenChange={(open) => !open && setSelectedRole(null)}>
+        <DialogContent className="max-w-2xl p-0 overflow-hidden gap-0 [&>button]:hidden">
+          <div className="px-6 py-4 bg-linear-to-r from-brand-800 via-brand-500 to-brand-700 text-white">
+            <DialogHeader>
+              <DialogTitle className="text-lg font-semibold text-white">
+                Danh sách nhân viên thuộc role: {selectedRole?.name}
+              </DialogTitle>
+              <DialogDescription className="text-white/80">
+                Có {selectedRoleEmployees.length} nhân viên thuộc role này.
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+
+          <div className="max-h-[60vh] overflow-y-auto p-4">
+            {selectedRoleEmployees.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 p-6 text-center">
+                <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                  Chưa có nhân viên nào thuộc role này
+                </p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                  Bạn có thể gán role này ở trang Nhân sự.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {selectedRoleEmployees.map((employee) => (
+                  <div
+                    key={employee.id}
+                    className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 px-4 py-3 flex items-center justify-between gap-3"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-neutral-900 dark:text-white truncate">
+                        {employee.name}
+                      </p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
+                        {employee.email}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+                        {DEPARTMENT_META[employee.department].name}
+                      </span>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_META[employee.status].bg} ${STATUS_META[employee.status].text}`}
+                      >
+                        {STATUS_META[employee.status].name}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

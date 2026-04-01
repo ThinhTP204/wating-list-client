@@ -26,23 +26,23 @@ export default function EmployeeCalendarHeader({
   onToday,
 }: EmployeeCalendarHeaderProps) {
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white/90 p-3 shadow-sm dark:border-neutral-700/80 dark:bg-neutral-900/80 sm:p-4">
+    <div className="rounded-2xl border border-slate-200/90 bg-white p-3 shadow-sm dark:border-neutral-700/80 dark:bg-neutral-900 sm:p-4 md:p-5">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-lg font-black text-slate-900 dark:text-slate-100 sm:text-section-title">
+          <p className="text-lg font-black tracking-tight text-slate-900 dark:text-slate-100 sm:text-section-title">
             Lịch ca của tôi
           </p>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 sm:text-meta">
-            {viewMode === "week" ? `Tuan ${weekLabel}` : monthLabel}
+          <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400 sm:text-meta">
+            {viewMode === "week" ? `Tuần ${weekLabel}` : monthLabel} · Hệ thống HRM
           </p>
         </div>
 
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-end lg:w-auto">
-          <div className="grid w-full grid-cols-2 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5 dark:border-neutral-700 dark:bg-neutral-800 sm:w-auto sm:flex">
+          <div className="grid w-full grid-cols-2 items-center rounded-xl border border-slate-200 bg-slate-50 p-0.5 dark:border-neutral-700 dark:bg-neutral-800 sm:w-auto sm:flex">
             <button
               onClick={() => onChangeViewMode("week")}
               className={cn(
-                "flex h-10 flex-1 items-center justify-center gap-1 rounded-md px-3 py-1.5 text-xs font-semibold transition sm:h-8 sm:flex-none",
+                "flex h-10 flex-1 items-center justify-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold transition sm:h-9 sm:flex-none",
                 viewMode === "week"
                   ? "bg-white text-slate-900 shadow-sm dark:bg-neutral-700 dark:text-slate-100"
                   : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
@@ -54,7 +54,7 @@ export default function EmployeeCalendarHeader({
             <button
               onClick={() => onChangeViewMode("month")}
               className={cn(
-                "flex h-10 flex-1 items-center justify-center gap-1 rounded-md px-3 py-1.5 text-xs font-semibold transition sm:h-8 sm:flex-none",
+                "flex h-10 flex-1 items-center justify-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold transition sm:h-9 sm:flex-none",
                 viewMode === "month"
                   ? "bg-white text-slate-900 shadow-sm dark:bg-neutral-700 dark:text-slate-100"
                   : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
@@ -66,18 +66,28 @@ export default function EmployeeCalendarHeader({
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            <Button variant="outline" size="sm" onClick={onPrev} className="h-10 w-full p-0 sm:h-8">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onPrev}
+              className="h-10 w-full rounded-xl border-slate-300 p-0 sm:h-9 dark:border-neutral-700"
+            >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={onToday}
-              className="h-10 w-full px-2 text-xs font-semibold sm:h-8"
+              className="h-10 w-full rounded-xl border-slate-300 px-2 text-xs font-semibold sm:h-9 dark:border-neutral-700"
             >
               Hôm nay
             </Button>
-            <Button variant="outline" size="sm" onClick={onNext} className="h-10 w-full p-0 sm:h-8">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onNext}
+              className="h-10 w-full rounded-xl border-slate-300 p-0 sm:h-9 dark:border-neutral-700"
+            >
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
@@ -85,25 +95,28 @@ export default function EmployeeCalendarHeader({
       </div>
 
       <div className="mt-3 flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-        <Badge variant="outline" className="shrink-0 text-xs">
+        <Badge
+          variant="outline"
+          className="shrink-0 border-slate-300 bg-white text-xs font-semibold text-slate-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-slate-200"
+        >
           Tong {stats.total} ca
         </Badge>
         <Badge
           variant="outline"
-          className="shrink-0 border-emerald-300 bg-emerald-50 text-emerald-700 text-xs dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300"
+          className="shrink-0 border-emerald-300 bg-emerald-50 text-xs font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300"
         >
           Đã chốt {stats.published}
         </Badge>
         <Badge
           variant="outline"
-          className="shrink-0 border-amber-300 bg-amber-50 text-amber-700 text-xs dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300"
+          className="shrink-0 border-amber-300 bg-amber-50 text-xs font-semibold text-amber-700 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300"
         >
           Nháp {stats.draft}
         </Badge>
         {stats.absent > 0 && (
           <Badge
             variant="outline"
-            className="shrink-0 border-red-300 bg-red-50 text-red-700 text-xs dark:border-red-800 dark:bg-red-950/30 dark:text-red-300"
+            className="shrink-0 border-red-300 bg-red-50 text-xs font-semibold text-red-700 dark:border-red-800 dark:bg-red-950/30 dark:text-red-300"
           >
             Vắng {stats.absent}
           </Badge>

@@ -35,7 +35,7 @@ export default function EmployeeMonthView({
           return (
             <div
               key={`week-${weekIndex}`}
-              className="rounded-2xl border border-slate-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-900"
+              className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-neutral-700 dark:bg-neutral-900"
             >
               <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 Tuan {weekIndex + 1}
@@ -52,7 +52,7 @@ export default function EmployeeMonthView({
                     <div
                       key={`mobile-${isoDate}`}
                       className={cn(
-                        "rounded-xl border border-slate-200 p-2.5 dark:border-neutral-700",
+                        "rounded-xl border border-slate-200 bg-slate-50 p-2.5 dark:border-neutral-700 dark:bg-neutral-800/40",
                         isToday && "ring-2 ring-brand-400/40"
                       )}
                     >
@@ -76,7 +76,7 @@ export default function EmployeeMonthView({
                             return (
                               <div
                                 key={shift.id}
-                                className="truncate rounded-md border border-slate-200 px-2 py-1.5 text-xs font-semibold dark:border-neutral-700"
+                                className="truncate rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs font-semibold dark:border-neutral-700 dark:bg-neutral-900"
                                 style={{ borderLeftWidth: 3, borderLeftColor: config?.color }}
                                 title={`${config?.name ?? "Ca"} ${config?.startTime ?? ""} - ${config?.endTime ?? ""}`}
                               >
@@ -102,7 +102,7 @@ export default function EmployeeMonthView({
       </div>
 
       <div className="hidden overflow-auto sm:block">
-        <div className="grid min-w-[760px] grid-cols-7 gap-1 rounded-2xl border border-slate-200 bg-slate-100 p-1 dark:border-neutral-700 dark:bg-neutral-800">
+        <div className="grid min-w-190 grid-cols-7 gap-1 rounded-2xl border border-slate-200 bg-slate-100 p-1 shadow-sm dark:border-neutral-700 dark:bg-neutral-800">
           {DAY_NAMES.map((day) => (
             <div
               key={day}

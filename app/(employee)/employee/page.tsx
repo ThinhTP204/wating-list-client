@@ -1,10 +1,10 @@
-import MyCalendar from "@/app/(features)/features/components/my-calendar/MyCalendar";
+import EmployeeCalendarPage from "@/features/employee-calendar/components/EmployeeCalendarPage";
 import ShiftSwapPage from "@/app/(employee)/employee/components/shift-swap/ShiftSwapPage";
 import EarningsPage from "@/app/(employee)/employee/components/earnings/EarningsPage";
 import ChatPage from "@/app/(features)/features/components/chat/ChatPage";
 
 const TAB_COMPONENTS: Record<string, React.ComponentType> = {
-  calendar: MyCalendar,
+  calendar: EmployeeCalendarPage,
   "shift-swap": ShiftSwapPage,
   earnings: EarningsPage,
   chat: ChatPage,
@@ -16,7 +16,7 @@ export default async function EmployeePage({
   searchParams: Promise<{ tab?: string }>;
 }) {
   const { tab = "calendar" } = await searchParams;
-  const Component = TAB_COMPONENTS[tab] ?? MyCalendar;
+  const Component = TAB_COMPONENTS[tab] ?? EmployeeCalendarPage;
 
   return <Component />;
 }

@@ -82,9 +82,7 @@ export default function RolesPage() {
     return grouped;
   }, []);
 
-  const selectedRoleEmployees = selectedRole
-    ? employeesByRole.get(selectedRole.key) ?? []
-    : [];
+  const selectedRoleEmployees = selectedRole ? (employeesByRole.get(selectedRole.key) ?? []) : [];
 
   const resetForm = () => {
     setForm(EMPTY_FORM);
